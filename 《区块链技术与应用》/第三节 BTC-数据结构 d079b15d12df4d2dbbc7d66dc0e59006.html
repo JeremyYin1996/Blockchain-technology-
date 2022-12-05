@@ -1,0 +1,670 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第三节:BTC-数据结构</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d079b15d-12df-4d2d-bbc7-d66dc0e59006" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/met_william_morris_1875.jpg" style="object-position:center 0%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍉</span></div><h1 class="page-title"><strong>第三节:BTC-数据结构</strong></h1></header><div class="page-body"><nav id="8c286595-0399-413f-8d41-f37e8ffc2a2e" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#b79fd152-c358-4cb5-8bd4-a3f18fed00b9">3.1 哈希指针 hash pointers</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#99d7006f-0897-4c84-8705-dea656c0c365">3.2 默克尔树 Merkle tree</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#b188d61b-4a5a-4f70-937f-6a7472b9e0b6">3.2.1 merkle tree的作用：merkle proof</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#280e13d4-4dc3-4bad-bc04-059708a94ad8">3.2.2 证明不存在 proof of non-membership</a></div></nav><hr id="fb95268a-0c16-4cf9-9137-910ed520d7ac"/><h2 id="b79fd152-c358-4cb5-8bd4-a3f18fed00b9" class="">3.1 哈希指针 hash pointers</h2><p id="5c024c9c-eeef-4b5d-827a-47a8cc245444" class="">普通指针存储的是某个结构体在内存中的地址。假如P是指向一结构体的指针，那么<strong>P</strong><strong>里面存放的就是该结构体在内存中的起始位置</strong>。而哈希指针除了要存地址之外，还要保存该结构体的哈希值H()。好处是:从哈希值这个哈希指针，不仅可以找到该结构体的位置，同时还能够检测出该结构体的内容有没有被篡改，因为我们保存了它的哈希值。</p><figure id="706420ad-184c-414d-87ed-303df9c34d26" class="image"><a href="%E7%AC%AC%E4%B8%89%E8%8A%82%20BTC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20d079b15d12df4d2dbbc7d66dc0e59006/Untitled.png"><img style="width:377px" src="%E7%AC%AC%E4%B8%89%E8%8A%82%20BTC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20d079b15d12df4d2dbbc7d66dc0e59006/Untitled.png"/></a></figure><p id="7058a5d1-b92b-4d78-8855-ce0bea104223" class="">比特币中最基本的结构就是区块链，区块链就是一个一个区块组成的链表。区块链和普通的链表相比有什么区别:</p><p id="88af013d-2b07-4ce1-ad5b-f34af4b81a11" class="">①用哈希指针代替了普通指针(Block chain is a linked list using hash pointers)</p><p id="b4e09eb5-b9e1-4dc3-938b-192d6019f826" class="">区块链第一个区块叫做创世纪块(genesis block) 最后一个区块 是最近产生的区块(most recent block) 每一个区块都包含指向前一个区块的哈希指针。</p><p id="6e2959da-8fff-405b-9761-97fd71df14e0" class="">一个区块的哈希指针怎么算:是把前面整个区块的内容，包括里面的hash pointer，合在一起取哈希值。通过这种结构，可以实现tamper-evident log。如果有人改变了一个区块的内容，后面一个区块的哈希指针就对不上，因为后一个区块哈希指针是根据前一个区块的内容算出来的，所以后一个哈希指针也得改，以此类推，我们保留的是最后一个哈希值也会变化。</p><figure id="12de3eb2-0999-46f8-9ea5-c4632affe2c8" class="image"><a href="%E7%AC%AC%E4%B8%89%E8%8A%82%20BTC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20d079b15d12df4d2dbbc7d66dc0e59006/Untitled%201.png"><img style="width:554px" src="%E7%AC%AC%E4%B8%89%E8%8A%82%20BTC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20d079b15d12df4d2dbbc7d66dc0e59006/Untitled%201.png"/></a></figure><p id="e53eaa8e-ed67-4b74-a043-e7f5ec678aa1" class="">②普通链表可以改变任意一个元素，对链表中其他元素是没有影响的。而区块链是牵一发而动全身，因为只需要保存最后一个哈希值，就可以判断区块链有没有改变，在哪里改变了。</p><p id="d071aa45-7aef-46f4-ac54-d25b43189bcc" class="">因此比特币没有要保存所有区块的内容，可以只保留最近的几千个区块。如果要用到以前的区块，可以向系统中其他节点要这个区块。有些节点是有恶意的，怎么判断?这里要用到哈希值一个性质，如下:</p><p id="d936d152-b83e-4ba9-8d76-f53e83502b06" class="">其他节点给你一个区块，如何判断它是正确的?算出它的哈希值，与保留的区块的哈希值对比，即可。</p><h2 id="99d7006f-0897-4c84-8705-dea656c0c365" class="">3.2 默克尔树 Merkle tree</h2><p id="e1037afd-f150-4956-b047-6a280c227117" class="">比特币中的另外一个结构是:Merkle tree。(如下图，其中最下面一层是数据块(data blocks)，上面三层内部节点都是哈希指针(hash pointers)，第一层是根节点，根节点的区块也可以取个哈希，叫根哈希(root hash))</p><p id="ea985eb9-363d-44c4-b7cc-012a9020aef8" class="">另外一个概念:二叉树 binary tree。</p><figure id="f0d1bd8b-ebaa-40e6-9ff9-52b40149894e" class="image"><a href="%E7%AC%AC%E4%B8%89%E8%8A%82%20BTC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20d079b15d12df4d2dbbc7d66dc0e59006/Untitled%202.png"><img style="width:554px" src="%E7%AC%AC%E4%B8%89%E8%8A%82%20BTC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20d079b15d12df4d2dbbc7d66dc0e59006/Untitled%202.png"/></a></figure><p id="ea2536f9-c191-4304-87a6-1a8464479359" class="">这种结构的好处:只要记住根哈希值，就能检测出对树中任何部位的修改。</p><p id="0a80c0bd-80c2-405b-b42f-b6d8d5301fb4" class="">它们的区别:①用哈希指针代替了普通指针。</p><p id="fb2fc00e-cbed-4bf7-a758-33cd7296cee7" class="">比特币当中各区块之间用哈希指针连接在一起，每个区块所包含的交易组织成一个merkle tree的形式，最下面一行data blocks每个区块实际上是一个交易，每个区块分为两部分，分别是块头和块身(block header ,block body)。块头里面有根哈希值，每个区块所包含的所有交易组成的merkle tree的根哈希值存在于区块的块头里面，但是，块头里没有交易的具体内容，只有一个根哈希值，块身里面是有交易的列表的。</p><h3 id="b188d61b-4a5a-4f70-937f-6a7472b9e0b6" class="">3.2.1 merkle tree的作用：merkle proof</h3><p id="6cc28572-31a9-4c44-920b-5bfbe7f7ec84" class="">比特币中的节点分为两类:全节点(保存整个区块的内容，即块头块身都有，有交易的具体信息)和轻节点(例如手机上的比特币钱包)(只有块头)</p><p id="c8a28fbb-4cbc-421f-9acf-a56b12a756b2" class="">这时存在一个问题:如何向一个轻节点证明某个交易是写入区块链的?</p><p id="ed1db3fc-c570-4768-b04b-081f59feb25a" class="">这时需要用到merkle proof :找到交易所在的位置(最底行的其中一个区块)，这时该区块一直往上到根节点的路径就叫merkle proof。</p><figure id="fdc4368f-6f1b-43fd-813d-1074a7578a81" class="image"><a href="%E7%AC%AC%E4%B8%89%E8%8A%82%20BTC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20d079b15d12df4d2dbbc7d66dc0e59006/Untitled%203.png"><img style="width:554px" src="%E7%AC%AC%E4%B8%89%E8%8A%82%20BTC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20d079b15d12df4d2dbbc7d66dc0e59006/Untitled%203.png"/></a></figure><p id="2b70ca34-7134-4fc5-8e75-ebe914fe549b" class="">最上面一行是小型的区块链，该图展现的是一个区块的merkle tree，最下面一行是包含的交易。假设某个轻节点想知道图中黄色的交易，是否包含在了merkle tree里面。该轻节点没有包含交易列表，没有这颗merkle tree的具体内容，只有一个根哈希值。这时轻节点向一个全节点发出请求，请求证明黄色的交易被包含在这颗merkle tree里面的merkle proof。全节点收到这个请求之后，只需要将图中标为红色的这三个哈希值发给轻节点即可。有了这些哈希值之后，轻节点可以在本地计算出图中标为绿色三个哈希值。首先算出黄色交易的哈希值，即它正上方的那个绿的哈希值，然后跟旁边红色的哈希值拼接起来，可以算出上层节点绿色的哈希值。然后再拼接，再算出上层绿色哈希值，再拼接，就可以算出整棵树的根哈希值。轻节点把这个根哈希值和block header里的根哈希值比较一下，就能知道黄色的交易是否在这棵merkle tree里。</p><p id="7e546da8-d406-4d49-9635-f03365118245" class="">全节点在merkle proof里提供的这几个哈希值，就是从黄色的交易所在的节点的位置到树根的路径上用到的这些哈希值。轻节点收到这样一个merkle proof之后，只要从下往上验证，沿途的哈希值都是正确的即可。(验证时只能验证该路径的哈希值，其他路径是验证不了的，即该图中红色的哈希值是验证不了的)</p><p id="5339fc86-82ef-4da6-b2c1-629537b9f8fe" class="">这样是否不安全呢?假如黄色交易被篡改，它的哈希值发生了变化，那能不能调整旁边红色的哈希值，使得它们拼接起来的哈希值是不变的呢?不行，根据collision resistance，这是不可行的。</p><p id="b94c5b56-0c49-43ae-bb8a-c22ba9351b1a" class="">merkle proof可以证明merkle tree里面包含了某个交易，所以这种证明又叫proof of membership或 proof of inclusion。</p><p id="a21b3ba2-f97f-4445-b61a-c2398532be21" class="">对于一个轻节点来说，验证一个merkle proof 复杂度是多少?假设最底层有n个交易，则merkle proof <mark class="highlight-red"><strong>复杂程度是O(log(n))</strong></mark></p><h3 id="280e13d4-4dc3-4bad-bc04-059708a94ad8" class="">3.2.2 证明不存在 proof of non-membership</h3><p id="f384afa3-c809-43a3-85db-5472429abd0f" class="">如何证明merkle tree里面没有包含某个交易?即proof of non-membership。</p><p id="28bbd6b6-a4e2-4e51-99d8-58de4947af03" class=""><strong>不排序</strong></p><p id="aeb9cd4a-3d1f-48a3-80ef-0ad22472af32" class="">可以把整棵树传给轻节点，轻节点收到后验证树的构造都是对的，每一层用到的哈希值都是正确的，说明树里只有这些叶节点，要找的交易不在里面，就证明了proof of non-membership。问题在于，它的<mark class="highlight-red"><strong>复杂度是线性的O(n)</strong></mark>，是比较笨的方法。</p><p id="312322e9-aa95-4ee0-9067-e6e184bc974d" class=""><strong>排序</strong></p><p id="b320d41b-7cd7-4225-a131-45901739e99b" class="">如果对叶节点的排列顺序做一些要求，比如按照交易的哈希值排序。每一个叶节点都是一次交易，对交易的内容取一次哈希，<span style="border-bottom:0.05em solid">按照哈希值从小到大排列</span>。要查的交易先算出一个哈希值，看看如果它在里面该是哪个位置。比如说在第三个第四个之间，这时提供的proof是第三个第四个叶节点都要往上到根节点。如果其中哈希值都是正确的，最后根节点算出的哈希值也是没有被改过的，说明第三、四个节点在原来的merkle tree里面，确实是相邻的点。要找的交易如果存在的话，应该在这两个节点中间。但是它没有出现，所以就不存在。其<mark class="highlight-red"><strong>复杂度也是O(log(n))，代价是要排序</strong></mark>。排好序的叫做sorted merkle tree。比特币中没有用到这种排好序的merkle tree，因为比特币中不需要做不存在证明。</p><p id="8a6270e5-6fa8-41d1-befb-7dbdd2922f03" class="">这节讲了比特币中两种最基本的结构:区块链和merkle tree，都是用哈希指针来构造的。除了这两种之外，哈希指针还能用另一个方面。</p><p id="20b6ec78-78c5-4c3e-8bb5-b00167780c2f" class="">只要一个数据结构是无环的(非循环链表)，都能用哈希指针代替普通指针。有环的话存在一个问题，他们的哈希值没法计算，没法确定一个哈希值固定的区块。</p><p id="2db09421-c6d8-423c-ae3f-6a39745ec6bf" class="">
+</p></div></article></body></html>

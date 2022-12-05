@@ -1,0 +1,671 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第四节:BTC-共识协议</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="caf3853f-4d5e-45f6-bbe5-dc261e4b60e3" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/woodcuts_2.jpg" style="object-position:center 19.999999999999996%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍉</span></div><h1 class="page-title">第四节:BTC-共识协议</h1></header><div class="page-body"><nav id="eced542f-0581-4830-b355-baa107b5a3ef" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#84c1e5c3-cd61-40a9-8a8c-73ca8a3b4bb1">4.1 与纸币的区别</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#963bf156-67b6-4371-b620-4e87e6f315bc">4.2 Bitcoin区块链内容</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#1132d35e-18a2-4d11-a848-1444a7e0efad">4.2.1 块头 Block header</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0aa7b9cb-097b-4a3a-9bf1-fbe8a0b61d7e">4.2.2 块身 Block body</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#302a2378-d68b-47fa-9632-da95aa001b51">4.3 节点类别</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#d65433dd-8886-4d32-8c71-58162aa96c57">4.4 分布式的共识 distributed consensus</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#8fc56304-6b7d-4d21-9e99-a09065b8f5df">4.4.1 不可能结论 impossibility result</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#84eaaa53-34a6-4edd-8345-8e19ab4d495c">4.4.2 协议</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#440f9ddc-a33b-4ade-9785-dd18258437d0">4.5 比特币中的共识协议 consensus in BitCoin:</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d962a751-b7be-445d-a977-a26b1e302114">4.5.1 人头投票</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0a63de80-1112-4f97-9986-d4d1145024fe">4.5.2 算力（hash rate）投票</a></div></nav><hr id="16105d28-e18e-4639-a9ef-cdb3f00f7b17"/><h2 id="84c1e5c3-cd61-40a9-8a8c-73ca8a3b4bb1" class="">4.1 与纸币的区别</h2><p id="21f29e4a-15ed-4000-8843-889394e51d5c" class="">数字货币和纸质货币区别是可以复制，叫做双花攻击 即double spending attack。</p><p id="e1ad64af-da2b-456a-871e-635d8d241ffd" class="">去中心化货币要解决两个问题:<strong>①数字货币的发行②怎么验证交易的有效性，防止double spending attack</strong>。</p><p id="a5c92b6a-41e1-417e-a753-eee5ea1b9748" class="">答案:①比特币的发行是由挖矿决定的</p><p id="96c0e6bd-9813-43e9-adaa-d93128798b4e" class="">②依靠区块链的数据结构</p><p id="52f8c9b4-3f0b-4362-84c6-870257bef735" class="">比特币的发行者A拥有铸币权(createcoin) 假如发行10个比特币 A(10)分别给B和C各五个→ B(5)C(5) 该交易需要有A的签名，证明经A同意。(designed by A)同时还要说明花掉的10个比特币从哪来的。</p><p id="15408222-e6f0-4df5-9a5b-e5e5c3edd752" class="">参考拍的图四 第二个方框中的钱是从第一个框内铸币交易中来的。</p><figure id="d2820700-43ff-41bb-a2fb-21eee9e0d8b5" class="image"><a href="%E7%AC%AC%E5%9B%9B%E8%8A%82%20BTC-%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%20caf3853f4d5e45f6bbe5dc261e4b60e3/image5.png"><img style="width:525px" src="%E7%AC%AC%E5%9B%9B%E8%8A%82%20BTC-%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%20caf3853f4d5e45f6bbe5dc261e4b60e3/image5.png"/></a></figure><p id="a0c6c61b-d1c4-4537-bfbf-5d2ce8de0f51" class="">比特币系统中每个交易都包含输入和输出两部分。输入部分要说明币的来源，输出部分要给出收款人公钥的哈希。</p><p id="34d166d4-d8a4-4d47-921c-dffceec03dbf" class="">有的交易部分比较复杂，如C的货币来源是第二第三个方框，要标识清楚。</p><p id="72ccc118-e822-4fe4-960e-f560c985bc4b" class="">图四就构成了一个小型的区块链，这里有两种哈希指针，一种哈希指针是连接在各个区块之间的，把它们串起来构成一个链表，前面学的就是这种哈希指针。而在该图中还有第二种哈希指针，是指向前面某个交易的指针，用来指明币的来源。为什么要说明币的来源:证明币不是凭空捏造的是有记录的，同时也是防范double spending。</p><p id="c0a6f562-9b1f-4bbe-bde3-70bb163d4ac9" class="">现在来看第二个方框里A向B的转账，该交易需要A的签名和B的地址。比特币系统里收款的地址是通过公钥推算出来的。比如B的地址就是B的公钥取哈希然后经过一些转换得到的。</p><p id="597f13c7-3e64-4c3c-ba42-9ff14323d25b" class="">A如何知道B的地址?比特币系统中没有查询对方地址的功能，必须通过其他渠道。比如某个电商网站，接受比特币支付，就可以公开它的地址或公钥。</p><p id="c82e133b-649b-43af-9d9e-d26de695feac" class="">A需要知道B的地址，B需要知道A的什么信息吗?B其实也要知道A的公钥，这代表A的身份。不仅是B，所有节点都需要知道A的公钥。而签名是用私钥签名公钥验证(注意不要跟前面知识弄混了，加密是用接收人的公钥加密私钥解密)，所以区块链上每个节点都要独立验证。</p><h2 id="963bf156-67b6-4371-b620-4e87e6f315bc" class="">4.2 Bitcoin区块链内容</h2><p id="7929d1f5-57a0-4e1f-a49f-51b85d2bc8e8" class="">那如何才能知道A的公钥?实际上交易里就包含了。输入时不仅要输入币的来源，还要输入公钥。那就存在了安全漏洞，假如B的同伙伪造了这次交易呢?其实第一个方框里铸币交易的输出就有A的公钥的哈希，所以第二个方框交易里A的公钥要跟前面哈希对的上。</p><p id="a891e8c9-9377-41c7-9b76-14ece7228241" class="">在比特币系统当中，前面这些验证过程，是通过执行脚本来实现的。每个交易的输入提一段脚本，包括给出公钥的过程，公钥也是在输入的脚本里指定的。每个交易的输出也是一段脚本，验证其的合法性，就需要把当前交易的输入脚本跟前面交易(提供币来源的交易)的输出脚本拼在一起，然后看看能不能顺利执行，如果能执行说明是合法的。比特币脚本(BitCoin Script)。</p><p id="22940221-7eb6-44b2-8e85-80f9e46035ab" class="">该图对交易系统进行了简化，实际上每个区块(对应图中的每个方框)可以有很多交易，这些交易就组成merkle tree。每个区块分为块头和块身。</p><h3 id="1132d35e-18a2-4d11-a848-1444a7e0efad" class="">4.2.1 块头 Block header</h3><p id="a3ab11dd-f919-4361-b2cb-8f4352981e24" class="">块头包含的是区块的宏观信息：</p><table id="f7758cf6-3427-4c17-9c73-1d0cae2ef943" class="simple-table"><thead class="simple-table-header"><tr id="fd727688-064a-4a70-a47e-0dbafb525c8f"><th id="MisH" class="simple-table-header-color simple-table-header" style="width:349px"><strong>字段：</strong></th><th id="sfaW" class="simple-table-header-color simple-table-header" style="width:349px"><strong>释义：</strong></th></tr></thead><tbody><tr id="165428b5-d47f-41da-9276-9ff0f3896396"><td id="MisH" class="" style="width:349px">Version</td><td id="sfaW" class="" style="width:349px">用的是比特币哪个版本的协议</td></tr><tr id="61dd8584-782a-4c74-b931-6bf403bc052c"><td id="MisH" class="" style="width:349px">hash of previous block header</td><td id="sfaW" class="" style="width:349px">区块链当中指向前一个区块的指针</td></tr><tr id="98e4d297-0137-4ae8-b4ef-6f77a9731f3b"><td id="MisH" class="" style="width:349px">merkle root hash</td><td id="sfaW" class="" style="width:349px">整棵merkle tree 的根哈希值</td></tr><tr id="51a9b3f0-d0c3-4977-a1a3-41ee85f428ee"><td id="MisH" class="" style="width:349px">target</td><td id="sfaW" class="" style="width:349px">挖矿的难度目标预值（与挖矿相关）</td></tr><tr id="6eca1564-8e71-4653-8dbe-99f37451c320"><td id="MisH" class="" style="width:349px">nonce</td><td id="sfaW" class="" style="width:349px">随机数（与挖矿相关)</td></tr></tbody></table><p id="350f55a4-3e94-4fd0-8701-4aedd77cfb2c" class="">
+</p><figure id="d4360744-1a86-4284-9a02-37ec9fbb250b" class="image"><a href="%E7%AC%AC%E5%9B%9B%E8%8A%82%20BTC-%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%20caf3853f4d5e45f6bbe5dc261e4b60e3/image6.png"><img style="width:700px" src="%E7%AC%AC%E5%9B%9B%E8%8A%82%20BTC-%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%20caf3853f4d5e45f6bbe5dc261e4b60e3/image6.png"/></a></figure><p id="dd23d58d-7257-4058-86f0-ee8ebf159a25" class="">这里的target，就是前面讲到的，整个块头的哈希要小于这个预值，即H(block header)≤target。block header里存的就是这个目标预值的编码(nBits)。这里需要注意，前一个区块的哈希只算的是前一个区块的块头，所以前面画的，一个区块引出一个剪头指向另一个区块中间，是不正确的，所以有的书剪头是指向一个区块的上面。取哈希时是把块头的所有部分都取哈希。</p><figure id="17d4d305-17f1-4675-85ab-55697d9655fe" class="image"><a href="%E7%AC%AC%E5%9B%9B%E8%8A%82%20BTC-%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%20caf3853f4d5e45f6bbe5dc261e4b60e3/image7.png"><img style="width:700px" src="%E7%AC%AC%E5%9B%9B%E8%8A%82%20BTC-%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%20caf3853f4d5e45f6bbe5dc261e4b60e3/image7.png"/></a></figure><h3 id="0aa7b9cb-097b-4a3a-9bf1-fbe8a0b61d7e" class="">4.2.2 块身 Block body</h3><p id="9ae87478-0318-417c-835c-c4b74dc4c103" class="">块身里面有交易列表(transaction list)和Merkel tree。</p><h2 id="302a2378-d68b-47fa-9632-da95aa001b51" class="">4.3 节点类别</h2><p id="a4f80609-e094-473e-a3ca-446b4c6346fa" class="">前面还有一个内容讲的时候简化了:每个节点都需要验证所有的交易，实际上系统中的节点分<strong>全节点(full node)</strong>和<strong>轻节点(light node)</strong>，全节点是保存区块链所有的信息的，验证每一个交易，所以全节点又叫fully validating node。轻节点只保存block header的信息，一般来说轻节点没法独立验证交易的合法性。</p><p id="4c74d5d8-92c0-4fb3-b970-829d7aad5629" class="">比如一个交易是不是double spending，轻节点没有存以前的交易信息所以它没法验证。系统中大多数节点是轻节点，这节课内容主要针对全节点，因为轻节点没有参与区块链的构造和维护，只是利用了区块链的一些信息做一些查询。</p><p id="b61485fe-0750-435b-9228-616e1adec13f" class="">区块链里的内容是如何写到区块链里面的呢:每个节点，每个账户都可以发布交易，交易是广播给所有节点的。有些交易是合法的，有些是非法的。谁来决定哪些交易应该被写入下一个区块中呢?按照什么顺序写呢?如果每个节点自己决定可以吗?如果每个人在本地维护一个区块链，那区块链的统一性得不到保证，而账本的内容是要取得<strong>分布式的共识(distributed consensus)</strong>。</p><h2 id="d65433dd-8886-4d32-8c71-58162aa96c57" class="">4.4 分布式的共识 distributed consensus</h2><p id="fae385b9-6bd7-4333-8fcd-3294960bdd08" class="">下面的笔记跟比特币的应用关系不大，可以作为了解:</p><p id="2335da05-3c1c-464d-b32d-41dfb8051902" class="">分布式的共识一个简单的例子就是分布式的哈希表(distributed hash table)，比如系统里有很多台机器，共同维护一个全局的哈希表。</p><p id="8677124e-8ac5-4307-8e32-95eb5402de4b" class="">这里需要取得共识的内容是什么？哈希表中包含了哪些键值对key valve pair。假如有人在自己电脑上插入一个键值对，&#x27;xiao&#x27;这个pair对应的是12345，即&#x27;xiao&#x27;→12345。那么别人在另一台读的时候也要能把这个读出来，这就叫一个全局的哈希表。</p><h3 id="8fc56304-6b7d-4d21-9e99-a09065b8f5df" class="">4.4.1 不可能结论 impossibility result</h3><p id="7ece8175-5d6f-43af-9464-abdf86eed3f5" class="">关于分布式系统有很多不可能结论(impossibility result)，其中最著名的是FLP。这三个字母是三个专家的名字缩写，他们的结论是:在一个异步的(asynchronous)系统里，(网络传输迟延没有上限就叫异步系统)，即使只有一个成员是有问题的(faulty)，也不可能取得共识。</p><p id="338049e3-ba0c-475e-9b6d-8a465f622783" class="">还有一个著名结论:CAP Theorem。(CAP是指分布式系统的三个我们想要的性质，Consistency【系统状态的一致性】 Availability【别人都可以用】 Partition tolerance【分区容错性】)。该理论内容是:任何一个分布式系统，比如分布式哈希表，这三个性质中，最多只能满足两个，假如想要前两个性质，那么就不会得到第三个性质。</p><h3 id="84eaaa53-34a6-4edd-8345-8e19ab4d495c" class="">4.4.2 协议</h3><p id="416aec76-1e38-4193-839d-2f07a82bba8f" class="">分布式共识一个著名的协议是Paxos，该协议能够保证一致性，即第一个性质。如果该协议打成了共识，那么这个共识一定是一致的，即每个成员所认为的共识都是相同的。但是，某些情况下，该协议可能永远无法达成共识，这种可能性比较小但是客观存在的。</p><h2 id="440f9ddc-a33b-4ade-9785-dd18258437d0" class="">4.5 比特币中的共识协议 consensus in BitCoin:</h2><p id="186fa886-6e6d-4774-96f0-317ab6a976ca" class="">比特币中共识要解决的一个问题是，有些节点可能是有恶意的。我们<strong>假设</strong>系统中大多数节点是好的，那么该如何取得共识协议?</p><h3 id="d962a751-b7be-445d-a977-a26b1e302114" class="">4.5.1 人头投票</h3><p id="0dffa902-7ce3-4fbc-8c08-c8b8ae7af248" class="">第一种方案是投票，首先应该确定哪些区块有投票权，有些membership是有严格要求的，这种情况下基于投票的方案是可行的。但比特币系统创建账户是很容易的，甚至一个人产生了公私钥对别人都无法得知，只有转账时别人才知道。所以有些人可以不停的创建账户，当超过账户总数的一半时就有了控制权，这种称为女巫攻击(sybil attack)。因此此<strong>投票方法不可取。</strong></p><h3 id="0a63de80-1112-4f97-9986-d4d1145024fe" class="">4.5.2 算力（hash rate）投票</h3><p id="8583e16b-b048-4c47-b268-97b8f55d024a" class="">比特币账户巧妙的解决了这个问题，不是按照账户数目投票，而是按照计算力来投票。每个节点都可以在本地组装出一个候选区块，把它认为合法的交易放在里面，然后开始尝试各种nonce值(占4 byte)，看哪一个能满足不等式H(block header)≤target的要求。如果某个节点找到了符合要求的nonce，它就获得了<strong>记账权</strong>。</p><p id="32f6fe99-eccb-40ee-82cf-2ebf0364152d" class="">所谓的<strong>记账权</strong>，就是往比特币账本里写入下一个区块的权利。只有找到这个nonce，获得记账权的节点才有权利发布下一个区块。其他节点收到这个区块之后，要验证这个区块的合法性。</p><p id="f0f6863b-38d9-4666-bae4-1e47c6307e79" class="">比如括号里block header的内容填的对不对；block header里面有一个域，叫nBits域，实际上它是目标预值的一个编码检查一下nBits域设置的是不是符合比特币协议中规定的难度要求；该不等式是否成立。假设都符合要求，然后检查block body里面的交易列表，验证一下每个交易都是合法的:①要有合法的签名②以前没有被花过。如果有一项不符合要求，这个区块就是不能被接受的。如果所有条件都符合，也不一定接受。</p><p id="8740529d-df47-4a22-af1a-718f13665276" class="">假如生成了一个新区块，怎么知道新区块插在了哪里呢?根据生成区块的指针。有可能就存在一个问题，如图5，这两个交易指A转账给B，以及A转账给自己。这种情况不是double spending，判断一个交易是不是double spending ，是看这个区块所在的分支上币又没有被花掉。如图，一直到第三个区块，币都没有花过，所以这个交易是合法的。虽然该交易是合法的，但是它不在最长合法链(longest valid chain)上。这种称为<strong>分叉攻击(forking attack)</strong>。所以接收的区块应该是<strong>扩展最长合法链</strong>。</p><figure id="bd50a394-cd42-46a9-b422-32b3bc8ab979" class="image"><a href="%E7%AC%AC%E5%9B%9B%E8%8A%82%20BTC-%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%20caf3853f4d5e45f6bbe5dc261e4b60e3/image8.png"><img style="width:700px" src="%E7%AC%AC%E5%9B%9B%E8%8A%82%20BTC-%E5%85%B1%E8%AF%86%E5%8D%8F%E8%AE%AE%20caf3853f4d5e45f6bbe5dc261e4b60e3/image8.png"/></a></figure><p id="6953f8c7-5906-4485-9065-ac9b842bd84f" class="">区块链在正常情况下也可能出现分叉:两个节点同时获得记账权。每个节点在本地自己组装一个它认为合适的区块，然后去试各种nonce，如果两个节点在差不多同一个时间找到了符合要求的nonce，就都可以把区块发布，这时会出现两个等长的分叉。这两条都是最长合法链，那该接受那条呢?比特币协议当中，在缺省(默认的意思)情况下，每个节点是接受它最早收到的那个。所以不同节点根据在网络上的位置不同，有的节点先听到新生成的其中一个区块，那就接受这个区块；有些节点先听到另一个区块，那就接受另一个区块。</p><p id="f459d9ca-6276-40b4-a5e1-fe3901e8f2a5" class="">如何判断接收了一个区块?比特币协议中用到了implicit consign，如果沿着这个区块往下继续扩展，就算认可了这个发布的区块。比如在新生成的其中一个区块后面又拓展一个区块，表明就认可了这个新区块。</p><p id="7bcd75c7-dae9-41d5-9c82-b3d30dda429d" class="">等长的临时性的分叉会维持一段时间，直到一个分叉胜出。也就是哪一个链抢先一步生成了新的区块，哪一条就是最长合法链。另一个作废的就叫<strong>孤块（orphan block）</strong>。这两个新区块有可能会各自拉拢，两个区块链看谁的算力强，有时候也是看谁的运气好，就会胜出。</p><p id="a8f948f3-6380-480b-b707-d197a425b026" class="">竞争记账权的好处:首先获得记账权的节点本身有一定的权力，可以决定哪些交易写到下一个区块里。但这些不应该被设定为竞争记账权的动力，所以巧妙地建立了一个机制:<strong>区块奖励(block reward)。</strong></p><p id="f69c55db-b1e8-4d5b-86b0-b2e56df02240" class="">比特币协议中规定获得记账权的节点在发布的区块里可以有一个特殊的交易:铸币交易。在这个交易里可以发布一定数量的比特币。</p><p id="a46cc233-2771-4868-8baa-b3efba37e975" class="">这里要回到前面的问题①，谁来决定货币的发行?<strong>币基交易（coinbase transaction）是比特币系统中发行新的比特币的唯一方法</strong>，后面的交易都是比特币的转移。这个交易不用指出币的来源。</p><p id="66d92b9a-8b3b-488c-98a8-72ca2b491654" class="">那么能造多少币呢?开始时比特币刚上线的时候，每一个发布的区块可以产生50BTC(BTC就是比特币的符号)。协议中规定，21万个区块以后，初块奖励就要减半，就变成了25BTC。再过21万个区块，又要减半。</p><p id="63e07bbc-fbed-4bf8-bc26-193e9e0074d5" class="">因此当一个区块胜出后，另一个作废的区块得到的比特币是没有作用的，其他诚实的区块是不会承认的。</p><p id="eaf0aace-9abb-4992-a1e2-c6cd3a9f7202" class="">比特币系统中要取得什么共识?去中心化的账本要取得共识。谁又能决定账本的内容呢?只有获得记账权的节点才能写东西。怎么获得记账权呢?就是解pow(挖矿)。按照算力（hash rate）记票，算力可以用每秒能试多少nonce数值表示。那怎样防范女巫攻击呢?按算力记票，即使创建再多的账户，也无法使算力增强。</p><p id="f6e7c672-38ba-4653-b787-46d128fc5581" class="">比特币争夺记账权的过程叫做挖矿(mining)，比特币被称为数字黄金(digital gold)，争夺记账权的节点被称为矿工(miner)。</p><p id="55aea785-fb04-4b5e-9bcd-dbe9cf4653d6" class="">
+</p></div></article></body></html>

@@ -1,0 +1,670 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第十六节:ETH-数据结构</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="7a20dd3f-b237-4441-aed9-53d01a02f976" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/woodcuts_1.jpg" style="object-position:center 90%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍉</span></div><h1 class="page-title">第十六节:ETH-数据结构</h1></header><div class="page-body"><nav id="b77adfe3-2ddd-4a89-a430-75fc7e0d44ab" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#89a27504-240c-4ac0-b1a4-1c493e3c6466">16.1 需求</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f25b37bf-25ad-4007-9083-ba67c743f4fe">16.1.1 包含的内容</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#656dece5-118e-4645-973c-e7e4406bf921">16.1.2 方案一-用哈希表实现</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#de1e0361-5dfb-4721-a682-adfb337c329b">16.1.3 方案二-直接用一个Merkle Tree把所有的账户都放进去</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#dfb1e857-6e67-4174-9ab0-aa8319ac3994">16.1.4 方案三-用Sorted Merkle Tree</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ca34d04c-b0d0-40dd-b1da-a8a284f8cbff">16.2 以太坊的数据结构</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#b2486e13-bad9-4191-8064-34dc2f49e9dd">16.2.1 前缀树 Trie</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#8f55288e-3fb3-4efe-9440-4024a73575e2">16.2.2 路径压缩前缀树 <strong>Patricia Tree/Patricia Trie</strong></a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ac3ca03c-4eef-41d2-a9f7-bf9f42649034">16.2.3 MPT Merkle Patricia Tree</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#dcc9a58b-646f-49f5-bf80-f3aa8400a3e1">16.2.4 Modified MPT</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#b1526a69-e0e1-4c38-bd5b-821e1e93f753">16.3 以太坊的数据结构实现</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#abd9e992-21f0-4282-9d48-19b408b132d7">16.3.1 块头</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#c1f4aaf2-3a37-4d54-9a20-544a155dd26b">16.3.2 区块</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#e482e794-00f8-4706-a9e3-b8e1096d3553">16.3.3 区块链上的真正内容</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#28fec641-61f4-4ff7-9523-fbe915155d87">16.4 状态树中的value的存储：RLP</a></div></nav><hr id="3493fefa-84b1-4a79-98e3-a4959ed2a137"/><h2 id="89a27504-240c-4ac0-b1a4-1c493e3c6466" class="">16.1 需求</h2><p id="c2536e55-4ccb-42e4-a90d-8e1ee1feea80" class="">以太坊采用基于账户的模式，系统中显式地维护每个账户上有多少余额，来看一下用什么样的数据结构来实现account-based ledger</p><p id="2b1cd4a2-acc7-47eb-8fe3-234fe6df8fc9" class="">要完成的功能是<strong>从账户地址到账户状态的映射：addr-&gt;state</strong></p><h3 id="f25b37bf-25ad-4007-9083-ba67c743f4fe" class="">16.1.1 包含的内容</h3><p id="fc0741fd-d9bc-4740-9c5e-08696f1b0461" class="">addr：账户地址，以太坊中用的账户地址是160位，也就是20个字节，一般表示成40个十六进制的数。</p><p id="ca577b10-0db0-46df-a632-2f7957aa97c8" class=""><strong>地址系数是去中心化系统防止碰撞的唯一方法</strong></p><p id="92416969-d356-421a-94d9-42adf3257528" class="">state：外部账户和合约账户的状态，包括余额、交易次数，合约账户还包括代码、存储</p><p id="d3d6b758-6a7e-4b1d-ad32-dde11197ec79" class="">那么要设计什么样的数据结构来实现这个映射呢？</p><h3 id="656dece5-118e-4645-973c-e7e4406bf921" class="">16.1.2 方案一-用哈希表实现</h3><p id="cdb432bc-d43b-4993-b815-9d8bb32bb305" class="">从直观上看，像一个很典型的key-value pair，给出一个账户地址，要找到相应的账户状态，所以一个直观的想法是用哈希表实现</p><p id="c93f1966-c1a3-4dce-bf38-d8fb52a1e5fc" class="">系统中的全节点维护一个哈希表，每次有一个新的账户，插入到哈希表里面。查询账户的余额，就直接在哈希表中查询。如果不考虑哈希碰撞的话，基本上查询的效率是常数时间内完成的，更新也是很容易在哈希表中更新的</p><p id="3282909e-150d-4ed9-a6eb-92b4930752ea" class=""><strong>问题：如果用这个哈希表要提供Merkle proof怎么提供？</strong></p><p id="aaa5ea7b-e822-4a9c-83c9-970aca34fa3b" class="">比如说你要跟一个人签合同，希望他能证明一下他有多少钱，怎么提供证明呢？</p><p id="efaeeca6-cb04-4dec-8255-d37b6255ddec" class="">一种方法是把哈希表中的元素组织成一个Merkle Tree，然后算出一个根哈希值，这个根哈希值存在block header里，只要根哈希值是正确的，就能保证底下的树不会被篡改</p><p id="bfb6219f-6dc5-4a4b-9e4e-2d23ab7de1b9" class="">如果有新区块发布怎么办？新区块中包含新的交易，执行这个交易必然会使哈希表的内容发生变化，发布下一个区块的时候，再重新把哈希表中的内容（key：账户地址，value：账户状态）组织成一个Merkle Tree吗？</p><p id="625335f3-d4cc-4c78-b4a0-f140fd74c3bb" class="">这个代价太大了。实际上，真正发生变化的账户状态只是一小部分，因为只有那个区块里的交易所关联的账户才会发生变化，大多数账户的状态是不变的。所以每次都重新构造一次Merkle Tree，这个代价是很大的</p><p id="33727845-6bed-464b-b947-7b1f26871818" class=""><strong>比特币系统当中难道不是每出现一个区块也要重新构造一个Merkle Tree吗？那个为什么没有问题？</strong></p><p id="e5b74685-ff1d-499b-9d0c-88ad71407da1" class="">比特币是把区块里包含的交易组织成一个Merkle Tree，那区块中的交易每次发布一个新的区块又有一系列新的交易，所以比特币中的Merkle Tree是immutable（不变的）的，每次发布一个新的区块对应一个Merkle Tree，然后这棵Merkle Tree构建完之后是不会再改的，下次再发布一个新的区块再构建一个新的Merkle Tree</p><p id="833c18c5-cdf5-4806-ae43-4b9bdedc32be" class="">那区块里有多少个交易呢？最多差不多4000个（按照1M字节，每个交易大概是250M字节左右），这个其实是一个上限，很多区块的交易数目根本到不了4000个，有好多区块就只有几百个，甚至有可能还有更少的。所以每次发布一个区块，比特币里构建一个Merkle Tree，是要把这几百个到几千个交易构成一个Merkle Tree</p><p id="1b6c8aa6-986a-41d4-a40e-4d108096ca63" class=""><strong>这里如果采用这种方法会是什么情况？</strong></p><p id="7a00b0fb-ed12-4712-a8f5-6dd47965bad3" class="">是要把所有的以太坊账户一起构成一个Merkle Tree，这个就比刚才讲的几百、几千个交易要高出好几个数量级，相当于每次发布一个区块要把所有的账户遍历一遍构建出一个Merkle Tree，下次再有一个区块，再把所有的账户遍历一遍，再构建出一个Merkle Tree</p><p id="34e21879-2bdd-4fe4-b644-1d14a124b9c2" class="">除了提供Merkle proof证明账户有多少钱之外，这个Merkle Tree还有另外一个很重要的作用，就是<strong>维护各个全节点之间状态的一致性</strong>。如果没有根哈希值发布出来，每个节点就是在本地维护一个数据结构，那怎么知道你的数据结构的状态跟别人的数据结构的状态是不是一致呢，各个全节点要保持状态的一致才行。这也是为什么比特币中把根哈希值写在块头里的原因，就是对于当前区块中包含哪些交易，所有的全节点要有一个共识</p><p id="c875afc8-f08f-4428-bd0f-acb8da2e94e5" class=""><strong>结论：不可行，因为每次构建Merkle Tree的代价太大</strong></p><p id="b64858ae-07de-4425-9650-34174fbc088d" class="">如果每个全节点在本地维护一个哈希表，然后需要构建Merkle Tree的时候构建出Merkle Tree来，然后根哈希值放到区块头里，这个方法是不行的。哈希表本身的效率是挺好的，插入、更改效率都很好，但是每次构建Merkle Tree的代价太大了</p><h3 id="de1e0361-5dfb-4721-a682-adfb337c329b" class="">16.1.3 方案二-直接用一个Merkle Tree把所有的账户都放进去</h3><p id="4d9ef1b8-43e6-4dd5-b24e-46fd31f2e87c" class="">不要哈希表了，直接用一个Merkle Tree把所有的账户都放进去，要改的时候直接在Merkle Tree里改。因为每个区块更新的只是一小部分账户，所以改的时候只是Merkle Tree里的一小部分</p><p id="d25634c9-c225-4adb-9251-538a4362fdc4" class=""><strong>问题1：Merkle Tree没有提供一个高效的查找、更新的方法</strong></p><p id="230ec2cf-70b1-4397-98ca-09f4a196e1bf" class="">比特币中的Merkle Tree最底下一层是transaction，然后哈希值放到上面节点里，两两结合，然后再取一个哈希往上整。Merkle Tree没有提供一个快速查找，更新的方法</p><p id="66b39223-dbf7-4ecb-8875-00150c3efecd" class=""><strong>问题2：直接把账户放到Merkle Tree里，这个Merkle Tree要不要排序？（Sorted Merkle Tree）</strong></p><p id="e60dccd2-f554-4b1f-8524-c301f8f362b6" class="">如果不排序会怎么样？</p><p id="88327960-a244-4541-b0c3-b0f01d54c778" class="">1）查找速度会慢</p><p id="1d09c207-2937-4a30-931a-ebac2591030c" class="">2）这些账户组成了这棵Merkle Tree，叶节点是这些账户的信息，如果不规定这些账户在叶节点出现的顺序，那么这样构建出来的Merkle Tree不是唯一的</p><p id="77f7b82f-f76c-4d28-9209-28196ec44640" class="">系统中有很多全节点，每个全节点按照自己的某个顺序，比如说他听到某个交易的顺序构建一个Merkle Tree，那么叶结点的顺序是乱的，每个节点都是自己决定的，最后构建出的Merkle Tree是不一样的，算出的根哈希值也是不一样的</p><p id="7bfdd9fd-7de0-4442-8d0d-94ccd99b4071" class=""><strong>比特币中的Merkle Tree也是不排序的，那为什么比特币就没有问题呢？</strong></p><p id="b84fcfdf-ec73-459c-8010-c090ee21423f" class="">因为比特币中的每个全节点收到的交易的顺序也是不一样的，理论上说构建的Merkle Tree的根哈希值也是不一样的</p><p id="23b2321f-2fe8-47a0-97d9-ea153e154ad9" class="">比特币中，每个节点在本地组装一个候选区块，这个节点自己决定哪些交易、以什么顺序打包进这个区块里，然后通过挖矿去竞争记账权。如果他没有抢到记账权，他的任何决定其他人没必要知道；只有他有记账权，且发布区块后最终成为被大家接受的区块，那么，这个顺序就是发布这个区块的节点确定的</p><p id="7cee6bbb-c3dc-4f6a-9d13-4fb42da593fc" class="">也就是说，<strong>比特币中虽然也没用排序的Merkle Tree，但是顺序是唯一的，是由发布区块的那个节点确定的</strong></p><p id="24aabd53-f44e-45a6-ba76-32dd675c9df4" class=""><strong>那为什么以太坊不能这样做？</strong></p><p id="350fbe07-c5ff-4c03-96cf-bf415950ce5f" class="">如果以太坊也这么做的话，需要把<strong>账户的状态</strong>发布到区块里。也可以说是每个全节点自己决定怎么把账户组织成一个Merkle Tree，算出跟哈希值、挖出矿，但要怎么让别人知道这个顺序，你得把这个Merkle Tree发布到区块里。但发布的是所有账户的状态，不是交易，这两者差好几个数量级，比特币发布一个区块只需要几百、几千个交易</p><p id="f937fdde-2fdc-4e7d-8fea-94ba6ac06bde" class=""><strong>结论：不可行，不排序的Merkle Tree是不行的</strong></p><p id="f9441e98-3a9c-4c7e-93cb-1ab82ae829d3" class="">交易是必须要发布的，不发布别人就没法知道，但<strong>账户状态可以维护在本地</strong>，而且<strong>大部分账户状态是不变</strong>的。一个区块里的交易只能改很少的账户，大多数账户是不变的，而且重复发布，每隔十几秒发布一个新的区块，把所有状态都打包发布一遍，下次再过十几秒再发布一遍，这个是不可行</p><h3 id="dfb1e857-6e67-4174-9ab0-aa8319ac3994" class="">16.1.4 方案三-用Sorted Merkle Tree</h3><p id="c5598cbd-3486-4d34-a42a-6caeeff494d1" class=""><strong>问题：新增一个账户怎么办？</strong></p><p id="de1eef06-d1f2-4594-809d-47163746f58d" class="">产生一个账户的地址是随机的，他的叶节点的位置很可能是插在中间的，那后面这些树的结构都得变</p><p id="0ae9919d-d1be-4b4e-9bc3-17c412b07dad" class=""><strong>新产生一个账户，对外发生了交互，我需要把他加入到我的数据结构里，这是没错的，但问题是，这个加入的代价有多大？</strong></p><p id="816adfe9-0d14-4399-8d28-a02917d086c8" class="">可能大半棵Merkle Tree需要重构，这个代价太大了</p><p id="80014718-457e-4a9a-a55a-eb5138fe3e30" class=""><strong>结论：不可行，用Sorted Merkle Tree，插入、删除代价都太大</strong></p><p id="acf2d122-f7e1-4515-b052-ea255b1d1e62" class="">而且，区块链是不可篡改的，是说加东西容易，删东西难。以太坊中没有显式地删除账户的操作，有的账户上就一点钱，就一两个Wei，也不能把他删掉</p><h2 id="ca34d04c-b0d0-40dd-b1da-a8a284f8cbff" class="">16.2 以太坊的数据结构</h2><h3 id="b2486e13-bad9-4191-8064-34dc2f49e9dd" class="">16.2.1 前缀树 Trie</h3><p id="5043ec48-b815-435a-923f-e29c1d981e8d" class="">以太坊中是用一个叫<strong>MPT（Merkle Patricia Tree）</strong>的结构，讲这个之前先讲一个简单的数据结构</p><p id="d765d5f8-f27c-4ebb-80f6-f2b113e8f168" class="">Trie也是一种key-value对，一般来说key用字符串用的比较多，比如说一些单词排成一个Trie的数据结构</p><p id="efd20ccf-043f-4b45-b102-e1cf9a9eca51" class="">举例：general、genesis（创世纪块，区块链的第一个区块）、go、god、good</p><figure id="7ad0581f-93de-49b1-86a6-a33812bb5a31" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image1.png"><img style="width:356px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image1.png"/></a></figure><p id="bffb4230-e0a7-43f5-99ba-be17d6614844" class="">上图就是一个Trie的结构，这几个单词都是以G开头的，然后第二个字母就开始分裂了，左边是E，右边是O。左边这前两个单词都是N和E，然后下面再分开，R和S，然后是后三个字母。右边这个分支，O这个分支，Go就已经结束了，从这个可以看到单词可能在Trie的中间节点结束，然后左边是D，右边是O，左边变成了God，右边下来是Good</p><p id="f3bf8e20-14c9-435d-9d6c-b5b28faefd74" class="">Trie树可以<strong>利用字符串的公共前缀来节约存储空间</strong>。如果系统中存在大量字符串且这些字符串基本没有公共前缀，则相应的Trie树将非常消耗内存，这也是Trie树的一个缺点</p><p id="b7e08256-97b5-41a8-bdf4-9ca7579a1d4b" class=""><strong>特点1：Trie的每个节点的分叉数目取决于key值里每个元素的取值范围</strong></p><p id="9c06d8f1-f8bf-4585-82d3-b19d8396eb5b" class="">这个例子当中，每个都是英文单词，而且是小写的，所以每个节点的分叉数目最多是26个，加上一个结束标志位（表示这个单词到这个地方就结束了）</p><p id="0936dd1c-5cac-4223-aa4d-fb7bca64e20f" class="">在以太坊中地址是表示成40个十六进制的数，因此<strong>分叉数目</strong>（branching factor）是17（十六进制的0~f，再加上结束标志位）</p><p id="01b1c6e9-63bc-4a41-b45a-f4d5ded641df" class=""><strong>特点2：Trie的查找效率取决于key的长度。键值越长，查找需要访问内存的次数就越多</strong></p><p id="1fa09ee8-658c-49d8-a094-9c30d4c7a1ae" class="">在这个例子当中，不同的单词键值长度是不同的。</p><p id="00483127-30a8-4bcd-bad4-87d73a749aa2" class="">在以太坊中，所有键值都是40，因为地址都是40位十六进制的数。</p><p id="d3675909-13de-4a4c-b401-1ae43ca7f0b7" class="">比特币和以太坊的地址是不通用的，两个地址的格式长度都是不一样的。但有一点是类似的，以太坊中的地址也是公钥经过转换得来的。其实就是公钥取哈希，然后前面的不要，只要后面这部分，就得到一个160bit的地址。</p><p id="a00d77f3-6c52-47dd-a4e0-941c23c33df5" class=""><strong>特点3：只要两个地址不一样，最后肯定映射到树中的不同分支，所以Trie是不会出现碰撞的</strong></p><p id="fd9ce0ad-5e3b-4c89-9a26-cd8a9ccf635c" class=""><strong>特点4：不同的节点，不论按照什么顺序插入这些账户，最后构造出来的树是一样的。</strong></p><p id="5f85a753-0473-4cb1-9de5-a55c373e4e61" class="">前面讲Merkle Tree，如果不排序的话，一个问题是账户插入到Merkle Tree 的顺序不一样，得到的树的结构也不一样</p><p id="6aeb66ed-6459-4988-a01d-dd1df8d0dd73" class="">那Trie呢？比如上图中的这五个单词，换一个顺序插到这个树里面，得到的是一个不同的树吗？其实是一样的，只要给定的输入不变，无论输入怎么打乱重排，最后插入到Trie当中，得到的树是一样的</p><p id="0e30ef22-980b-49da-9ea5-7fad723ab654" class=""><strong>特点5：更新操作的局部性很好</strong></p><p id="d5432c38-0886-4334-90b9-8d21935e9f76" class="">每次发布一个区块，系统中绝大多数账户的状态是不变的，只有个别受到影响的账户才会变，所以更新操作的局部性很重要</p><p id="d4f5dc33-ebc0-43bb-8076-a653c1e2641c" class="">Trie的局部性呢？比如在上图中，我要更新genesis这个key对应的value（这个图当中只画出了key，没有画出value），只要访问genesis的那个分支，其他分支不用访问的，也不用遍历整棵树</p><p id="7376d6ce-b580-47bb-ae11-079603cbb9d9" class=""><strong>缺点：存储浪费</strong></p><p id="ffd92898-401a-443e-94d8-e39d95264d01" class="">比如在上图中左边分支都只有一个子节点，对于这种一脉单传的情况，如果能把节点进行合并，那么可以减小存储的开销，同时也提高了查找的效率，不用一次一个一个的往下找了</p><p id="6ff36f7c-0e4f-49b8-b9d4-fdf8aeab64e1" class="">那么就引入了Patricia Tree，也有人写成Patricia Trie，是经过路径压缩的前缀树，有时候也叫压缩前缀树</p><h3 id="8f55288e-3fb3-4efe-9440-4024a73575e2" class="">16.2.2 路径压缩前缀树 <strong>Patricia Tree/Patricia Trie</strong></h3><figure id="050c5cdd-b083-4fc6-bdd5-3bbfa62b2757" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image2.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image2.png"/></a></figure><p id="227bfaff-8d7b-4f9d-9680-9a3cfbced843" class="">Trie中的例子进行路径压缩就变成上图的样子。可以看到，G下面还是E和O进行分叉，E下面之后跟的都是NE，再往下就是E和S分叉，然后后面都和在一起了，右边的分支也是一样的</p><p id="085979b3-6ae5-414a-97ff-40a58885c21d" class=""><strong>这样压缩之后有什么好处？直观上看，这个高度明显缩短了，访问内存的次数会大大减少，效率提高了</strong></p><p id="eba5c096-e1aa-4e4e-956a-c115b41c46ce" class=""><strong>注意：对于Patricia Tree来说，新插入一个单词时，原来压缩的路径可能需要扩展开</strong></p><p id="13125586-f216-4c50-97b1-a4b98beb8c13" class="">比如这个例子中，加入geometry，左边的分支就不能那样压缩了</p><p id="5643c6d8-ac38-43b3-a2fb-4e968d01e3c3" class=""><strong>路径压缩在什么情况下效果比较好？键值分布比较稀疏的时候，路径压缩效果比较好</strong></p><p id="bb425fd3-1319-4466-b98b-4cdd1592567c" class="">比如说，这个例子当中是用英文单词，假设每个单词都很长，但是一共没有几个单词，举例：misunderstanding、decentralization（去中心化的）、disintermediation（去中间商，非中介化，intermediaries：中间商）</p><p id="4d4f82f7-4630-4db0-bf6d-1a1f008a0ae1" class="">这三个单词插入到一个普通的Trie里面就成了下图的样子。可以看到这样的结构效率是比较低的，基本上是一条线了</p><figure id="a387d6e5-59f6-4da7-9185-4a078af6c384" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image3.png"><img style="width:322px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image3.png"/></a></figure><p id="0d8a9259-6b80-44b4-9f4e-5940f45f3962" class="">如果用Patricia Tree的话，如下图</p><figure id="735cfa2a-456b-44ad-bfb7-b22fc9094dd6" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image4.png"><img style="width:386px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image4.png"/></a></figure><p id="763f3abd-a7f4-414b-9fbb-b4bbbc9bf4a1" class="">这个树的高度明显缩短了。所以键值分布比较稀疏的时候，路径压缩效果比较好</p><p id="e440e016-50cc-4dcb-b9d9-cdcdbaa61a16" class="">以太坊中键值是不是稀疏的呢？</p><p id="2de77877-fd8e-47f8-b6a4-bf7325c35249" class="">以太坊中键值是地址，地址是160位的，地址空间有2160 ，这是一个非常非常大的数。如果设计一个计算机程序的算法，需要进行运算的次数是2160，那这个在所有人的有生之年都不可能算出来，全世界的以太坊的账户数目加在一起也远远没有这么大，跟这个数比，是微乎其微的</p><p id="94e17e3f-4cb0-43c1-960a-de6b703de842" class="">为什么要弄这么稀疏，不把地址长度缩短一点，这样访问效率也快，也没必要那么稀疏了？</p><p id="0fc9f45e-f6bd-437f-a443-8ae7022ee64f" class="">以太坊中普通账户跟比特币的创建方法是一样的，没有一个中央的节点，就每个用户独立创建账户。在本地产生一个公私钥对，就是一个账户</p><p id="d3c27f0e-60b3-45d6-adc4-09ff41750ddb" class="">那怎么防止两个人的账户碰撞，产生的一样呢？</p><p id="19915534-b4ad-436f-9c92-361b07f99234" class="">这种可能性是存在的，但是这个概率比地球爆炸还要小。怎么达到这么小的概率，就是<strong>地址要足够长，分布足够稀疏，才不会产生碰撞</strong>。这个可能看上去有点浪费，但是这是<strong>去中心化的系统防止账户冲突的唯一办法</strong>。所以以太坊地址分布非常稀疏的，所以比较适合使用Patricia Tree</p><h3 id="ac3ca03c-4eef-41d2-a9f7-bf9f42649034" class="">16.2.3 MPT Merkle Patricia Tree</h3><p id="a7480688-9195-4117-8640-0e9536d5a702" class=""><strong>Merkle Tree和Binary Tree的区别：</strong></p><p id="8bcc88aa-efbc-44f5-94ab-eb0a84257bbb" class="">就是区块链与普通链表的区别，把普通指针换成了哈希指针</p><p id="a78b2c3e-fa39-4b84-bef6-7b63d63130e7" class=""><strong>Merkle Patricia Tree和Patricia Tree的区别：</strong></p><p id="415a3718-c083-4a6d-a6bf-32957a80ed60" class=""><strong>所有的账户组织成一个Patricia Tree，用路径压缩提高效率，然后把普通指针换成哈希指针，所以就可以计算出一个根哈希值。这个跟哈希值也是写在block header里面</strong></p><p id="028e1647-dec2-4ba0-abb2-30eb10f26c16" class=""><strong>比特币的block header里只有一个根哈希值：交易树</strong>，就是区块里包含的交易组成的Merkle Tree组成的根哈希值。</p><p id="67b11ec6-76e4-42a7-b752-a305c5349ddb" class=""><strong>以太坊的block header里有三个根哈希值：交易树、状态树、收据树</strong></p><p id="2b801b36-37d9-43db-876a-3b4ee86ed6d6" class=""><strong>账户状态最后组织成了一个Merkle Patricia Tree，状态树的根哈希值的作用：</strong></p><p id="7c14fd68-ed64-4a70-b822-ca08792c0ca5" class=""><strong>作用1：防止篡改</strong></p><p id="373a5b5a-4490-41f8-892d-59356669c48f" class="">只要根哈希值不变，整个树的任何部分都没有办法被篡改，也就是说每个账户的状态都能保证是没有被篡改过的</p><p id="89f5e846-1e01-44cb-8ad8-77f58cf1f2bb" class=""><strong>作用2：Merkle proof</strong></p><p id="fdee5833-3fe5-434c-b268-105eaadaa3c0" class="">1）能证明账户的余额是多少</p><p id="f7fcbfa1-ce78-4e4a-8369-94920e5385e4" class="">你这个账户所在的分支自己向上作为Merkle proof发给轻节点，轻节点可以验证你的账户上有多少钱</p><p id="c6e5be7d-9801-4b23-9571-f3e7e6b33cae" class="">2）能证明某个账户是不存在的</p><p id="84c16f75-c1be-485d-ba44-df03500d5cb6" class="">Sorted Merkle Tree的一个作用是能证明non-membership，这里的证明方法跟Sorted Merkle Tree类似</p><p id="2302a99a-bd7c-45ab-9c3b-36996b8d596c" class="">比如，给一个地址转账之前，验证一下全节点里有没有这个账户信息。说的更直白一点，证明MPT中某个键值是不存在的</p><p id="bae541df-27fb-4e4e-8a6e-318b240d8f20" class="">如果存在的话，是在什么样的分支，把这个分支作为Merkle proof发过去，可以证明他是不存在的</p><h3 id="dcc9a58b-646f-49f5-bf80-f3aa8400a3e1" class="">16.2.4 Modified MPT</h3><p id="348c1ca9-b7c4-4e66-ad98-5f481a90098e" class="">以太坊中用到的不是原生的MPT，是Modified MPT，就是对MPT的结构做一些修改，这些修改不是很本质的修改</p><figure id="1a262f64-e534-4644-8156-2b4e926e7fe5" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image5.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image5.png"/></a></figure><p id="df0ce9c5-516d-4e3b-bcb2-1e5e9d384169" class="">上图是Modified MPT的案例，右上角有四个账户，为了简单起见，账户地址都比较短，假设只有7位的地址，而不是40位，账户状态也只显示出了余额，其他账户状态没有显示出来。第一个账户有45个以太币，第二个账户只有1WEI（这个是以太坊中最小的计量单位，1WEI基本上可以忽略不计）</p><p id="9be86774-15c5-47fe-94ed-1eadf4a69de3" class="">这个案例当中，节点分为三种：</p><p id="12d8d0ca-3846-4167-8488-ae5c0aafe7df" class=""><strong>扩展节点 Extension Node：</strong></p><p id="5f2d94aa-b1bf-459b-b440-82c9ccdecce4" class="">如果这个树中出现了路径压缩就会有一个Extension Node，这四个地址前两位都是一样的a7，所以Root（根节点）就是一个Extension Node，<strong>shared nibble</strong>（nibble：16进制数，一个nibble就是一个16进制数），这里共享的nibble是a7</p><p id="7259e0d7-83f4-41b1-98ed-50673015f0da" class=""><strong>分支节点 Branch Node：</strong></p><p id="472d60ae-4501-4c51-b21b-ae62e25b9955" class="">案例中第三位就分开了，有1、7、f，所以就跟了一个Branch Node</p><p id="d2afca5d-fbc0-48f7-bc81-ec6ba6352ec3" class=""><strong>叶节点 Leaf Node：</strong></p><p id="769a977f-d931-43f3-b275-ae4079149130" class="">先说1，这个1之后就是1355，只有这一个地址，就跟了Leaf Node。这个7有两个地址，连着路径压缩d3，然后再往下3和9分开了，跟着一个Branch Node，下面两个Leaf Node，都是7。最后一个f，就跟着一个Leaf Node：9365</p><p id="ca36cff5-1ba1-4731-8a60-1f7045ecf88b" class="">另外，这个树的根节点取哈希之后得到的一个根哈希值，是要写在块头里的（左上角）</p><p id="76cdd9be-3a89-40cd-b966-180c954ee8ff" class="">用的也是哈希指针。比如7这个位置，这里存的是下面这个节点（extension node）的哈希值。如果是普通指针的话，7这个位置存的是下面这个节点的地址</p><p id="6002d2f8-f97b-4a77-9eef-15d6de420be6" class=""><strong>每次发布一个新的区块的时候，状态树中有一些节点的值会发生变化，这些改变不是在原地改，而是新建一些分支，原来的状态其实是保留下来的</strong></p><figure id="7758e8e7-0934-402e-b79d-a9d0273e4fa0" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image6.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image6.png"/></a></figure><p id="02ea6383-add6-4966-a978-1f563788a305" class="">上面这个例子中，有两个相邻的区块：</p><p id="c518048b-e31f-43a9-b490-787a85030738" class="">Block N Header：State Root就是状态树的根哈希值，下面显示的是这棵状态树</p><p id="7aa8829a-c689-43d4-a65c-d0085d6dfd4e" class="">Block N+1 Header：这个是新的区块的状态树</p><p id="b3da89e0-03a0-49b7-9e02-405b085acbb0" class="">可以看到，<strong>虽然每一个区块都有一个状态树，但是这两棵树的大部分节点是共享的。右边这棵树主要都是指向左边这棵树的节点，只有那些发生改变的节点是需要新建一个分支</strong></p><p id="a5d8b83b-7173-473c-9619-2995e798d605" class="">这个例子中，这个账户是一个合约账户，因为有Code，还有Storage合约账户的存储也是由MPT保存下来的。这个存储其实也是一个Key Value Store，维护的是从这个变量到这个变量取值的一个映射，在以太坊当中，也是用的一棵MPT。<strong>所以以太坊中的这个结构是一个大的MPT，包含很多小的MPT，每一个合约账户的存储都是一棵小的MPT</strong></p><p id="382a979b-3f68-4b7e-92e5-0aab038f5712" class="">上图中这个账户的新的区块里：Nonce和Balance发生了变化，Code是不变的，所以Codehash指向原来树中那个节点，Storage是变了的（存储下面这个叫存储树），在存储树中，大部分节点也是没有改变。这个例子当中，只有一个节点变了，这个整数变量从29变成了45，所以新建了一个分支</p><p id="95eae7c1-dae9-47b9-94af-ceb6feaa446f" class="">所以，系统中每个全节点需要维护的不是一棵MPT，而是每次出现一个区块，都要新建一个MPT，只不过这些状态树中，大部分的节点是共享的，只有少部分发生变化的节点要新建分支</p><p id="0a67a7d2-e7d3-45a0-a09c-40d6ce3038c5" class=""><strong>为什么要保留历史状态，为什么不在原地直接改了？</strong></p><p id="e0c34a3d-8a97-4d18-b4f9-debee74fc4b0" class="">系统当中有时候会出现分叉，临时性的分叉是很普遍的。以太坊把出块时间降低到十几秒之后，这种临时性的分叉是常态，因为区块在网上传播时间可能也需要十几秒</p><figure id="f17f44b5-73e4-405b-83fe-344a7ec8a3a0" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image7.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image7.png"/></a></figure><p id="048dcfa7-89d5-4fa1-8a33-2b10e4144e42" class="">如上图，有个分叉，这两个节点同时获得记账权。这两个分叉最终上面那个胜出了，下面这个分叉的节点这个时候就要回滚（roll back），就是这个节点当前的状态，就接受了下面这个节点的状态要取消掉，退回到上一个节点的状态，然后沿着上面那条链往下推进</p><p id="350c78d9-baa2-4a1c-b717-1de55d532dcc" class="">有时候可能要把当前状态退回到没有处理到这个区块中交易的前一个状态</p><p id="e4d2fd79-bb43-41f3-a602-58503091df07" class=""><strong>那怎么实现回滚呢？</strong></p><p id="e42cb8c1-78b4-492b-aa38-aea8240c5826" class="">就是要维护这些历史纪录</p><p id="3d23d939-a0fd-442d-880f-069c3658dfdf" class="">这个跟比特币还不太一样，如果是比特币的话，交易类型比较简单，有的时候可以通过这种反向操作推算出前一个状态。如果是一个简单的转账交易，A转给B 10个比特币，这个对账户余额有什么影响呢？A的账户上少了10个比特币，B的状态多了10个比特币。假如这个状态要回滚，退回到前一个状态，那就把B这个账户减少10个比特币，把A这个账户加回去10个比特币就行了。简单的转账交易回滚其实是比较容易的</p><p id="ffe6f5ff-5ebb-40b0-9cb1-9bd993aecf1c" class="">以太坊中为什么不行？因为以太坊中有智能合约。智能合约是图灵完备的，编程功能是很强的。从理论上说，可以实现很复杂的功能，跟比特币简单的脚本还不太一样。<strong>以太坊中如果不保存前面的状态，智能合约执行完之后，想再推算出前面是什么状态，这是不可能的，所以要想支持回滚，必须保存历史状态</strong></p><h2 id="b1526a69-e0e1-4c38-bd5b-821e1e93f753" class="">16.3 以太坊的数据结构实现</h2><h3 id="abd9e992-21f0-4282-9d48-19b408b132d7" class="">16.3.1 块头</h3><figure id="e57fe95b-f247-429e-b11b-79671bc71441" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image8.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image8.png"/></a></figure><table id="9fe13e45-6c36-4479-a713-a7d47397327b" class="simple-table"><thead class="simple-table-header"><tr id="318fde24-ab22-4306-bc12-47024c181a41"><th id="Ud=H" class="simple-table-header-color simple-table-header" style="width:243px"><strong>block header中的属性</strong></th><th id="R?yJ" class="simple-table-header-color simple-table-header" style="width:474px"><strong>含义</strong></th></tr></thead><tbody><tr id="c879353b-691c-4aa0-a8d5-4b90e087ca37"><td id="Ud=H" class="" style="width:243px">ParentHash</td><td id="R?yJ" class="" style="width:474px">父区块块头的哈希值，是区块链中前一个区块块头的哈希值</td></tr><tr id="405c9cd3-b5be-4bdb-9cea-af1795035c69"><td id="Ud=H" class="" style="width:243px">UncleHash</td><td id="R?yJ" class="" style="width:474px">叔父区块块头的哈希值。每个区块还有叔父区块，以太坊中Uncle和Parent不一定是一个辈分的，Uncle比Parent可能大好多辈分</td></tr><tr id="537d8666-5e54-4177-87ac-987220b0d6cc"><td id="Ud=H" class="" style="width:243px">Coinbase</td><td id="R?yJ" class="" style="width:474px">挖出这个区块的矿工的地址</td></tr><tr id="6913f170-d309-41a3-b486-aafaff110b43"><td id="Ud=H" class="" style="width:243px">Root</td><td id="R?yJ" class="" style="width:474px">状态树的根哈希值</td></tr><tr id="ecb3fca4-8cab-4970-89eb-6a9159afb0cc"><td id="Ud=H" class="" style="width:243px">TxHash</td><td id="R?yJ" class="" style="width:474px">交易树的根哈希值（类似比特币系统中的那个根哈希值）</td></tr><tr id="88f5fe7a-f3ec-4fbc-b76e-d5006ff00755"><td id="Ud=H" class="" style="width:243px">ReceiptHash</td><td id="R?yJ" class="" style="width:474px">收据树的根哈希值</td></tr><tr id="f74bb95b-42e4-4305-87b4-d7a30c37dd07"><td id="Ud=H" class="" style="width:243px">Bloom</td><td id="R?yJ" class="" style="width:474px">布隆过滤器，提供一种高效的查询符合某种条件的交易的执行结果（跟收据树是相关的）</td></tr><tr id="92e46c1c-dcf4-450a-bb52-0663f43912f7"><td id="Ud=H" class="" style="width:243px">Diffculty</td><td id="R?yJ" class="" style="width:474px">挖矿难度，要根据需要调整</td></tr><tr id="2e0c863b-ab64-48aa-a27f-56ab25476ae5"><td id="Ud=H" class="" style="width:243px">GasLimit</td><td id="R?yJ" class="" style="width:474px">单个区块允许的最多Gas总量（智能合约要消耗汽油费，类似于比特币中的交易费）</td></tr><tr id="e1618fe2-6eb6-4ded-b7ab-ccc02027addd"><td id="Ud=H" class="" style="width:243px">GasUsed</td><td id="R?yJ" class="" style="width:474px">该交易消耗的总Gas数量</td></tr><tr id="c82a1005-440b-4815-9881-f1c21302bae1"><td id="Ud=H" class="" style="width:243px">Time</td><td id="R?yJ" class="" style="width:474px">区块的大致的产生时间</td></tr><tr id="e5818560-7949-47b7-b2ad-4ed4269bc342"><td id="Ud=H" class="" style="width:243px">Nonce</td><td id="R?yJ" class="" style="width:474px">是挖矿时猜的那个随机数（类似于比特币的挖矿），以太坊中的挖矿也是要猜很多个随机数，写在块头里的随机数是最后找到的，符合难度要求的</td></tr><tr id="1229fcd7-b4e4-4d13-af71-15968e8f675c"><td id="Ud=H" class="" style="width:243px">MixDigest</td><td id="R?yJ" class="" style="width:474px">混合摘要，从nonce这个随机数经过一些计算，算出一个哈希值</td></tr></tbody></table><h3 id="c1f4aaf2-3a37-4d54-9a20-544a155dd26b" class="">16.3.2 区块</h3><figure id="8acd00b8-2615-46d4-ba19-3e17dd4e005f" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image9.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image9.png"/></a></figure><table id="ef388571-5354-4b07-a58d-de99a90f8c6d" class="simple-table"><thead class="simple-table-header"><tr id="f50ed5aa-9885-40a0-8428-9c3a7beee3a5"><th id="cynn" class="simple-table-header-color simple-table-header" style="width:349px"><strong>block中的属性</strong></th><th id="]h|o" class="simple-table-header-color simple-table-header" style="width:349px"><strong>含义</strong></th></tr></thead><tbody><tr id="00a7129e-cfc2-44fa-be1f-22320e614f8e"><td id="cynn" class="" style="width:349px">header</td><td id="]h|o" class="" style="width:349px">指向block header的指针</td></tr><tr id="05b0f3bc-e742-4e38-b73e-07b9ebf64b6e"><td id="cynn" class="" style="width:349px">uncles</td><td id="]h|o" class="" style="width:349px">指向叔父区块的header的指针，是个数组，因为一个区块可以有多个叔父区块</td></tr><tr id="df24b43e-7d9a-4334-a6ec-eab0084f8cad"><td id="cynn" class="" style="width:349px">transactions</td><td id="]h|o" class="" style="width:349px">这个区块中交易的列表</td></tr></tbody></table><h3 id="e482e794-00f8-4706-a9e3-b8e1096d3553" class="">16.3.3 区块链上的真正内容</h3><figure id="400a2236-02ba-442c-8a66-5e1ec61ccab8" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image10.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AD%E8%8A%82%20ETH-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%207a20dd3fb2374441aed953d01a02f976/image10.png"/></a></figure><p id="560bb305-8693-4339-9455-0f59faac3025" class="">extblock是区块在网上发布的信息，就是block中的前三项会真正发布出去</p><h2 id="28fec641-61f4-4ff7-9523-fbe915155d87" class="">16.4 状态树中的value的存储：RLP</h2><p id="d380e86e-9d6e-46f6-9ddf-f00c25ab9c3c" class="">状态树中保存的是key value pair对。key就是地址，前面主要讲的是键值，这个地址的管理方式。</p><p id="1118d06b-2d18-4172-b9d7-dde86762ea5b" class="">那么这个value呢，这个账户的状态呢，是怎么存储在状态树当中的呢？实际上是要经过一个序列化（RLP）的过程，然后再存储。</p><p id="c111317d-b64f-4465-b0ae-7db291b1374a" class=""><strong>RLP</strong>：Recursive Length Prefix，递归长度前缀，是一种序列化方法。特点是简单，极简主义，越简单越好。</p><p id="f6ef204e-ed96-43c6-99fa-35be7ff5c48a" class=""><strong>Protocal buffer</strong>：简称Protobuf，是个很有名的做序列化的库。</p><p id="14ab3e53-33c3-4af1-bc1c-1022ad55f250" class="">跟这些库相比，RLP的理念就是越简单越好。它只支持一种类型：<strong>nested array bytes</strong>，嵌套数组字节。一个一个字节组成的数组，可以嵌套。以太坊里的所有的其他类型，比如整数或者比较复杂的哈希表，最后都要变成nested array bytes</p><p id="5d649260-6500-46b2-a73d-8d3411269a28" class="">
+</p></div></article></body></html>

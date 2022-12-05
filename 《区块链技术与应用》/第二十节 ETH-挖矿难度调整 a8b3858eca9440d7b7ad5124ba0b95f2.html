@@ -1,0 +1,724 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第二十节:ETH-挖矿难度调整</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="a8b3858e-ca94-40d7-b7ad-5124ba0b95f2" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/webb3.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍉</span></div><h1 class="page-title">第二十节:ETH-挖矿难度调整</h1></header><div class="page-body"><nav id="6e26c5ad-ef84-4b68-807c-f21162141e92" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#9deddc81-ac37-48fc-b530-d75a7e57b419">20.1 以太坊的难度调整原理</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#f7edf8b5-e576-40af-aacf-ea429e307b43">20.2 以太坊发展的四个阶段</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#39b214e7-829a-411a-90f3-dfd54878ec81">20.3 代码实现</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f5e4417d-88b5-4686-8bc3-bf826b5532f3">20.3.1 Byzantium阶段，挖矿难度调整的代码</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f2215cdc-4585-4323-a7c3-b7b2c352f424">20.3.2 计算基础部分的难度调整</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#8ade4b62-8ec8-4980-81c3-2d0d1eab5a13">20.3.3 难度炸弹的计算</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#691f3736-b284-4a36-95e0-923011d4254e">20.4 以太坊实际统计统计</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#088694e1-7375-472e-b5d9-830cb3373a43">20.4.1 以太坊中的难度统计</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#26061708-625f-4cdb-9810-d87763461453">20.4.2 出块时间统计</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#bb6fa035-b267-4ac0-b423-e44239b4b49b">20.4.3 两个区块</a></div></nav><hr id="df55a1a4-826a-4c2c-8d78-d7b0d26d1ed3"/><p id="ff53ef6d-24cc-4a22-8c8d-1295a60e8ed8" class="">
+</p><h2 id="9deddc81-ac37-48fc-b530-d75a7e57b419" class="">20.1 以太坊的难度调整原理</h2><p id="d8ac10cf-fa18-45ee-81db-d90472fc4d70" class="">为了维持出块时间在十分钟左右，比特币是每隔2016个区块会调整一下挖矿难度。以太坊是每个区块都有可能调整挖矿难度，调整的方法也比较复杂。也改过好几个版本，以太坊的黄皮书和实际代码也有一些出入，这里遵循以代码为准的原则，进行学习。</p><p id="4e52e852-6eb5-4ba1-bac5-608a64717fc1" class="">
+</p><figure id="32e1df18-66ff-4646-9fe0-19931cec7dd4" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image4.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image4.png"/></a></figure><p id="bf7de598-5845-4554-8d21-c7c3463d97b6" class="">
+</p><p id="01fddab3-af68-43a7-8695-2acd68b993d6" class="">
+</p><p id="f94ed037-1417-423b-860a-d3c21d619c7e" class="">难度调整公式</p><figure id="b91f65ff-1992-48ac-8e86-eeab1f403f6c" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.2500em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mi>D</mi><mo stretchy="false">(</mo><mi>H</mi><mo stretchy="false">)</mo><mo>≡</mo><mrow><mo fence="true">{</mo><mtable rowspacing="0.3600em" columnalign="left left" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>D</mi><mn>0</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo separator="true">,</mo><mi>i</mi><mi>f</mi><mspace width="1em"/><msub><mi>H</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mo stretchy="false">(</mo><msub><mi>D</mi><mn>0</mn></msub><mo separator="true">,</mo><mi>P</mi><mo stretchy="false">(</mo><mi>H</mi><msub><mo stretchy="false">)</mo><msub><mi>H</mi><mi>d</mi></msub></msub><mo>+</mo><mi>x</mi><mo>×</mo><msub><mi>ε</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo>+</mo><mi>ϵ</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo separator="true">,</mo><mi>o</mi><mi>t</mi><mi>h</mi><mi>e</mi><mi>r</mi><mi>w</mi><mi>i</mi><mi>s</mi><mi>e</mi></mrow></mstyle></mtd></mtr></mtable></mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mi>W</mi><mi>h</mi><mi>e</mi><mi>r</mi><mi>e</mi><mo>:</mo><msub><mi>D</mi><mn>0</mn></msub><mo>≡</mo><mn>131072</mn></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}&amp; D(H)\equiv\begin{cases} D_0&amp;{,if    \quad H_i=0}\\max(D_0,P(H)_{H_d}+x\times\varepsilon_2)+\epsilon&amp;{,otherwise}\end{cases}\\&amp;Where:D_0\equiv131072\end{align*}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:4.8000300000000005em;vertical-align:-2.1500150000000002em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.6500150000000002em;"><span style="top:-4.650015em;"><span class="pstrut" style="height:3.75em;"></span><span class="mord"></span></span><span style="top:-2.259985em;"><span class="pstrut" style="height:3.75em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.1500150000000002em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.6500150000000002em;"><span style="top:-4.650015em;"><span class="pstrut" style="height:3.75em;"></span><span class="mord"><span class="mord"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≡</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathnormal">ma</span><span class="mord mathnormal">x</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3487714285714287em;margin-left:-0.08125em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15122857142857138em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.25586em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal">ϵ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord"><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:1em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">0</span></span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord"><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">o</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.02778em;">er</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal">i</span><span class="mord mathnormal">se</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-2.259985em;"><span class="pstrut" style="height:3.75em;"></span><span class="mord"><span class="mord"></span><span class="mord mathnormal">Wh</span><span class="mord mathnormal">ere</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≡</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">131072</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.1500150000000002em;"><span></span></span></span></span></span></span></span></span></span></span></span></div></figure><p id="a9dd0583-e333-4cae-8403-e79478abd1f3" class="">
+</p><p id="704d5b37-7caa-4b1a-b6ae-0c8b7b9dedf2" class="">
+</p><p id="2c7c3e6e-7e4a-4a92-b910-e0a673efd49d" class="">这是难度调整的公式，这里的H是指当前这个区块，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">H_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>是这个区块的序号，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo stretchy="false">(</mo><mi>H</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">D(H)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>是这个区块当前的难度，那么这个难度调整的公式有两部分，这个max括号里的是第一部分，管它叫基础部分，目的是为了维持出块时间大概在十五秒左右，后面跟的<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">ϵ</span></span></span></span></span><span>﻿</span></span>是第二部分，也称为难度炸弹，主要是为了向权益证明过渡，以太坊想把共识机制从工作量证明逐步转入权益证明。</p><figure id="29b67f7f-9821-49b8-a184-c7379593e538" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image5.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image5.png"/></a></figure><figure id="12bd2b6d-c5c0-4a92-89a4-34092c367708" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image6.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image6.png"/></a></figure><p id="455f9fbc-3fc3-42ce-89be-277c292d01dd" class="">难度炸弹这部分的取值，是从指数形式增长的。以太坊刚刚上线不久的时候，区块号都比较小，难度炸弹这部分算出来的值是很小的，基本上可以忽略不计，所以难度调整主要还是由基础部分（系统中的出块时间）来决定的。随着区块号越来越大，难度炸弹的威力开始显现。当初设计的思想是等难度炸弹的威力开始发挥时，以太坊就可以从工作量证明转入权益证明（挖矿变得越来越难了，大家也就原意转入权益证明）。但实际情况：</p><p id="cea67985-7108-456d-99f4-463b3df2e602" class=""><strong>基于权益证明的共识机制还有很多问题要解决</strong></p><p id="f4291b13-4dd8-477d-982a-dcb878dad7ae" class="">，远没有当初想象那么顺利，所以转入权益证明的时间点一再推迟，难度炸弹的威力已经显现，但是大家还是得继续挖，因为没有别的方法可以达成共识。</p><p id="dc70a1d7-14e7-4854-88c3-57ee0e32fec9" class="">本来担心大家不愿意转，现在变成了想转也没法转，这个情况到2017年四五月的时候就已经很明显了，出块时间已经逐渐开始增长，从15秒最后增加到30s左右，而且如果不采取措施，还会继续增长上去。以太坊最后决定计算难度炸弹的时候，把区块号回退三百万个区块，即把真实的区块号减去三百万，算出一个假的区块号，然后再算难度炸弹，给权益证明的上限争取了一些时间。</p><figure id="f0c195a9-c22a-45df-9b15-7752217dc5ff" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image7.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image7.png"/></a></figure><p id="f0793e5e-c6b1-47e4-a237-2d66985d4886" class="">难度炸弹的作用如图所示，可以看到早期的时候，基本可以忽略不计，难度调整基本上是根据系统中的出块时间进行调整的。大概是370万个区块左右，难度炸弹的威力开始指数上升，到上面这个尖峰（就是以太坊决定回调这个难度炸弹的时候），减了三百万个区块，这个难度炸弹的取值一下就掉下来了，后面看上去好像是个平的直线，其实也是在增长，只不过是因为那个尖峰的位置太高了，所以看不出来。</p><h2 id="f7edf8b5-e576-40af-aacf-ea429e307b43" class="">20.2 以太坊发展的四个阶段</h2><p id="6cbff779-6ce0-4183-a67a-0ca4af1c0f88" class="">以太坊的发展被分成了四个阶段，Frontier,Homestead,Metropolis,Serenity，其中Metropolis又分为两个阶段，Byzantium和Constantinople，我们处于Byzantium阶段，难度炸弹的回调就是在Byzantium阶段进行的，如图所示。EIP（Ethereum Improvement Proposal），BIP（BitCoin Improvement Proposal）。</p><figure id="6d5c8ba1-d083-4b27-8de3-7ca806af5ff7" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image8.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image8.png"/></a></figure><p id="ab9bf583-45e7-4aca-920d-e4b1f8eb419c" class="">以太坊系统在难度回调的同时，把出块奖励从5ETH降到了3ETH（如果不调的话，对于回调之前的矿工是不公平的），而且从系统当中获益的总供应量来说要维护总供应量的稳定，挖矿变得容易，就应该相应将出块奖励减少一些。比特币当中每隔一段时间出块奖励减半，这种做法在以太坊中是没有的，像这个把5ETH降到了3ETH是一次性的，并不是说以后定期都要这么做。</p><h2 id="39b214e7-829a-411a-90f3-dfd54878ec81" class="">20.3 代码实现</h2><h3 id="f5e4417d-88b5-4686-8bc3-bf826b5532f3" class="">20.3.1 Byzantium阶段，挖矿难度调整的代码</h3><p id="9c0b5098-e266-4847-9341-8507347e94cc" class="">输入是父区块的时间戳和父区块的难度，计算出当前挖的这个区块的难度。代码中的BigTime就是当前区块的时间戳，bigParentTime就是父区块的时间戳</p><pre id="5d00d667-997a-4039-b14c-da7f64b88fc0" class="code"><code>//calcDifficultyByzantium is the difficulty adjustment algorithm.It returns
+//the difficulty that a new block should have when created at time given the
+//parent block&#x27;s time and difficulty.The calculation uses the Byzantium rules.
+func calcDifficultyByzantium(time-uint64,parent *types.Header) *big.Int {
+    //https://github.com/ ethereum/EIPs/issues/100.
+    //algorithm:
+    //diff = (parent_diff +
+    //        (parent_diff [ 2048*
+    //            max((2 if len(parent.uncles) else 1) - ((timestamp -parent.timestamp)// 9),-99))
+    //        ) + 2^(periodCount - 2)
+    bigTime := new(big.Int).Setuint64(time)
+    bigParentTime := new(big.Int).Set(parent.Time)
+    × := new(big.Int)
+    y := new(big.Int)</code></pre><h3 id="f2215cdc-4585-4323-a7c3-b7b2c352f424" class="">20.3.2 计算基础部分的难度调整</h3><pre id="262cb238-02d7-4a52-8149-64b7f252c969" class="code"><code>//(2 if len(parent_uncles) else 1) - (timestamp - parent_timestamp) //9
+x.Sub(bigTime,bigParentTime)
+x.Div(x,big9)
+if parent.UncleHash == types.EmptyUncleHash {
+    x.Sub(big1,x)
+} else {
+    x.Sub(big2,x)
+}
+//max((2-if-len(parent_uncles) else 1) - (timestamp - -parent_timestamp)//9, -99)
+if x.cmp(bigMinus99) &lt; 0 {
+    x.Set(bigMinus99)
+}
+//parent_diff + (parent_diff / 2848 *，
+//max((2 if len(parent.uncles) else 1) - ((timestamp - parent.timestamp)// 9),-99))
+y.Div(parent.Difficulty, params.DifficultyBoundDivisor)
+x.Mul(y,x)
+x.Add(parent.Difficulty, x)
+//minimum  difficulty can ever be (before exponential factor)
+if x Cmp(params.MinimumDifficulty) &lt; 0 {
+    x.Set(params.MinimumDifficulty)
+}</code></pre><p id="d3649f24-b2c4-46e2-8efa-2ba6399098d1" class="">注：DifficultyBoundDivisor = big.NewInt(2048), inimumDifficulty= big.NewInt(131072)。</p><p id="9e91ff5f-ddb7-4dab-b918-609e66ad3292" class="">第一行就是把当前时间戳减去父区块的时间戳算出出块时间，然后第二行除以9向下取整。判断一下是不是有叔父区块，有的话，是用2减去前面这个数x，没有的话用1减去前面这个数x，然后接下来跟负的99相比，往下调有一个节限，不能比-99还要小，接下来算的是难度调整的力度，父区块的难度除以这个DifficultyBoundDivisor实际上就是2048，然后跟前面算出的系数相乘，加到父区块的难度上面去，基础部分的难度调整有一个下限，难度再小也不能小于那个D0，这个MinimumDifficulty就是那个D0=131072。</p><h3 id="8ade4b62-8ec8-4980-81c3-2d0d1eab5a13" class="">20.3.3 难度炸弹的计算</h3><pre id="e5d2fa6d-4690-49a0-a3f8-8bc2d43ded89" class="code"><code>//calculate a fake block number for the ice age delay:
+//    https : /lgithub.com/ ethereum/EIPs/pull/669
+//    fake_block_number = min(0,block.number - 3000000
+fakeBlockNumber := new(big.Int)
+if parent.Number.Cmp(big2999999) &gt;= 0 {
+    fakeBlockNumber = fakeBlockNumber.Sub(parent.Number , big2999999)}
+//for the exponential factor
+periodCount := fakeBlockNumber
+periodCount.Div(periodCount,expDiffPeriod)
+//the exponential factor, commonly referred to as &quot;the bomb&quot;
+//diff = diff + 2^(periodCount - 2)
+if periodCount.Cmp(big1) &gt; 0 {
+    y.Sub(periodCount,big2)
+    y.Exp( big2,y,nil)
+    x.Add(x,y)
+}</code></pre><p id="cc9e8ec6-bcdf-4e43-a194-c4da9d3f87b6" class="">注：expDiffPeriod = big.NewInt(100000)。</p><h2 id="691f3736-b284-4a36-95e0-923011d4254e" class="">20.4 以太坊实际统计统计</h2><h3 id="088694e1-7375-472e-b5d9-830cb3373a43" class="">20.4.1 以太坊中的难度统计</h3><p id="ea572327-f794-420d-9fc9-0a9c55526370" class="">看到这一部分的曲线，看上去像是指数形状，到尖峰的位置就是以太坊决定回滚难度炸弹，回滚三百万个区块，所以挖矿难度一下就掉下来了，目前以太坊的挖矿难度基本上是区域稳定的。</p><figure id="5508c3b1-da5d-4fa3-b8b4-c87a9ee30730" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image9.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image9.png"/></a></figure><h3 id="26061708-625f-4cdb-9810-d87763461453" class="">20.4.2 出块时间统计</h3><p id="4423a2af-faa7-42e6-b205-425532801687" class="">不考虑个别波动，总体来说，出块时间稳定在15s左右。说明以太坊在早期的时候，挖矿难度额调整主要以稳定出块时间为主，达到预期的效果。同样是在2017年中旬的时候，出块时间出现了大幅度增长，就是这个难度炸弹的效应。</p><figure id="c73db4f9-de6e-4750-a1c7-3b102001201a" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image10.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image10.png"/></a></figure><h3 id="bb6fa035-b267-4ac0-b423-e44239b4b49b" class="">20.4.3 两个区块</h3><p id="f0525755-2431-4d27-9162-a852ed90efe8" class="">最长合法链对于以太坊来说，其实应该叫做最难合法链，就是总难度最大额合法链，每个区块的难度，反应的是挖出这个区块所需要的工作量，总难度最大，就是挖出这条链上的所有区块需要的总工作量最大，一般来说，靠后的区块挖出来需要的工作量比较大。</p><figure id="7d76a3e8-a42a-4558-b001-4d511bcabab2" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image11.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%20a8b3858eca9440d7b7ad5124ba0b95f2/image11.png"/></a></figure><p id="2dd650e3-7647-434e-863b-c57160400a98" class="">
+</p></div></article></body></html>

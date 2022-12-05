@@ -1,0 +1,670 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第八节:BTC-挖矿</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="3ab7a2e6-8d11-455b-98bc-ddc2486adfea" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/nasa_orion_nebula.jpg" style="object-position:center 0%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍈</span></div><h1 class="page-title">第八节:BTC-挖矿</h1></header><div class="page-body"><nav id="97e8b047-72c5-4760-906c-bc9ce332757b" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#37b5e7af-f424-432e-bfb9-8935df341cb9">8.1 节点特性</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4c9cbdca-d40b-4b02-baff-55b763f3a8fb">8.1.1 全节点</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#02ab901f-e681-4349-8d8c-87044cc342cb">8.1.2 轻节点</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#45ee9a90-c807-4633-9566-d8af100050af">8.2 挖矿的设备</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4229b73b-b7f6-4d76-a10f-3ce89a6ac10c">8.2.1 CPU</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#57344070-2793-45e9-9600-d7ec50807c58">8.2.2 GPU</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#93b7cb25-c07b-4841-af0b-df3ce565dc61">8.2.3 ASIC（Application Specific Integrated Circuit）芯片</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#c9c936f6-8f0b-4d8e-8906-36cb2a7dc17d">8.2.4 Alternative mining puzzle</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#fca8820f-488b-4183-9355-a7a7320d4eb0">8.3 矿池</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#5f449572-2f25-4dd5-8738-7aa0019fd9b5">8.3.1 运行模式</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2707e82d-9477-4471-adb2-3155d28a608d">8.3.2 利益分配</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#47103c57-0b93-4b35-b2e8-bb50c46af65a">8.4 使51%攻击更容易</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#43f2b0d7-41f4-4f6b-99d8-d6d2700ee7ea">8.5 大型矿池可发动的攻击</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#066db01e-833b-40fb-b584-8dbc175b4407">8.5.1 分叉攻击 forking attack</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#035500d9-21c3-4746-8e29-1560d591a5d1">8.5.2 封锁境域 boycott</a></div></nav><hr id="b1574684-8ced-4cb3-bfd7-93caf3567072"/><h2 id="37b5e7af-f424-432e-bfb9-8935df341cb9" class="">8.1 节点特性</h2><h3 id="4c9cbdca-d40b-4b02-baff-55b763f3a8fb" class="">8.1.1 全节点</h3><figure id="652a3704-e3cd-4f06-9837-d2396bc62f6f" class="image"><a href="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image9.png"><img style="width:597px" src="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image9.png"/></a></figure><h3 id="02ab901f-e681-4349-8d8c-87044cc342cb" class="">8.1.2 轻节点</h3><figure id="d6662571-c18a-4f83-8967-f1c5db15f8af" class="image"><a href="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image10.png"><img style="width:615px" src="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image10.png"/></a></figure><p id="04c10b82-f34f-4dc6-8010-ffb96c2ef49c" class="">比特币网络中大部分节点都是轻节点，如果只是转账而不是挖矿的话，没必要用全节点。挖矿过程中，如果你听到别人发布了一个区块，该区块是合法的，也是在延长最长合法链。这时候你该怎么办?</p><p id="889fae48-f905-4262-acaa-d2143826229b" class="">应该停止挖矿，然后重新在本地组装一个候选区块，再重新从头开始挖矿。因为如果沿着新发布的交易往下挖的话，那么本地组装的区块中包含的交易就会发生变化，有些交易可能已经被包含到新发布的区块里了。另外block header的内容也会发生变化，像block header里有交易所组成的merkle tree的根哈希值，还有指向前一个区块的指针，这些也都会发生变化。</p><p id="8d832e3b-c02e-4d74-b1f4-b98baf8579bc" class="">这样做是不是有些可惜?挖矿的一个性质是无记忆性，无论是继续挖原来的区块，还是停下来挖一个新组装出来的区块，成功的概率是一样的。只要还没有挖到符合要求的nonce值，前面已经挖了多长时间都是无所谓的。</p><p id="50a900a0-358a-4fda-a07f-50acdcfa0884" class="">即使挖到了合法的区块，发布到区块链上，也不能保证胜利了。有可能你发布的区块最终没有成为最长合法链，可能存在一些冲突情况，别人可能同时发布一些合法的区块，或者存在一些你不知道的double spending，使得你的区块中的某些交易变成冲突的。</p><p id="8ffc4028-2a11-4301-b718-6dd9cf0c1203" class="">比特币是怎么保证安全的?两个方面:①密码学②共识机制</p><p id="0fbc70fb-224d-45a1-9ef7-fabfec3e1a79" class="">①别人没有你的私钥，就没有办法伪造你的签名，所以不能把你账上的钱转走。(前提是系统中拥有大多数算力的矿工是好的，是遵守协议的，不会接受那些没有合法签名的交易。如果没有这些，密码学上的保证也就没有用武之地。)</p><p id="25974718-236e-407e-8c86-2cdc05c94bd2" class="">比如:你去银行取钱，按照规定取钱得出示合法的证件，银行工作人员才能把钱给你。合法的证件就相当于密码学上的签名，密码学的性质保证了别人没有办法伪造你的签名，也就没有办法伪造你的身份。产生私钥以及签名的时候，都要有好的随机源，产生的随机数要足够随机。但又这些也不是足够的，银行工作人员要足够自觉，不能把钱交给那些没有合法证件的人，只有这两条合在一起，才能保证别人不能把你账上的钱转走。</p><h2 id="45ee9a90-c807-4633-9566-d8af100050af" class="">8.2 挖矿的设备</h2><h3 id="4229b73b-b7f6-4d76-a10f-3ce89a6ac10c" class="">8.2.1 CPU</h3><p id="e4881134-828d-4974-bf1f-c18379adfc96" class="">挖矿设备演化趋势是越来越趋于专业化，最早的时候用的是普通的CPU挖矿，像家里计算机、笔记本电脑。但如果买一台计算机专门用来挖矿是非常不划算的，计算机当中的大部分内存都是闲置的，挖矿只用到其中很小一部分内存，CPU当中的大部分部件也是闲置的，因为挖矿当中计算哈希值的操作只用到了通用CPU当中的很少一部分指令。硬盘和其他很多资源也都是闲置的，所以随着比特币挖矿难度的提高，用CPU挖矿，用通用计算机挖矿显得性价比太低。</p><h3 id="57344070-2793-45e9-9600-d7ec50807c58" class="">8.2.2 GPU</h3><p id="08b97b1f-85a7-412b-8de6-ae170b52b835" class="">所以挖矿转入第二代设备:GPU。GPU效率相比CPU提高了很多，主要用于大规模的并行计算。但GPU用来挖矿还是有点浪费了，GPU是用于通用并行计算而设计的，用来挖矿的话有很多部件仍然是出于闲置状态，比如说用于浮点数计算的部件。这些部件对于深度学习来说是很重要的，但比特币的操作只用到了整数挖矿。所以GPU虽然效率提高了很多但仍然有不小的浪费。这些年GPU价格涨得很快，有些人归因于深度学习的火热，其实有很多GPU是用来挖矿的。不过有一个好消息，随着比特币挖矿难度的提升，用GPU挖矿已经划不来了，已经超过了GPU的算力范围，所以GPU现在可以更多的用于深度学习、游戏应用的服务。</p><h3 id="93b7cb25-c07b-4841-af0b-df3ce565dc61" class="">8.2.3 ASIC（Application Specific Integrated Circuit）芯片</h3><p id="185b9934-75bc-4584-8c58-aba762209c08" class="">有一些新开发的加密货币有的还在用GPU挖矿，而现在更多用ASIC芯片挖矿，这是专门为了挖矿而设计的芯片，上面没有多余的电动逻辑，整个芯片就是为了比特币挖矿、计算哈希值的操作而设计的。它的性价比是最高的，这个芯片除了挖矿什么事都干不了，而且为某一种加密货币设计的ASIC芯片，只能挖这一种加密货币。除非这两个加密货币用同一个mining puzzle。</p><p id="2ffc99e0-abce-4066-a9d1-e00ec2166c90" class="">有些加密货币刚发行的时候，为了解决能启动问题，会故意用一个已有的加密货币的mining puzzle，比如说跟比特币一样的mining puzzle，这样可以吸引更多的人来挖矿，这种情况叫merge mining。除了这种情况，其他都是一个芯片只能为一个加密货币挖矿。ASIC芯片生产周期需要一年，但跟其他通用芯片相比，ASIC芯片研发速度已经是非常快的了。</p><p id="43afcd2e-a57e-4546-ac67-96349af18d45" class="">在这么长的生产周期里面，如果比特币价格出现剧烈变化的话，前期投入的研发费用可能就打水漂了。从历史上看，比特币的价格变化是比较剧烈的。曾经发生好几次，比特币的价格在几个月之内，下跌了80%，然后又慢慢恢复。</p><p id="f4687c64-0fd3-4fdc-8e44-48e5d48fd87e" class="">如果比特币价格大幅度下降的话，挖矿可能是赔本的，可能还抵不上电费。即使在比特币发展的黄金时期，价格不断上涨，这时挖矿是有利可图的。但是竞争也是越来越激烈的，定制的ASIC芯片可能用不了几个月就过时了。一款ASIC矿机刚上市的时候大部分的利润是在它上市的前两个月获得的，因为这个时候它的算力在同类产品中是最强的。再往后随着更强的矿机出现，它就可能被淘汰掉。所以购买ASIC矿机的时机很重要，现在都是要提前预定的。有些不良厂商，ASIC矿机生产出来之后，不是立即提供给消费者，而是自己先用来挖矿一段时间，赚取比特币，等到最赚钱的黄金时间即这前两个月过去之后，再把矿机发给用户。当比特币系统中算力突然有一个很大的提升，就说明某个大公司生产出了新一款的ASIC矿机。所以在挖矿热潮中真正赚钱的不一定是挖矿的用户，而可能是卖矿机的大厂商。</p><h3 id="c9c936f6-8f0b-4d8e-8906-36cb2a7dc17d" class="">8.2.4 Alternative mining puzzle</h3><p id="d86c6236-be52-4a97-ae23-cae98e5870a1" class="">挖矿机的变化趋势，是从通用变得越来越专用，CPU是通用计算，GPU是通用并行计算，ASIC是专用计算。ASIC一旦过时就作废了，不像CPU和GPU还能做其他工作。很多人觉得这是不好的，是跟去中心化的理念是不相符的，也违背了比特币设计的初衷。最民主的情况是，大家都用家里的CPU计算机挖矿。后来改为GPU噪音是很大的。而有些新的加密货币设计的是Alternative mining puzzle。而设计它的出发点是asic resistance(抗asic芯片化)，<strong>目的是让通用的计算机也能参与挖矿的过程。</strong></p><h2 id="fca8820f-488b-4183-9355-a7a7320d4eb0" class="">8.3 矿池</h2><h3 id="5f449572-2f25-4dd5-8738-7aa0019fd9b5" class="">8.3.1 运行模式</h3><p id="d4db3b6c-03b5-4935-9f35-ab23c49b3150" class="">挖矿的另一个趋势是大型矿池的出现，单个矿工即使用了ASIC芯片，挖矿从平均收益上看是有利可图的，但是收入是非常不稳定的。比特币系统中平均每10分钟出一个区块，这是说比特币系统中所有的矿工做一个整体来看平均10min会产生一个区块。但如果具体到某一个矿工来说，他可能要挖很长时间，如果他用一个矿机可能要挖一两年。这样子就好像是买彩票，挖到了就是中了一个大奖。单矿工还有其他问题，他除了挖矿之外还要承担全节点的其他责任。</p><p id="f71ecaee-3c98-468e-9b00-06bc3c944779" class="">所以要引入矿池，所谓的矿池，就是把这些矿工组织起来，作为一个整体，矿池的架构一般是一个全节点会驱动很多矿机，一个矿池有一个矿主，叫pool manager。下面连了很多矿工，这些<strong>矿工只负责计算哈希值，全节点的其他职责都由矿主来承担</strong>。他负责监听网上的交易，把这些交易组织打包成区块，同时要看一看有没有其他的节点抢先发布区块，如果有的话看怎样进行调整.....</p><figure id="6ddd76e8-1afe-44da-a69f-1dddd142e595" class="image"><a href="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image11.png"><img style="width:355px" src="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image11.png"/></a></figure><p id="2b7c9167-4a66-46c4-8886-afc1dede1a48" class="">ASIC芯片只能负责计算哈希值，它不能干全节点的其他功能。矿池的出现还为了解决另一个问题:收入不稳定。单个矿工的收入是不稳定的，所以大家一起干，有了收益再进行分配。</p><h3 id="2707e82d-9477-4471-adb2-3155d28a608d" class="">8.3.2 利益分配</h3><p id="c498096b-f091-4048-9634-1faaf0c61fe8" class="">那么收益该如何分配?矿池一般有两种组织形式，一种是像大型数据中心那样，有的互联网公司，有成千上万个服务器，大的矿池里面也有成千上万的矿机，这些矿机如果是属于同一个机构的话，那么收入怎么分配就不重要了。</p><p id="f2a0b018-f09a-443e-97e0-49fa64b918f0" class="">但也有矿机是来自不同机构的，即第二种组织方式:分布式的。矿工和矿主不在同一个地方，可能分散在世界各地，那么矿工要加入一个矿池，就是按照矿池规定的通讯协议跟矿主进行联系。<strong>矿主把计算哈希值的任务分配给他</strong>，矿工计算完之后，把结果反馈给矿主，将来获得出块奖励时一起分配。</p><p id="a9d8487f-dfb4-4038-89e8-e21349bea967" class="">如果矿工是来自五湖四海的，不是属于同一个机构的，那么利益该怎么分配?平均分配行不行?比如每个矿工挖到一个区块，得到了出块奖励，然后平分给其他矿工，这样行吗?不行，因为会有矿工偷懒。因此要按矿工的贡献大小进行分配，也就是这里同样需要工作量证明。那该怎么证明每个矿工做了多少工作呢？</p><p id="7ae5ae32-7a49-4207-ae7f-acabbe4f8a04" class="">为什么矿工的收入不稳定，因为挖矿太难了，如果把挖矿的难度降低之后，挖矿就会变得稳定了。怎么降低难度呢?以前的要求是，矿工要找到一个nonce，用nonce计算block header 的哈希值，前面至少有70个0才是合法的区块。降低挖矿难度之后，比如说前面只要有60个0就行了，这样挖到的叫做一个<strong>share</strong>，这个share叫做<strong>almost valid block</strong>。矿工挖到share或almost valid block之后，把它提交给矿主。矿主拿到这个区块有什么用呢？用来证明矿工所做的工作量，而没有其他用途。矿主无法得到区块奖励以及任何好处。所以矿主就统计每个矿工提交了多少这样的share，将来等到某个矿工真正挖到了合法的区块之后，再将出块奖励按照每个矿工所做的工作量，提交的share数目进行分配。</p><p id="18056eb3-97c1-4849-a1de-f92ca87f690b" class="">这样做为什么是可行的?<strong>每个矿工挖到矿的概率取决于他尝试的nonce数目，尝试的nonce越多，能找到的share就越多</strong>。</p><p id="c35922c0-9e86-40fe-bcce-4deacde15888" class="">有没有可能一个矿工挖到一个合法的区块之后，不把它提交给矿主，而是自己偷偷摸摸发布出去，得到出块奖励?即平时挖到的share提交，但挖到了合法区块就不提交?不可能，因为每个矿工的任务是由矿主分配的，矿主负责组装好一个区块，然后交给矿工去尝试各种nonce，而且挖矿仅仅调nonce是不够的，还需要调整coinbase parameter。所以矿主会把不同的coinbase parameter所对应的nonce值的范围交给不同的矿工去尝试。那么这个区块里包含什么?coinbase transaction里面有收款人的地址，这个地址填的是矿主的地址，<strong>铸币交易的目标账户是矿主</strong>，即pool manager的地址，所以矿工挖到区块之后，如果他不提交给矿主自己发不出去是没有用的。里面的收款地址是矿主的，他取不出钱来。所以只要是当初按矿主给分配的任务进行挖矿的，就不可能偷区块奖励。</p><p id="6f7f3263-ada2-4d95-b07b-f8769738874a" class="">如果他一开始就不管矿主的任务，自己组装一个区块，偷偷把收款地址改成自己地址，会怎样?那样他提交share给矿主的话，矿主是不认的，因为里面交易列表被改过了，coinbase transaction里面的内容发生了变化，算出的merkle tree 的根哈希值也是不一样的。这种情况下矿主是不会给他工作量证明的。那就相当于矿工一开始就单干，跟矿池是没关系的。</p><p id="5cfaff6c-fa01-4bdc-a35d-f8eb664b5ae2" class="">虽然不可能偷区块奖励，但会不会有人捣乱，比如平时挖到一个share，提交给矿主，作为工作量证明。等他挖到一个真正合法的区块之后，把它扔掉。这是有可能的，虽然没有经济好处，但有可能是别的矿池派来的卧底，不想让这个矿池得到区块奖励。这些矿工还是会分红，分的是别的矿工挖出来的区块奖励。</p><p id="b0ae1f50-289e-4dc6-955a-60e773c22997" class="">如图是矿池在各个国家的分布比例，中国矿池占世界81%，远远超过其他国家，所以按矿池比例来看的话，中国的总算力是有绝对优势的。</p><figure id="d16dfb84-cc45-48ec-b86a-5e23b7df5a2f" class="image"><a href="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image12.png"><img style="width:602px" src="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image12.png"/></a></figure><p id="29d9005b-7d6b-4e85-9857-c24837b23aa1" class="">如图，如果按照单个矿池来看，在2014年，曾经有叫GHash.IO的矿池，这个矿池的算力，占到了全球算力的一半以上。在当时曾引起一些恐慌，这一个矿石的算力就已经足以发动51%的攻击了。这个事情公布之后，该矿池主动把算力占比大幅度的减少，以免动摇大家对比特币的信心。</p><figure id="d9b3e43c-f3aa-4b55-97b6-33fea3251640" class="image"><a href="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image13.png"><img style="width:677px" src="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image13.png"/></a></figure><p id="1544a562-7ae9-4a9e-b121-3b258b59929b" class="">如图是2018年的各矿池的算力分布，看上去没有那么集中了，GHash.IO矿池早已停止运营。当然，挖矿集中化的程度仍然是比较大的，几个大型矿池占了相当大的比重，但没有矿池占50%以上。这样看算比较安全了，但可能只是一个表面现象。假如一个机构有一半以上的算力，他不一定要把算力集中在一个矿池里，而可以把算力分散隐藏在很多矿池里，真正需要发动攻击的时候再集中起来发动攻击。</p><figure id="451f0f56-13a2-4f58-8922-09a4d25540ca" class="image"><a href="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image14.png"><img style="width:700px" src="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image14.png"/></a></figure><p id="9a3f3499-8178-4c66-8667-d5bb2bf34316" class="">矿工转换矿池是很容易的，加入一个矿池就是按照这个矿池的协议跟这个矿主联系，矿池把组装好的区块信息发给矿工，矿工来尝试各种nonce值就可以了。</p><h2 id="47103c57-0b93-4b35-b2e8-bb50c46af65a" class="">8.4 使51%攻击更容易</h2><p id="a31cca29-b30f-4998-8256-d6d37b56abde" class="">所以这就是矿池带来的危害，如果没有矿池，想要<strong>发动51%的攻击</strong>，攻击者要投入大量的成本来购买到足够的矿机，能够达到系统中半数以上的算力。有了矿池之后，他可能只占很小一部分比例的算力，只要能够吸引到足够多的矿工，足够多的不明真相的群众加入到他的矿池里来就行了。</p><p id="ef5fcc66-0521-4947-b757-c77a6a557abe" class="">一般来说，矿池的矿主要收取一定比例的出块奖励作为管理费。矿主也要按照比例收取管理费，有的是按照出块奖励的比例，也有的是抽取交易费。有的一些有恶意的矿池在发动攻击之前，可能故意把管理费降得特别低，甚至是赔本赚吆喝，吸引足够多的矿工加入之后就可以发动攻击了。这是大型矿池的一个弊端，使得51%的攻击更加容易了。</p><h2 id="43f2b0d7-41f4-4f6b-99d8-d6d2700ee7ea" class="">8.5 大型矿池可发动的攻击</h2><h3 id="066db01e-833b-40fb-b584-8dbc175b4407" class="">8.5.1 分叉攻击 forking attack</h3><p id="23981b71-556e-430a-ab20-90a46da8d927" class="">假如某个矿池占到了半数以上的算力，他具体能够发动哪些攻击呢?一个最常见的就是分叉攻击。假如一个区块链，其中一个区块包含了一个大笔的交易，又等了几个确认区块之后，自认为已经安全了。然后这时就可能有人在该交易前面的区块发动分叉攻击。</p><figure id="fc4a63d9-d2a7-4a2e-8d07-f50b0793e119" class="image"><a href="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image15.png"><img style="width:422px" src="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image15.png"/></a></figure><p id="01dfc39c-1e35-4d22-93ef-c0943bb6d1e4" class="">看上去好像追赶的道路是很漫长的，但如果拥有51%的算力，最终还是可以成功攻击。另外，不要把51%当成绝对的门槛，有可能不到51%就可以。算力都是估计的，而且算力还在不断变化。</p><h3 id="035500d9-21c3-4746-8e29-1560d591a5d1" class="">8.5.2 封锁境域 boycott</h3><p id="0db7a5be-2533-4655-982e-da79f624ab46" class="">攻击者还能做什么坏事?还可以做<strong>boycott(封锁境域)</strong>。比如说攻击者不喜欢某个账户，怀疑某个账户参与非法交易，想把这个账户封锁掉，所有跟这个账户相关的交易都不让上链。假如A把某个交易A→B发布到区块链上，攻击者就会马上进行分叉，产生一个不包含这个交易的区块，所有跟A有关的交易也都不包含进去。</p><p id="b0abe778-7dd8-43ab-b98f-d7dc21ae7e1d" class="">这种攻击跟分叉攻击区别是什么?他没必要等后面几个确认区块。这时候如果攻击者等待确认区块，是为了让B放心，B以为后面有六个确认区块，已经没事了，然后攻击者再发动分叉攻击。而如果目的是为了boycott的话，就没有必要等后面区块生成。A→B交易一上链马上进行分叉，越早越好，因为攻击者是希望别人沿着他的链往下挖的。</p><figure id="120c02a7-2c37-44bd-b0ee-0aa0952a6e79" class="image"><a href="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image16.png"><img style="width:175px" src="%E7%AC%AC%E5%85%AB%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%203ab7a2e68d11455b98bcddc2486adfea/image16.png"/></a></figure><p id="d1b825e7-f674-4b3f-bb93-9170a2cc47fb" class="">前面讲过，有些有恶意的节点故意不把某些交易写入区块里，是可以的。但没有关系，后面的区块还是会包含的。但是如果这个坏人拥有51%的算力的话，他可能仗着自己算力强，公开抵制他想抵制的交易。这样别的矿工也不敢随便把交易打包进去了。</p><p id="ee7671c9-738f-4adf-859f-1438d0e4a336" class="">那么攻击者有没有可能掌握51%的算力后，把别人账上的钱转走。这是不可能的。因为他没有别人账户的私钥，没有办法伪造签名。如果他仗着算力强，强行把一个没有合法签名的交易发布到区块链上，会有什么样的结果?会造成分叉。因为诚实的矿工会沿着另外一个分叉去挖，不会沿着他发布的区块往下挖。所以盗币是不可能的。</p><p id="340c0440-a8bc-4c11-bb4e-dc555951fae5" class=""><strong>总结:</strong>矿池的出现减轻了矿工的负担，矿工只需要挖矿，计算哈希值就行了，别的事情都由矿主来完成。矿工的收入分配也更加稳定。但矿池的出现也有危害，发动51%的攻击变得容易了。他不一定自己有这么强的算力，只要动员召集这些算力就可以了。</p><p id="1d1b3305-0b29-4243-bffa-64fb32a47459" class="">这有点类似于云计算中的on demand computing。平时不需要维护很大的计算机群，需要用的时候可以随时召回来。而矿池的情况，是on demand mining。</p><p id="9e43677f-5e51-4af5-8dbb-f95f38ecc93d" class="">
+</p></div></article></body></html>

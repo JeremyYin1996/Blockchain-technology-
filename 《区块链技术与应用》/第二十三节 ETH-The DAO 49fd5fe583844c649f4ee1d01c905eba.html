@@ -1,0 +1,671 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第二十三节:ETH-The DAO</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="49fd5fe5-8384-4c64-9f4e-e1d01c905eba" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/nasa_tim_peake_spacewalk.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍈</span></div><h1 class="page-title">第二十三节:ETH-The DAO</h1></header><div class="page-body"><nav id="f1eebd30-5e1d-44fe-a08d-2239cb63f900" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#81b50ac4-fb48-4108-9121-68ef30b5ed55">23.1 The DAO</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#70e402de-5fe2-4fb1-91cb-3453c4ecc3af">23.1.1 设计理念</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#721f8dbb-5acf-4612-9932-15a7d2a4b1b0">23.1.2 问题</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ed761175-40d0-4c92-aab0-392334265c2c">23.1.3 补救</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#77bbac69-128c-44b9-9164-ea162c240fb9">23.2 ETH和ETC</a></div></nav><hr id="f2c42ea2-ef98-449a-8b02-e75e00447b78"/><p id="b9d020e4-ab69-4052-918c-9ce31dde038e" class="">
+</p><h2 id="81b50ac4-fb48-4108-9121-68ef30b5ed55" class="">23.1 The DAO</h2><p id="a3984827-630b-406e-b46b-f158344e1bce" class="">比特币实现了去中心化的货币，以太坊实现了去中心化的合约，有人想既然去中心化这么好，为什么不把所有的东西都改成去中心化呢？有人提出口号：let’s decentralize everything。<strong>DAO（Decentralized Autonomous Organization，去中心化的自治组织）</strong>就是在这个背景下产生的。传统社会中，组织都是建立在某种法律文件基础上的，比如说可以有个章程规范组织的行为，有时候还可能到政府登记注册。那DAO就是把组织的规章制度写在代码里，通过区块链的共识协议来维护这种规章制度的正常执行</p><p id="01675d58-6d19-4e4f-9229-35acffa71632" class="">在2016年5月，出现了一个<strong>致力于众筹投资的DAO</strong>，它的名字为<strong>The DAO</strong>。DAO是一个通用的概念，凡是去中心化的自治组织都可以称为DAO，The DAO是指具体的这个DAO，它的工作原理有点像众筹的投资基金，本质是运行在以太坊上的一个智能合约。如果你想参与The DAO，那你可以把以太币发给这个智能合约，然后可以换回The DAO的代币。需要决定投资哪个项目的时候，是大家投票决定的，手里的代币越多，投票的权重越大，最后有了收益也是按照智能合约中制定的规章制度进行分配的</p><p id="5160e129-f458-4189-9360-b88beec89d5b" class="">工作原理有点像<strong>DAC（Decentralized Autonomous Corporation）去中心化的自治公司</strong>，一般来说，DAC是出于盈利目的，DAO的话可以是出于非盈利性目的，比如某种公益事业。DAC虽然有公司这个词，但是在现实社会中，它没有公司应有的法人地位，一般来说也没有像董事长、CEO这样的职务</p><p id="03bfbe3d-91ae-413c-aa92-aec66b1905ee" class="">The DAO 2016年5月份开始众筹的时候在当时受到了很大的关注度，因为以前从来没有这样民主的投资基金，一个月的时间筹集到了当时价值1.5亿美元的以太币。当时媒体都在预测，未来几年The DAO的影响里会有多么多么的大，有的人甚至说在3到5年以后The DAO的影响力甚至会超过以太坊本身。遗憾的是，The DAO一共只存活了3个月</p><p id="e442c417-f75d-4717-85e8-9a9b9ae2ca0a" class=""><strong>如果你是The DAO的投资者，你怎么取回自己的收益，比如你参与The DAO，投了一笔以太币过去，换回一些The DAO的代币，过一段时间你需要用钱了，想把以前投资的以太币换回来，怎么办？</strong></p><p id="b21786db-7010-4403-becd-9866adf6af89" class="">这个在The DAO的基金里是通过拆分的方式实现的，叫做：split DAO。拆分的做法不止是取回自己的收益，也是一种建立子基金的方式，拆分完之后得到一个child DAO</p><h3 id="70e402de-5fe2-4fb1-91cb-3453c4ecc3af" class="">23.1.1 设计理念</h3><p id="d6c31e30-c275-4424-851f-ea157cc40171" class="">设计理念是这样的，<strong>The DAO投资项目是靠大家手里的代币去投票</strong>，如果有一小部分人他的投资理念和其他人不一样怎么办。这一小部分人可以用拆分的办法从The DAO独立出来，成立一个自己的子基金，叫做child DAO。拆分的时候，他们手中的代币会被收回，换成相应数量的以太币，把相应的以太币打到子基金里，然后他们就可以投自己想投的项目了。拆分的一个极端例子就是单个的投资者成立一个子基金，然后在子基金里就可以把所有的钱投给他自己，这是投资者取回投资和收益的唯一途径。拆分之前有7天的辩论期，拆分完之后有28天的锁定期，就是这28天的锁定期给了后面事故中的补救时间</p><p id="86ba3b7e-b06e-4c70-83c5-c936338ded85" class="">拆分的理念并没有错，而且是民主制度的进一步体现，民主制度并不是绝对的少数服从多数，而是说也要尊重少数人选择的权力。</p><p id="9e45c029-474c-427d-a839-ee4589f77cc6" class="">拆分的理念没有错，那问题出在哪里呢？</p><h3 id="721f8dbb-5acf-4612-9932-15a7d2a4b1b0" class="">23.1.2 问题</h3><p id="4891e31d-c773-46e3-9c4d-f4af0dd70ba6" class=""><strong>问题就出在split DAO的实现上</strong></p><figure id="e6e9227b-faa4-4c65-92ac-13eed8c594f4" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E8%8A%82%20ETH-The%20DAO%2049fd5fe583844c649f4ee1d01c905eba/image13.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E8%8A%82%20ETH-The%20DAO%2049fd5fe583844c649f4ee1d01c905eba/image13.png"/></a></figure><p id="a0b7a50a-bad4-4f55-be3e-f6a0b1c8c66f" class="">上图是split DAO的代码，从withdrawRewardFor这个语句开始，首先把钱还给调用这个函数的人，然后把The DAO中的总金额减少相应的数量，再把调用者的账户清0。在上一节讲过，正确的操作是先把账户清0，然后再转账。黑客就是利用这个漏洞进行的重入攻击，转走了5千万美元的以太币，差不多1/3</p><p id="4a9fe25e-b381-47df-b4ed-f4e7ee835500" class=""><strong>这件事情在以太坊社区引起了很大的恐慌，引起了币价的大跳水。以太坊社区对此进行了激烈的讨论，该怎么办？</strong></p><p id="935e5f71-30cc-4037-a242-0358e78d365a" class="">社区的意见分裂为两派：</p><p id="aeef9086-d570-4ff1-9d91-662e6f1c15a6" class="">一派认为，要回滚交易，成立的子基金有28天的锁定期，所以黑客暂时还没有办法取走以太币，还有时间可以采取补救措施</p><p id="4e55a30b-9e4b-44a0-bbf9-48e9eaf4e20f" class="">另一派认为，不需要做任何补救措施，因为黑客的行为没有违法，code is law。在疑似黑客的公开信中，黑客声称自己没有做错任何事情，只是利用了代码中的feature，既然代码里写的可以让我重复多次取钱，我就没有违反任何法律。这方认为，不应该回滚交易，区块链最重要的特性是不可篡改性，如果出了问题就回滚，怎么能叫不可篡改呢。而且这次出问题的只是以太坊上的一个应用而已，以太坊本身的代码没有问题，如果每个智能合约出了问题都回滚的话，不就乱套了吗</p><p id="3df322ad-052d-4ff2-958e-152ef6be5eba" class=""><strong>以太坊的开发团队是支持采取补救措施的，主要是这个事情的影响太大了，The DAO筹集的以太币数目已经占到了当时以太币总流通量的百分之十几。too big too fail，太大了以至于不能倒。那现在怎么补救呢？</strong></p><h3 id="ed761175-40d0-4c92-aab0-392334265c2c" class="">23.1.3 补救</h3><figure id="bb8092e9-2545-45c5-92da-a57187327bf4" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E8%8A%82%20ETH-The%20DAO%2049fd5fe583844c649f4ee1d01c905eba/image14.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E8%8A%82%20ETH-The%20DAO%2049fd5fe583844c649f4ee1d01c905eba/image14.png"/></a></figure><p id="3f6c38d7-0d04-4b80-9e2e-53842d0b9b95" class="">比如说从黑客盗取以太币的区块的前一个区块开始分叉，让分叉链更长，这样行不行。如果这样，不光是黑客的交易回滚了，区块上所有的交易都回滚了，会影响大量正常交易的人，所以这样做是不行的。</p><p id="98b880ea-6d33-4f42-8f94-ed349921893f" class=""><strong>要回滚的话只能是精确定位，只能是针对黑客盗取以太币的那些交易，其他发生的正常交易不能受到影响。</strong>怎么操作呢？以太坊的团队制度了两步走的方案。<strong>第一步，首先要锁定黑客的账户。第二步，把盗取的以太币设法退回去，清退The DAO基金上的这些钱</strong></p><p id="917487a5-e54e-49a7-a0a9-080137a54c3c" class="">第一步，怎么锁定这些账户。以太坊团队发布了一个软件升级，<strong>增加了一条规则，凡是和The DAO这个基金上的账户相关的，不能做任何的交易。</strong>许多矿工都升级了软件。这个是<strong>软分叉</strong>，软件升级是增加了一条判断的规则，新矿工挖出来的区块，旧矿工是认可的，旧矿工可以继续在这个区块后来开始挖，旧矿工挖出来的区块，新矿工有可能不认可，如果这个区块里包含了The DAO账户的交易，新账户就不认可，这样对系统只会造成临时性的分叉</p><p id="b5208caf-ae5f-4cd3-9a4f-e75ab437a23a" class="">遗憾的是，升级的软件有个问题，那就是判断是否和The DAO相关的交易这个步骤还要不要收取汽油费，如果不收取的话，可能有恶意的攻击者不断的发放非法的交易，拒绝服务（deny of service），浪费矿工的资源，反正对攻击者来说成本很低。<strong>以太坊的这个升级没有收gas费，受到了deny of service，矿工之后就受不了了，纷纷重新使用升级前的软件。于是软分叉的方案失败了。</strong></p><p id="b0d48b3b-814d-456e-a6b2-3db22ef91fcb" class="">这个时候形式严峻了，子基金成立之后有28天的锁定期，然后黑客就可以把钱取走了，软分叉的方案失败了，剩余的时间不多了。以太坊团队想软的既然不行，那就来硬的了，<strong>设计了一个硬分叉的方案，通过软件升级的方法，把The DAO账户上的所有资金强行转到另外一个新的智能合约上去，新的智能合约就只有一个功能，那就是退钱</strong>，当初是用以太币买的The DAO的代币，现在可以把代币退回成以太币。</p><p id="ccba1bd4-7f2e-4f1b-8dcc-32473266f741" class="">这个为什么是硬分叉？这种做法的本质是用软件升级的方法强行重新记账，本来的转账是要有合法的签名，比如说我要把你账上的钱转走，需要有你的签名才行，而这个升级的转账是没有合法的签名的，<strong>凡是The DAO上面的资金不管本人是否同意都要强行转到新的智能合约上去，挖到第192万个区块的时候，自动执行这条交易</strong>。新矿工挖出来的区块，旧矿工是不认可的，所以是个硬分叉。</p><p id="e6a1f302-70da-47be-955e-4a19733229d8" class="">由此，社区彻底分成了两派，以太坊团队还写了一个智能合约来进行投票，用手中的以太币去投票，结果显示大多数人支持硬分叉，于是绝大数矿工升级了软件。最后硬分叉没有出现意外，成功了。</p><h2 id="77bbac69-128c-44b9-9164-ea162c240fb9" class="">23.2 ETH和ETC</h2><p id="591ae9eb-f197-4a62-a5ad-2cba912aba2e" class="">但故事没有结束，反对者认为，参与投票的人并不是很多，此外，投票的结果就一定是正确的吗？旧的那条链并没有消亡，还有矿工在上继续挖，算力大幅度下降，不到原来的1/10，挖矿难度大幅度下调。<strong>旧链上挖出来的币叫做ETC（Ethereum Classic，经典以太坊）</strong>，并在交易所上市交易了。一部分人挖是由于投机，一部分人挖则是出于信仰，坚持这种纯而又纯的去中心化理念，认为旧链才是正宗的以太坊，根正苗红，那些搞硬分叉的是在搞修正主义</p><p id="469c62f7-f22f-4ec3-b08a-1659198a8e69" class="">刚开始硬分叉的时候带来了一些问题，比如重放攻击，在新链上的合法交易放到旧链上去同样是合法的，反过来旧链上的合法交易放在新链上也是可以执行的。后来给两条链增加了chainID来解决.</p><p id="be1ca2b3-3326-416a-9e0a-64bd86486d73" class=""><strong>为什么针对的都是The DAO中所有的账户，而不只是对应黑客的账户？</strong></p><p id="df445301-d85f-4c4f-9a4d-43c19fb01623" class="">如果只冻结黑客的账户，由于合约的bug修不了，那人人都可以成为黑客去继续盗取，所以必须把与The DAO相关的所有账户都冻结了.</p><p id="4d5b905d-2277-40ad-9c60-facab73cf189" class="">
+</p></div></article></body></html>

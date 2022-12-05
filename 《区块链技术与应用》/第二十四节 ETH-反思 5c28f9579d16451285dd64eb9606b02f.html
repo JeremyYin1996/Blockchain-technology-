@@ -1,0 +1,671 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第二十四节:ETH-反思</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="5c28f957-9d16-4512-85dd-64eb9606b02f" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/webb1.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍈</span></div><h1 class="page-title">第二十四节:ETH-反思</h1></header><div class="page-body"><nav id="f08306f9-aec1-49e8-9d92-8e64f7c5d52a" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#7e257ae1-7d07-42b6-8303-304e3487e346">24.1 智能合约的反思：智能合约真的智能吗？(Is smart contract really smart?)</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#1b88b659-e428-4466-ba97-c4ae4cd2c463">24.2 不可篡改性是把双刃剑（Irrevocability is a double edged sword）</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ed9ee5b9-bae9-4c6c-80f5-e8e440a96ac2">24.3 没有什么是真的不可篡改的（Nothing is irrevocability）</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#15c790cc-a1ab-4ee1-a258-e6af4cdc188f">24.4 合约语言设计的反思（Is solidity the right programming language?）</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#b06b55f0-a528-4636-ad8d-01117709fb39">24.5 开源软件漏洞的反思（Many eyeball fallacy）</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#61c62300-8edb-45eb-8cdd-896311606a96">24.6 去中心化的反思（What does decentralization mean?）</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#e0d49b44-6b84-4197-9438-889e03604b97">24.7 去中心化与分布式的反思（decentralized ≠ distributed）</a></div></nav><hr id="edf4f55e-45e9-4b90-9899-75542f3dc158"/><p id="5b170661-f403-44ee-8acf-acf250476db3" class="">
+</p><h2 id="7e257ae1-7d07-42b6-8303-304e3487e346" class="">24.1 智能合约的反思：智能合约真的智能吗？(Is smart contract really smart?)</h2><p id="66c4d942-d0aa-4905-a6e5-1119cd2c5687" class="">首先我们必须了解智能合约里面并没有用到任何人工智能的技术，所以有人认为应该把它叫做自动合约，按照事先写好的代码，自动执行某些操作，现实世界当中，有什么自动合约的例子吗？ATM取款机可以看作物理世界上的一个自动合约，按照事先规定好的逻辑去做某些事情。所以智能合约其实并不智能，而且挺笨的，一旦写好了之后就改不了了，就是作为代码合同（Smart contract is anything but smart）</p><h2 id="1b88b659-e428-4466-ba97-c4ae4cd2c463" class="">24.2 不可篡改性是把双刃剑（Irrevocability is a double edged sword）</h2><p id="d44d02fc-637b-4c38-a10e-7aa0fc8fbcd4" class="">一般来说我们提到区块链的不可篡改性都认为这个是区块链的一个优点，很多区块链的应用都利用了不可篡改的特性，比如防伪、溯源。但是从The DAO事件当中，可以看出不可篡改性其实是一个双刃剑。一方面，不可篡改性增加了合约的公信力，但另一方面，不可篡改性也意味着如果规则中有漏洞，我们想要修补这个漏洞，想软件升级都是很困难的。The DAO的盗币事件有传闻说The DAO的开发团队在发生盗币事件前几天已经收到了有关智能合约中存在安全漏洞的消息，但是没有来得及发布更新后的软件。这个如果是对于一个中心化的系统，大家可能会觉得是很难想象的，如果你发现你的软件中的安全漏洞，你干嘛不及时发布一个安全补丁呢。但是问题在于在区块链的世界里你怎么发布补丁，软件更新需要硬分叉来实现，还需要得到大部分矿工的支持。无论是比特币还是以太坊，硬分叉都不是随便搞的，这次以太坊搞的硬分叉，最后就造成了两条平行的链，而且要搞硬分叉要说明理由，否则别的矿工为什么要升级你的软件，而你一旦说明理由的话，那就会把安全漏洞的信息泄露出去，那么有恶意的攻击者在还没有来得及升级软件之前抢先发动攻击，这些都是区块链上不可篡改性带来的一些问题</p><p id="c3c457d6-7a3e-439b-8d41-7dfbba727098" class="">不可篡改性还导致另一个问题，即使我们发现了这个安全漏洞，已经有人进行恶意攻击了，我们想要冻结账户，终止交易都是很困难的。这个和我们日常生活的体验不太一样的地方，比如说你的银行卡的信息被泄露了，第一反应是通知银行，冻结账户，修改密码。很多人在刚接触区块链的时候也是同样的反应，发现比特币账户的私钥泄露出去了，怎么办，赶紧通知谁把账户给冻结了，没有办法冻结，要冻结的话只能软分叉，实质上要发布一个软件更新，有关要冻结的账户的交易都不予执行，这才可以冻结，对于个人来说，你的私钥泄露出去了搞一个软分叉，这是不可能的，对于普通人只能尽快将剩下的资金转到安全账户</p><p id="80bdf3fe-22ef-4117-bb32-835c342b19f8" class="">与之相关的一个问题，智能合约发布到区块链上就无法阻止别人对它的调用，比如说这次的盗币事件，黑客偷走了差不多1/3的以太币，还有2/3的以太币还在The DAO相关的子基金里，同样存在着安全的风险。我们传统直观的认为，智能合约出问题了，那就不能让别人去调用它了。但在区块链上你没办法组织别人对它的调用，你要阻止的话又要软分叉，增加一条新的规则，凡是调用这个智能合约的交易都不予执行。所以还剩的2/3的资金也应该及时转走，怎么转走？利用黑客的这个漏洞把钱转走。当时就有人建议这么做的，比如说你是个好人，你创建一个新的智能合约，把这个事情公布给大家，说现在要利用黑客的漏洞把剩下的钱转移到安全的智能合约，手段和重入攻击是一样的，只不过你的目的是好的，这个新的合约的目的是将来把钱退给大家。</p><h2 id="ed9ee5b9-bae9-4c6c-80f5-e8e440a96ac2" class="">24.3 没有什么是真的不可篡改的（Nothing is irrevocability）</h2><p id="df85ac5e-f8af-4cd5-90a0-92b10cda616b" class="">理论上，没有什么是绝对不可篡改的，比如分叉攻击可以回滚交易。The DAO事件中，以太坊开发团队通过软件升级方式强行改变了某些账户的状态，所以不能迷信不可篡改的特性。毕竟代码是死的人是活的，没有什么是绝对改不了的，连宪法都可以修宪，比如美国的宪法修正案，修宪是很难的，但是有必要的时候还是可以改的。区块链上是一样的，想要篡改是比较难的，但是遇到重大事件，要是想改还是改的了的</p><h2 id="15c790cc-a1ab-4ee1-a258-e6af4cdc188f" class="">24.4 合约语言设计的反思（Is solidity the right programming language?）</h2><p id="87b77a34-e762-4b26-845e-d43cb5e585b7" class="">为什么会出现重入攻击这样的事情，从某种意义上来说，Solidity语言上有一些反自然的特性，我们一般的理解是我给你转账，你是一个被动的接收者，你不可能再回来调用我。但Solidity语言的特性是，我给你转账等于调用了你的fallback()函数，虽然表面上我没有调用任何的函数，结果你还可以倒过来调用我。这个和平时的生活体验不一样，所以容易忽视这样的安全漏洞</p><p id="f5388e7f-654c-4532-9f85-a8a79b8c7e6e" class="">有人提议应该改进为函数式编程语言，这样比较安全，不容易出现漏洞，而且从长远来看，要实现理论上证明智能合约的正确性。如果能够用形式化验证（formal verification）的方式，证明一段程序的正确性，那么将能够解决智能合约的漏洞问题，这个有些人曾经认为是智能合约的一个终极目标。但是形式化验证距离实用仍有很大的距离，一般只能证明一些逻辑简单的正确性，而且在证明过程要屏蔽掉很多实现上的细节，这样导致的结果就是即使这个程序从理论上可以证明的正确的，实际跑起来可能仍然有问题。从语言设计上来说，Solidity有很多值得改进的地方，但是不是说我们就该用函数式编程语言，就应该用formal proof的方法证明程序的正确性，这个还有待探讨</p><p id="3b27959f-ac22-427b-9927-f4ca3cc780e5" class="">语言设计上的第二个反思是，编写智能合约的语言应该有什么表达能力。我们前面讲过比特币和以太坊的区别，比特币的脚本语言就是很简单的，表达能力很差，而以太坊的编程语言是图灵完备的，凡是计算机能完成的任务，语言都能实现，但是图灵完备的表达能力是不是一个好事情。出现智能合约的漏洞后，有些人认为，应该选取一种表达能力适中的语言，它可以实现智能合约的功能，又不容易出现漏洞。但是难以设计出适当的语言，因为设计语言的时候很难预料将来所有可能出现的所有应用场景，也很难预料将来可能出现的所有安全攻击</p><p id="d07f2a45-b4af-4539-8f1e-cd327e26aafb" class="">我们说比特币脚本是很简单的，但在实际应用中大部分矿工也只是接收几个常用的脚本，有一个安全脚本的白名单，如果交易的脚本不在白名单里面，很多矿工缺省情况下是不接受的。联想到现实中的合同，也会出现由于不严谨出现一些纠纷，所以通常使用模板写合同来规避这些问题。智能合约可以参考这种在模板基础上书写合约的方法，以后应该也会出现类似写智能合约的专门机构。所以大家不要对智能合约出现了各种各样的问题就对它丧失信心，智能合约的历史相对来说比较短的，最终还是会走向成熟</p><h2 id="b06b55f0-a528-4636-ad8d-01117709fb39" class="">24.5 开源软件漏洞的反思（Many eyeball fallacy）</h2><p id="bde85255-d09e-4124-864a-809e23bfe94a" class="">去中心化的系统一般都是开源的，因为需要所有节点执行同样的操作，才能达成共识。开源的一个好处就是增加合约的公信力，接受群众的监督；有人认为另一个好处是不容易出现安全漏洞，因为全世界有这么多双眼睛在看着这个代码，但实际情况并不如此，我们也看到了智能合约的代码出现了各种各样的漏洞，而且这个问题不是智能合约所特有的，其他开源的软件也有类似的问题。那全世界有这么多双眼睛看着为什么还出现了这么多漏洞？</p><p id="9dd16ef3-611c-4b69-b2d4-6983d46309b7" class="">理论上代码是开源的，但实际上去研究代码的人是很少的，像The DAO这样涉及到财产安全的项目，你要把你的钱投进去，投钱之前是不是需要检查下这个智能合约靠不靠谱，但是很多人都没有仔细看，看的人可能也没有足够的安全知识去检测里面的安全漏洞。有很多手机上的区块链钱包也是开源的，也是涉及到财产安全的，那么有多少人是去看了钱包的源代码的，有多少是看的懂的，大家都认为别人一定看过了，实际上可能没有谁认真看过，所以不要认为开源软件一定比不开源的软件安全，有很多人用的软件也不一定没有安全漏洞，历史上有很多开源软件的安全漏洞是很多年后发现的。所以这些关键性应用我们还是要小心仔细，需要自己去检查下智能合约是否有安全问题</p><h2 id="61c62300-8edb-45eb-8cdd-896311606a96" class="">24.6 去中心化的反思（What does decentralization mean?）</h2><p id="749ee187-d954-4775-a31b-dd58974532c7" class="">区块链技术的追随者一般都是去中心理念的拥护者，这些人对于现实生活中中心化的管理方式不满意，所以在区块链的世界中去寻找一种全新的管理方式。这也是为什么以太坊开发团队在推出了硬分叉的解决方案后引发了这么大的争议，有很多人认为又回到了中心化的老路上面，你开发团队凭什么用一个软件升级就把一个人账上的钱转走，这个岂不是比中心化更中心化，在中心化的社会里要没收一个人的财产还需要通过法律各种各样的程序，28天以内还不一定能完成</p><p id="01d6640e-3c2a-44f5-9aae-46857af3dd31" class="">但是回想一下这个硬分叉的过程，是不是就是以太坊的开发团队说的算的。首先他们搞了一个投票，最后是大部分人投票支持硬分叉，但是更重要的是以太坊的团队是没有办法强迫大家支持这个投票结果，最后硬分叉能够成功是因为90%以上的矿工升级了软件，用行动支持了硬分叉，即使是这样还有少部分的矿工不支持硬分叉的方案，继续留在旧链上挖矿，那也是他们的自由，以太坊的团队没有什么办法强制他们转过来。所以说去中心化并不是说全自动化，让机器决定一切，不能有人为的干预，去中心化也不是说已经制定的规则就不能修改，而是说对规则的修改需要用去中心化的方式完成。我们平时说是用脚投票，区块链的世界里是用挖矿来投票的。这次硬分叉为什么成功，是因为绝大多数矿工认为以太坊的开发团队所做的决定是符合大部分人的利益的，大家不要低估了广大部分矿工的思想觉悟。如果以太坊开发团队为了一己私利做了什么决定，那广大工人阶级是不会跟着他们这样干的，这是关于去中心化的反思</p><p id="bd7a989e-e641-43e2-8002-a9236623001d" class="">关于分叉的事情，我们一般认为分叉是件坏事，但是你仔细想一下分叉恰恰是去中心化的体现。在一个中心化的系统里，你是没有办法分叉的，你可以选择放弃，但是你不能选择分叉。比如以太坊创始人Vitalik的故事，19岁的他非常喜欢打魔兽世界，直到有一天暴雪公司把他最喜欢的技能去掉了，他非常生气，多次找暴雪公司的人反馈，没有得到任何满意的结果，他一气之下就不玩了，后来他就想为什么会出现这种情况， 本质上是因为这个游戏是一个去中心化的游戏，决定权在公司，普通用户没有任何办法，所以他决定要去创建一个去中心的平台，用户不满意就有选择分叉的权利。所以存在分叉的选项恰恰是民主的体现</p><h2 id="e0d49b44-6b84-4197-9438-889e03604b97" class="">24.7 去中心化与分布式的反思（decentralized ≠ distributed）</h2><p id="9e3d52e6-ebff-454a-826f-3a07fe92f3e0" class="">一个去中心化系统必然是分布式的，但是分布式系统不一定是去中心化的，即使这个系统运行在成千上万的计算机上，如果这些计算机都是由同一个组织所管辖的，那么也不能叫做去中心化的。在分布式的平台上可以运行一个中心化的应用，也可以运行一个去中心化的应用</p><p id="84938bbd-b175-4773-ac86-266f475ea3eb" class="">比特币和以太坊都是交易驱动的状态机（state machine），它的特点是让系统中几千台计算机做同一个操作，付出很大的代价来维护状态的一致性，而这个并不是分布式系统常用的工作模式，大多数的分布系统是让不同机器做不同的事情。然后再把各台机器的结果汇总起来，得到最后的结果，这样做的目的是为了比单机的速度要快。比如说1台计算机要完成的任务，可能需要一个星期，用10台计算机的分布式集群，可能一天就完成了，最理想的状况是得到线性加速，就是10台计算机的速度比1台计算机的速度要快10倍，但是实际应用当中，线性加速是很难达到的，因为存在任务切分、任务通讯、结果汇总都是有开销（overhead），所以实际应用当中10台计算的速度可能相当于1台计算机的6、7倍，但是任然要比1台计算机要强，这样分布式系统才有意义</p><p id="345264b1-7481-4737-8f3c-a43d66be1d8c" class="">状态机的模式不是这样的，状态机的目的不是比1台计算的处理速度快，而是为了容错。状态机最早的应用场景是什么，是一些mission critical applications（关键任务应用），比如像air traffic control, stock exchange, space shuttle，这些是状态机常见的应用场景，这些场景的特点是什么？这些应用程序必须无间断的向外提供服务，所以需要好几台计算机重复同一种操作，这样即使1台计算机宕机，剩下的计算机还能向外提供服务，这是状态机模式的原理。这样付出的代价是什么，效率很低，几台机器合在一起比一台机器还要慢，因为它要同步状态，而且集群里的机器越多速度越慢，所以传统利用状态机的模型里面机器的数量是比较少的，有很多就是个位数的。像比特币、以太坊这样上千台机器重复同一组操作，在以前是从来没有过的。所以不要以为比特币和以太坊是分布式系统的常态，我们理解了这点就能理解智能合约比较适用的场景是什么，不要把智能合约EVM平台当成大规模计算或者大规模存储等服务，如果你这么做的话，不光是速度很慢，而且也是非常贵的，因为要耗很多汽油费、智能合约是用来编写控制逻辑的，只有那些需要在互不信任的实体之间建立共识的操作，才需要写在智能合约里。如果你需要大规模计算服务的话，可以用亚马逊的云服务平台</p><p id="e94fec34-a9ef-4c4d-af98-939fc3208b7b" class="">
+</p></div></article></body></html>

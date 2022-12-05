@@ -1,0 +1,672 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第七节:BTC-挖矿难度调整</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="83c84362-8e8c-432e-985b-dee8f4b72bf9" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/webb4.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍈</span></div><h1 class="page-title">第七节:BTC-挖矿难度调整</h1></header><div class="page-body"><nav id="6a7189c3-c975-4b15-b180-8512ae7c0e5e" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#7a3a0d43-8eda-4649-a8b4-f9ebb845cf4a">7.1 目标阈值</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#6a5ddb5b-edf8-458c-b424-92b612893edd">7.2 挖矿难度</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a87212b2-8ec9-4105-87b9-94b97a34dcf7">7.2.1 为什么要调整挖矿难度</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#261b5eb3-8fc4-4eb7-b37f-2c14bb9b1d02">7.2.2 调整规则</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#283a20d0-13cd-455c-9510-bc737db47435">7.2.3 比特币算力增长</a></div></nav><hr id="74aa7854-447d-46fb-902a-4176dbb7fffc"/><h2 id="7a3a0d43-8eda-4649-a8b4-f9ebb845cf4a" class="">7.1 目标阈值</h2><p id="446fc162-310c-414d-995f-672b8f3df138" class="">目标预值越小，挖矿的难度越大。调整挖矿的难度就是调整目标空间在整个输出空间中所占的比例。</p><p id="8c776995-bbbd-4e63-ba28-262c80b5a019" class="">比特币用的哈希算法是SHA-256，这个产生的哈希值是256位，所以整个输出空间是2的256次方。调整这个比例，即目标空间占输出空间的比例，通俗的说，就是哈希值前面要有多少个0。比如说256位的哈希值，要是合法的区块，要求算出来的哈希，前面至少有70个0。当然这只是通俗的说法，因为这个目标预值，并不是说前面都是0，从某一个位置开始，后面都变成了1。</p><h2 id="6a5ddb5b-edf8-458c-b424-92b612893edd" class="">7.2 挖矿难度</h2><p id="cb890fd6-7306-4f12-9898-15dfcc394607" class=""><strong>挖矿的难度跟目标预值是成反比的</strong>，公式是</p><figure id="0cd6a2da-8f86-44b2-b9a4-70cb9f1a0871" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>d</mi><mi>i</mi><mi>f</mi><mi>f</mi><mi>i</mi><mi>c</mi><mi>u</mi><mi>l</mi><mi>t</mi><mi>y</mi><mo>=</mo><mfrac><mrow><mi>d</mi><mi>i</mi><mi>f</mi><mi>f</mi><mi>i</mi><mi>c</mi><mi>u</mi><mi>l</mi><mi>t</mi><mi>y</mi><mi mathvariant="normal">_</mi><mn>1</mn><mi mathvariant="normal">_</mi><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi></mrow><mrow><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">difficulty=\frac{difficulty\_1\_target}{target}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.10764em;">ff</span><span class="mord mathnormal">i</span><span class="mord mathnormal">c</span><span class="mord mathnormal">u</span><span class="mord mathnormal">lt</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.27488em;vertical-align:-0.8804400000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.39444em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.6999999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.10764em;">ff</span><span class="mord mathnormal">i</span><span class="mord mathnormal">c</span><span class="mord mathnormal">u</span><span class="mord mathnormal">lt</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord" style="margin-right:0.02778em;">_1_</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804400000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div></figure><p id="8cc38677-0240-4e44-b61f-7cb0e0e57f34" class="">上面是指挖矿难度等于1的时候所对应的目标预值，挖矿难度最小就是1，这个时候对应的目标预值是个非常大的数。</p><p id="ff86735b-524a-4cf1-82b1-fbb6661f141f" class="">即target越大，挖矿是越容易的。所以公式里很大的一个数，除以当前的目标预值，得到的就是当前的挖矿难度。所以difficulty和target大小是成反比的。</p><h3 id="a87212b2-8ec9-4105-87b9-94b97a34dcf7" class="">7.2.1 为什么要调整挖矿难度</h3><p id="8a2b281d-fbf4-4962-b057-aaad8d1f9ec2" class="">为什么要调整挖矿难度呢?如果不调会有什么问题呢?系统里的总算力越来越强，挖矿难度保持不变的话，<strong>出块时间是越来越短的</strong>。</p><p id="a813a926-7a85-4284-9557-ec634effa0bc" class="">出块时间越来越短，会有什么问题吗?</p><p id="d6aeb8b5-9744-4524-a6e4-9993d7900c01" class="">比如说不到一秒就出一个区块，区块在网络上传播的时间可能需要几十秒，底层的比特币网络可能需要几十秒才能让其他节点都收到。别的节点没有收到这个区块之前还是继续沿着已有的区块链往下扩展。如果有两个节点同时都发布一个区块，这个时候就会出现分叉。</p><p id="8b4da722-b2f2-4ffc-917a-3711560951cf" class="">出块时间如果越来越短的话，这种分叉会成为常态，而且不仅会出现二分叉，可能会出现很多的分叉。比如10个区块同时被挖出来，系统可能会出现10分叉。</p><figure id="5f9e2a01-994a-4681-a452-df8195406c58" class="image"><a href="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image2.png"><img style="width:427px" src="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image2.png"/></a></figure><p id="3218fa05-9e53-4c24-8360-85544bec8e05" class=""><strong>分叉如果过多，对于系统达成共识是没有好处的，而且危害了系统的安全性</strong>。比特币协议是假设大部分算力掌握在诚实的矿工手里。系统当中的总算力越强，安全性就越好，因为有恶意的节点想掌控51%的算力就越难。如果掌握了51%的算力，它就可以干很多坏事，比如分叉攻击。</p><p id="ae14f687-9af3-4583-bd8d-61a31415cd94" class="">如果后面分叉多的话，前面某个区块里的某个交易，很可能就遭受分叉攻击，恶意节点会试图回滚。因为后面分叉多，算力就会分散，恶意节点得逞的概率更大。这个时候恶意节点就不需要51%的算力了，可能10%的算力就够了，因此出块时间不是越短越好。</p><figure id="7eb6562a-a184-4992-b158-a5917cd52a3c" class="image"><a href="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image3.png"><img style="width:411px" src="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image3.png"/></a></figure><p id="e789f1eb-7f1e-4741-8d80-be5d588a6f49" class="">那10分钟的出块时间是不是最优的呢?不一定。改成其他值也可以，有间隔只是说应该有个常数范围。以太坊系统出块时间就降低到了15s，所以以太坊的出块速度是比特币的40倍。</p><p id="1936a09b-f343-4f4e-bda5-cc6ca2eb998b" class="">出块时间大幅度下降之后，以太坊就要设计新的协议，叫<strong>ghost</strong>。在该协议中，这些分叉，产生的orphan block(即产生最长合法链后另一个要被丢弃的区块)就不能丢弃掉了，而是也要给它们一些奖励，这叫uncle reward。以太坊也要调整挖矿难度，使出块时间保持在15s。</p><h3 id="261b5eb3-8fc4-4eb7-b37f-2c14bb9b1d02" class="">7.2.2 调整规则</h3><p id="104a9d76-fddb-4f99-a394-a597fb4cd9ef" class="">讲完了为什么要调整挖矿难度，现在讲一下怎么调整挖矿难度。比特币协议中规定，每2016个区块后就要调整目标预值，这大概是每两个星期调整一次。</p><p id="489ec8e7-5d2b-4da2-a2c5-7d3d30334b18" class="">具体的调整公式:</p><figure id="b5cc221b-034d-4181-9e8b-77111d8ee2c1" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi><mo>=</mo><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi><mo>×</mo><mfrac><mrow><mi>a</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>a</mi><mi>l</mi><mtext> </mtext><mi>t</mi><mi>i</mi><mi>m</mi><mi>e</mi></mrow><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>e</mi><mi>d</mi><mtext> </mtext><mi>t</mi><mi>i</mi><mi>m</mi><mi>e</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">target=target\times\frac{actual\ time}{expected\ time}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.80952em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.80952em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.25188em;vertical-align:-0.8804400000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.37144em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="mord mathnormal">x</span><span class="mord mathnormal">p</span><span class="mord mathnormal">ec</span><span class="mord mathnormal">t</span><span class="mord mathnormal">e</span><span class="mord mathnormal">d</span><span class="mspace"> </span><span class="mord mathnormal">t</span><span class="mord mathnormal">im</span><span class="mord mathnormal">e</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="mord mathnormal">c</span><span class="mord mathnormal">t</span><span class="mord mathnormal">u</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mspace"> </span><span class="mord mathnormal">t</span><span class="mord mathnormal">im</span><span class="mord mathnormal">e</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804400000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div></figure><p id="7c178c7c-cfa6-4b7a-bfdc-da2e831d76f1" class="">actual time指产生2016个区块实际花费的时间，expected time指产生2016个区块应用的时间，即2016×10min。</p><p id="ccb3e34b-a5fe-48cf-84b9-3da60d9a0ac8" class="">如果实际花费时间超过了两周，即平均出块时间超过了10min。那么这时候挖矿难度要调的低一点，应该让出块更容易。因此该公式算出来的target会变大，则难度会下降。</p><p id="cc1ebc3e-ead7-4916-9cab-489a1bed8b25" class="">实际上，上调和下调都有四倍的限制。假如实际时间超过了8个星期，那么我们计算公式时也只能按4倍算，目标预值增大最多只能增大4倍。</p><p id="75d82d10-4ddf-4025-a886-a9184fa0bd94" class="">那怎么才能让所有的矿工同时调整目标预值呢?计算target的方法写在比特币系统的代码里，每挖到2016个区块会自动进行调整。如果有恶意的节点故意不调，会怎么样?</p><p id="109da047-2678-45b3-a1e6-a759d34e19fa" class="">如果一个节点不调，将区块发布出去，诚实的节点是不会认的。nBits是target一个编码的版本，在block header里没有直接存储target的域，因为target的域是256位，直接存target的话要32个字节。nBits在header里只有四个字节，所以可以认为是它的一个压缩编码。</p><p id="692141c9-07cb-4d02-b7c7-0f9c8470688b" class="">如果遇到有恶意的矿工，该调的时候不调，这时检查区块的合法性就通不过。因为每个节点要独立的验证发布的区块的合法性。检查的内容就包括:nBits，目标预值设的对不对。如果投机取巧设计一个过大的目标预值，使得你自己挖矿容易了，但这个区块是不会被接受的。</p><h3 id="283a20d0-13cd-455c-9510-bc737db47435" class="">7.2.3 比特币算力增长</h3><p id="db6540b5-b724-42b8-81b6-eb0a16fbeb6d" class="">如图显示的是<strong>比特币系统中总算力的变化情况</strong>。</p><figure id="f6b9709e-01c2-4cf0-972b-84629808e849" class="image"><a href="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image4.png"><img style="width:700px" src="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image4.png"/></a></figure><p id="1bda72a2-199d-4a51-a245-95683e7731a7" class="">在比特币没有流行前，有很长一段时间，算力没有太明显的增长，前面这些年的hash rate几乎是0。其实这些年算力也是增长的，只是后面这些年算力增长的太快了，所以前面部分看上去像是一条直线。去年是涨得非常猛的一年，这也体现在了hash rate 的增长上，算力呈现出指数级的增长。即使在这段黄金时期，算力也不是单调递增的，中间也是有很多波动。</p><p id="fb43c37b-9d08-40c7-a372-f94ad3be9817" class="">如图是<strong>挖矿难度的变化情况</strong>，跟算力的增长基本上是同步的，这也符合难度调整的设计目标。</p><figure id="ca202241-dd4e-4db5-be0b-0e7a7fad1448" class="image"><a href="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image5.png"><img style="width:700px" src="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image5.png"/></a></figure><p id="65fd123a-3e5f-4adc-89ac-f388eb1e7082" class="">通过调整挖矿难度，使得出块时间保持稳定。注意这个图显示的是挖矿难度，不是目标预值。</p><p id="aeddd067-32ef-4dbb-a0ec-e5ffe9248d83" class="">如图是<strong>最近半年的难度调整曲线</strong>，可以看出很明显是一段一段的。</p><figure id="84e68612-5b31-44f4-9858-11ffa81ee3de" class="image"><a href="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image6.png"><img style="width:700px" src="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image6.png"/></a></figure><p id="5ec235f8-43a2-44a1-9838-2328fd43ada3" class="">每隔两个星期，难度上一个台阶，说明挖矿的人越来越多，用的设备越来越先进，反应出大家对比特币的热情越来越高。如果出现相反的情况，比如某个加密货币的挖矿难度越调越小，说明挖矿变得越来越容易了。但这不是好事，说明大家对币的热情是逐渐减小的。持续出现这种情况说明这个币将被淘汰。</p><p id="6f10a8f5-17a0-4362-af5b-ee7021e36994" class="">如图显示的是每天的出块时间。可以看出，总的来说出块时间稳定在10分钟上下振动。</p><figure id="332468a6-32bf-4c5b-94e0-8f01b94d968c" class="image"><a href="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image7.png"><img style="width:700px" src="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image7.png"/></a></figure><p id="b84138d2-c5a9-4467-b279-be7e2f4155c0" class="">如图显示最近半年的出块时间，也是维持在10分钟左右。</p><figure id="0d3dc06b-abe7-4be2-b2d3-b230d2d02e26" class="image"><a href="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image8.png"><img style="width:700px" src="%E7%AC%AC%E4%B8%83%E8%8A%82%20BTC-%E6%8C%96%E7%9F%BF%E9%9A%BE%E5%BA%A6%E8%B0%83%E6%95%B4%2083c843628e8c432e985bdee8f4b72bf9/image8.png"/></a></figure><p id="978a3469-587c-47c9-b913-daefa91f6f06" class="">挖矿难度的公式:</p><figure id="db1f763d-5c05-49da-bb1a-d7e82ab8a6ff" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>下一个难度</mtext><mo>=</mo><mfrac><mrow><mtext>前一个难度</mtext><mo>×</mo><mtext>两周</mtext></mrow><mrow><mtext>挖前</mtext><mn>2016</mn><mtext>个区块用的时间</mtext></mrow></mfrac></mrow><annotation encoding="application/x-tex">下一个难度 = \frac{前一个难度\times两周}{挖前2016个区块用的时间}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord cjk_fallback">下一个难度</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.04633em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.36033em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord cjk_fallback">挖前</span><span class="mord">2016</span><span class="mord cjk_fallback">个区块用的时间</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord cjk_fallback">前一个难度</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord cjk_fallback">两周</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div></figure><p id="add6ee12-e8a9-489e-80f6-ada49c89be54" class="">(注意:前面的公式是目标预值的公式，不要混淆了)</p><p id="6c572d50-fb4b-4baa-98e8-e105f14482a7" class="">
+</p><p id="b970cff8-909f-4aed-a44e-7b7fa63c4c5e" class="">
+</p></div></article></body></html>

@@ -1,0 +1,671 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第十八节:ETH-GHOST协议</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="5a6edd17-f84d-44ca-83d7-b93c3f685138" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/rijksmuseum_jansz_1636.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍉</span></div><h1 class="page-title">第十八节:ETH-GHOST协议</h1></header><div class="page-body"><nav id="149bf6ad-0a4f-40ff-a33f-313f5a8cb614" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#0bb81830-63ea-4ced-9845-a5dfd0943489">18.1 产生原因</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#e157d094-a92e-4f92-8edf-6a010cad385c">18.1.1 以太坊的出块时间</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4d435613-fe92-415e-aa95-9ce12e6376bf">18.1.2 以太坊与比特币系统的平均出块时间对比</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d12b3245-f76a-4d7d-98dd-e63253cdc157">18.1.3 带来的问题</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#8b555ef4-cc1b-4b75-bf82-895695202c4d">18.2 GHOST协议</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#bfcdc7ff-514b-4cd0-9cbd-d53c7971421d">18.2.1 GHOST协议的核心思想</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f191d760-e258-4fbf-85b8-88ff654b6356">18.2.2 GHOST协议的缺陷</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#deca791f-a017-42ef-9dee-c31058353de0">18.2.3 改进后的GHOST协议</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0fd544bc-ef4f-4c92-ba13-205f41c60c07">18.2.4 改进后的GHOST协议无法解决的问题</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#c1f21ac3-b615-4ae2-99ec-f915d31251be">18.3 以太坊中的奖励</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#9b2f0236-867e-4daf-bbf0-7a9f7b9e311d">18.4 思考</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#738b0b96-dfb1-4336-8a39-1fb220b472be">18.5 实例</a></div></nav><hr id="2f428aec-72b2-4bb0-9d0c-b0d2361020f7"/><p id="bd8ddaa9-c174-4b20-af71-5c99ff38cfad" class="">
+</p><h2 id="0bb81830-63ea-4ced-9845-a5dfd0943489" class="">18.1 产生原因</h2><h3 id="e157d094-a92e-4f92-8edf-6a010cad385c" class="">18.1.1 以太坊的出块时间</h3><p id="7c43ad6c-ee92-4316-b86d-d79a316bdc1f" class="">以太坊将出块时间降到了十几秒，提高了系统的吞吐量（Throughput）、降低了反应时间。与比特币系统出块时间的10分钟相比，以太坊的出块速度相当于提高到40倍，这样大幅度降低出块时间后也带来一些新的问题。比特币和以太坊都是运行在应用层的共识协议，底层是一个P2P的Overlay Network，Overlay Network本身的传输时间比较长（其拓扑协议做flooding的时候没有考虑实际的拓扑结构）。带来一个问题：发布区块的时候，该区块在网络上传到其他节点可能需要十几秒，那么就有较大可能会有两个节点（甚至多个），同时获得记账权，从而造成临时性分叉。</p><h3 id="4d435613-fe92-415e-aa95-9ce12e6376bf" class="">18.1.2 以太坊与比特币系统的平均出块时间对比</h3><p id="e5249d44-3b4d-4540-b5ca-90b7e6334277" class="">对于比特币系统来说，平均出块时间是600秒，足够让新发布的区块传播到网上的其他节点，但由于挖矿是个概率的过程，仍有两个矿工同时获得记账权、同时发布区块的可能，会带来临时性的分叉。在以太坊中，这种临时性的分叉会变成常态，而且分叉的数目也会变得更多（十几秒的出块时间很有可能别的节点没有来得及收到发布的区块，还沿着原来的区块链往下挖，可能等到收到发布的区块的时候，他自己已经挖到了区块），这对于共识协议来说，是一个挑战。</p><figure id="924ccbb2-cb4e-4a3f-adc1-931b65641ef0" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image28.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image28.png"/></a></figure><h3 id="d12b3245-f76a-4d7d-98dd-e63253cdc157" class="">18.1.3 带来的问题</h3><p id="40c93c40-550b-4701-bc66-10286c9207e7" class="">比特币系统中，只有在最长合法链上的那些区块，所包含的出块奖励才是真正有用的，其他的一些分叉的链上的出块奖励其实是作废的，如图1-1所示。比如图中区块链，分了三个叉，差不多是同一个时间取得了记账权，最后有一个会胜出成为最长合法链，假定中间区块胜出，那么上面和下面的这个区块叫做<strong>Orphan Block</strong>或<strong>Stale Block</strong>，<strong>挖到这类区块的矿工在里面有一个铸币交易，能够得到一定数量的比特币，但这个实际上是没有用的，因为不在最长合法链上，所以得到的出块奖励最后等于作废了。</strong>对于比特币来说，这种临时性的分叉不是很多，所以这么规定可以接受。</p><p id="d7b7530a-56fc-4629-8e50-6e812b3181dc" class=""><strong>对于以太坊来说，如果也将分叉区块的出块奖励作废的话，则意味着这个矿工挖到的区块有很大概率是白挖，对于个体矿工特别明显。</strong>按照常理，矿工的收益应该与算力成正比，矿池的收益也应当与矿池的总算力成正比。但大型矿池会出现Mining Centralization（挖矿集中化），即大型矿池所在的分叉更有可能成为最长合法链，这促使别的矿工沿着最长合法链继续挖（因为如果别的链去挖，很有可能白挖）。这样会使大型矿池出现恶性循环，越是大型矿池得到的收益越大，Mining Centralization更严重，有时候叫Centralization Bias，即中心化带来的不成比例的优势。<strong>如果以太坊按照比特币的共识机制就会有一定的问题。</strong></p><h2 id="8b555ef4-cc1b-4b75-bf82-895695202c4d" class="">18.2 GHOST协议</h2><p id="63c8570c-ba4a-4d4c-9d8d-b7e837c8e22b" class="">为解决以太坊如果按照比特币的共识机制产生的问题，采用<strong>一个基于GHOST协议的共识机制</strong>，这个协议并非以太坊发明的，以太坊只是对该协议做了一些修改。</p><h3 id="bfcdc7ff-514b-4cd0-9cbd-d53c7971421d" class="">18.2.1 GHOST协议的核心思想</h3><p id="a975a6be-a3c5-45c9-be2b-513d5c9e8523" class="">挖到矿的矿工发布一个区块，即便这个区块最后作废了，也会给予一些奖励，这个时候也能得到一些出块奖励，将作废的区块（上图1-1中的Orphan Block或Stale Block）称为Uncle Block。相对于最长合法链的当前区块来说，是他的叔父区块，最长合法链的下一个区块在发布的时候可以把叔父区块包含进来，如图2-1所示。</p><figure id="98b2f502-62f9-45a2-9ea1-a713efc69fc4" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image29.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image29.png"/></a></figure><p id="9127a38b-749f-4a4f-998b-1efd0ab1925a" class="">该协议的核心思想是：<strong>给予挖到矿但是没有成为最长合法链的那些矿工一种安慰。</strong>虽然挖的区块没有成为最长合法链上的区块，但仍可以得到大部分的区块奖励。这样<strong>有利于鼓励系统中出现分叉后及时合并，相当于最长合法链上面的区块将另外两个分叉链给招安过来</strong>，这是GHOST协议最初的版本。</p><h3 id="f191d760-e258-4fbf-85b8-88ff654b6356" class="">18.2.2 GHOST协议的缺陷</h3><p id="a3fde4ee-6210-4659-9985-f08a709058ef" class="">（1）Uncle Block的个数不能超过两个</p><p id="10e119ee-6155-415a-967c-057aa1d2721f" class="">Uncle Block只能包含两个，如果出现第三个Uncle Block，如下图所示，<strong>设计GHOST的目的是给Uncle Block一点好处，把它们合并过来，但是只能招安两个</strong>，如果出现第三个Uncle Block就没办法了。其实，只能包含两个Uncle Block也是有道理的，因为叔父区块得到八分之七的出块奖励是很高的，要是不限制的话，那么以太币就太不值钱了。</p><figure id="a559be94-14e0-4ec9-954b-78282b79b364" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image30.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image30.png"/></a></figure><p id="165796d0-fdf3-4727-b8c0-e3ca0b1b46df" class="">（2）区块传播存在延迟</p><p id="ca0f03a9-71f1-4170-8861-9e78d2ab95f6" class="">区块D把区块A作为叔父区块的前提是：在挖这个区块D的时候已经知道区块A这个叔父区块的存在了，如果已经发布了D这个区块，然后才知道叔父区块，这时候已经来不及了，叔父区块就变成什么好处都没有了。</p><p id="5ef0f2e7-5804-4444-81d8-f0e6ce6feee2" class="">（3）受矿工主观影响</p><p id="9b4198c0-3509-4b1d-9871-1b831be0afd6" class="">如果这个矿工比较自私的话，出于商业目的，有可能故意不包含叔父区块，就是挖的时候知道这个叔父区块，但是就是不包含，这样的话，对叔父区块来说，7/8的出块奖励是得不到的，对于他自己来说，1/32的出块奖励是得不到了，好像是损人不利己，但要从商业竞争的角度讲，这么做对这个矿工的损失是比较小的，对挖出叔父区块的矿工的损失是比较大的。</p><h3 id="deca791f-a017-42ef-9dee-c31058353de0" class="">18.2.3 改进后的GHOST协议</h3><p id="1e2d6b1d-178c-428a-8175-e8ca9692e90e" class="">改进后的GHOST协议如图所示。这么规定<strong>解决了矿池出于竞争关系故意不把某个叔父区块包含进去的问题</strong>。比如区块D故意不包含区块A，但是区块E仍然可以包含区块A。甚至有可能出现一个情况：挖到区块A的矿工发现自己不在最长合法链上，就沿着区块D挖出了区块E，然后就可以把自己的区块A包含进去。</p><figure id="d72616b6-33f0-426b-b4e4-31641dca8675" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image31.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image31.png"/></a></figure><p id="cd601ad5-e64f-4469-baf2-68f8c241db09" class="">这样的话，也<strong>解决了出现第三个叔父区块的问题</strong>。改进的GHOST协议的本质就是为了改进最初版本的GHOST协议存在的一些问题，所以把叔父的定义扩展了，不一定是当代叔父，可能是隔着几代的叔父。以太坊规定，叔父区块可以得到7/8的出块奖励。如果往前推一代，叔父区块得到6/8的出块奖励。以此类推，只有这六个是叔父区块，再往前就不是叔父区块了，如图2-4所示。叔父区块的定义是必须跟当前区块在7代以内有共同的祖先才行，超过七代就不认了，换句话说，合法的叔父只有6个辈分。</p><figure id="48244969-b306-4c86-96ab-1167f393aab4" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image32.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image32.png"/></a></figure><p id="08e0b4d0-cef7-4443-9d6a-d9d90be62d20" class=""><strong>为什么设定合法的叔父必须在当前区块在七代以内且有共同的祖先？</strong></p><p id="95f2908f-f7c2-488e-adca-79416fe6ce33" class="">（1）如果你不限制叔父的辈分，那么实现起来，<strong>全节点则需要维护非常多的状态</strong>（可能要记着隔着100代以前有哪些叔父区块），新发布的区块包含的叔父区块，其他节点同样也需要验证；</p><p id="5402824f-0e46-4594-af53-65c2f9d91f93" class="">（2）设计最多隔着7代，并且这7代以内，出块奖励是逐渐递减的，有利于<strong>鼓励出现分叉之后，尽早合并</strong>，一出现分叉就马上合并的时候能得到的出块奖励是最多的，如果隔好几代之后，出块奖励就越来越少了，隔得代数太多了就得不到任何出块奖励了。</p><p id="ad904628-d225-45ab-9b23-9ec34a0a05e1" class="">叔父区块的奖励叫做Uncle Reward，当前区块包含一个叔父区块，就会得到1/32的出块奖励，不论包含的是哪一个辈分的叔父。</p><h3 id="0fd544bc-ef4f-4c92-ba13-205f41c60c07" class="">18.2.4 改进后的GHOST协议无法解决的问题</h3><p id="13d615be-8b6c-4a03-ae31-3262f9f19e99" class="">设计这个协议主要是为了解决系统中出现的临时性分叉，包括比特币、以太坊，规定最长合法链的原则的目的是防止篡改，其实也是为了解决临时性分叉。最长合法链提供一个出现临时性分叉（State Fork）之后进行合并的一种机制。如果这个分叉是别的原因造成的，比如由于对运行的区块链协议有不同的意见，那么这种方法是解决不了的，也就是说，<strong>改进后的GHOST协议仍然无法解决硬分叉。</strong></p><p id="2386330c-1f53-4b22-aaab-fb55a924bade" class="">例如，学习比特币脚本的时候，学过的CHECKMULTISIG（用来检查多重签名的合法性），这个过程中有一个bug，检查的时候会从堆栈里多弹出一个元素，那如果正常操作的话，检查是通不过的，得先往里面压一个没用的多余的元素，就为了抵消这个Bug。这里不将这个BUG改掉就是因为：改完之后版本不一样了。比特币系统跟中心化的系统不一样（中心化的系统发布一个新版本很容易），<strong>去中心化系统如果修改的话，会出现硬分叉。</strong>上图的那两条链如果不是因为对当前状态有意见分歧，而是互相认为对方是非法的，认为对方的区块是包含非法交易的，那么用这种方法是合并不了的。如果有矿工将这样的区块包含进来，其他矿工会认为这条链是非法的，包含进来还是不会沿着这条链继续挖，还是沿着别的分叉链去挖，因为：即使主链最长，但是包含非法交易。</p><h2 id="c1f21ac3-b615-4ae2-99ec-f915d31251be" class="">18.3 以太坊中的奖励</h2><p id="d5cc0757-3448-4d2c-866e-288958f0724e" class="">区块链和以太坊发布一个区块能得到的奖励如下图所示，实际上得到的是两部分奖励，叔父区块得到八分之七的奖励只限于Block Reward，即7/8×3ETH。叔父区块是得不到汽油费的，但汽油费所占的比例是非常小的，大部分是出块奖励，跟比特币的情况是类似的。</p><figure id="4e2d9958-8655-4a68-a297-bbea3032bf22" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image33.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image33.png"/></a></figure><p id="0eb926c7-dc23-4e5e-b9f0-3729760163cb" class="">以太坊中没有规定定期要把出块奖励减半，比特币那么规定是为了人为制造稀缺性，以太坊中五个以太币降为三个以太币，不是为了认为制造稀缺性，实际上跟挖矿难度调整有关，2017年，挖矿难度炸弹被回调了300万个区块，导致挖矿难度大幅度下降，为了维护公平性，也是为了使以太币的供给量不要出现剧烈变化，所以降到了三个以太币，这是一次性的，并没有说以后会不断地下调。</p><p id="8ebc9efb-aa08-41a1-b0ea-ec55b3ae860a" class="">比特币一般当作数字黄金，是用来储值的；以太币被比喻成石油，它是用来花的，用来消耗，然后可以执行智能合约的。这个比喻不是完全的恰当，因为石油花完之后就没了，而以太坊中执行智能合约要消耗的gas，只是从一个账户转移到另外一个账户，发布智能合约的时候，要付出gas费，执行这个智能合约的矿工可以得到这个gas费，所以这个比喻也不完全恰当。</p><h2 id="9b2f0236-867e-4daf-bbf0-7a9f7b9e311d" class="">18.4 思考</h2><p id="e685caf5-d99f-4802-9dc3-1ca1fdab5829" class=""><strong>1.把叔父区块包含进来的时候，叔父区块的交易要不要执行？以太坊是一个交易驱动的状态机，比特币也一样，所以在最长合法链上每次发布一个新的区块都会使当前状态转移到下一个状态，现在引入了叔父区块，要不要执行叔父区块的交易呢？</strong></p><p id="220700ad-370f-4b32-af42-bae91716ee97" class="">不应该执行，最长合法链上的父区块和他的叔父区块包含的交易可能是冲突的，如果它们包含不同的交易，不同交易有可能不能都执行。对于比特币系统，对于有冲突的交易，比特币要做Double Spending Attack，要检测是不是双花攻击。在以太坊中，双花攻击花两次减两次，但是有可能一个交易花了之后，另一个交易就没法花了。所以叔父区块的交易，可能有些交易就变成了非法交易，叔父区块本身不一定是非法的，但执行完父区块的交易，再去执行叔父区块的交易可能就变成非法的。</p><p id="78c5f7e7-bb81-4366-9627-7a85b3eb7caf" class="">以太坊中只执行在最长合法链上的交易，叔父区块这些交易，当前区块是不执行的。而且根本就不检查叔父区块交易的合法性，只检查叔父区块是不是一个合法发布的区块，即这个区块是不是符合挖矿难度，也就是有没有获得记账权。</p><p id="7d494363-eb52-46fe-be83-beb0aa945ac2" class=""><strong>2.叔父区块能不能广义化？</strong></p><p id="acb227e8-57b5-4555-b232-2bbd4836d13a" class="">叔父区块都是分叉之后第一个区块。如果分叉之后后面还跟着一串，如图所示，这些不能被认为是叔父区块。假定，将这些区块认为是叔父区块，会造成一个后果：分叉攻击的代价过低。正常意义上的分叉攻击需要使分叉链长度大于原来最长合法链长度才算成功，否则这些用来分叉攻击的区块会作废，原本的出块奖励也没有了。如果将分叉链上的区块认为使叔父区块的话，分叉攻击不成还能作为叔父区块获得一些奖励。所以以太坊中规定，只有分叉后的第一个区块可以得到Uncle Reward，后面的都不行。</p><figure id="3df8349b-f4aa-4839-b0b1-e2b5a4f23a20" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image34.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image34.png"/></a></figure><h2 id="738b0b96-dfb1-4336-8a39-1fb220b472be" class="">18.5 实例</h2><p id="5e50fefd-8f40-4e35-b790-987016a36c10" class="">Etherscan.io可以实时查看以太坊的当前状态，右边这个曲线显示的是过去两周的交易历史，下面还包含最新挖出的区块和最新的交易，如下图所示。</p><figure id="2c61d0cb-a0b8-49a6-b438-90f371f16e44" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image35.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image35.png"/></a></figure><p id="536c9090-95d1-4b8e-8ff2-29b9659b2b86" class="">下图所示为叔父区块的几种情况，这里的每一行对应一个叔父区块，第一列的Block Height就是区块的序号，也就是Block Number，与表中不同辈分的叔父得到的Uncle Reward的数目相对应。</p><figure id="2b4d5166-8fff-403e-a301-9feb6452f286" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image36.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image36.png"/></a></figure><p id="da67de9c-83e9-42f9-8aaa-542a0fc305f6" class="">下图是两个区块的具体例子，左边这个区块包含了一个叔父区块，倒数第二行uncle reward是2.25，应该是距离为2的叔父。这个区块得到的奖励，在倒数第三行，有三个部分组成，即3ETH出块奖励、汽油费和包含叔父区块得到的三十二分之一的出块奖励。</p><figure id="a04bbd4f-e499-49b3-8bb5-937aa620f021" class="image"><a href="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image37.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E5%85%AB%E8%8A%82%20ETH-GHOST%E5%8D%8F%E8%AE%AE%205a6edd17f84d44ca83d7b93c3f685138/image37.png"/></a></figure><p id="05c1ef68-1a71-4bd2-a418-d82c3fc3d04f" class="">
+</p></div></article></body></html>

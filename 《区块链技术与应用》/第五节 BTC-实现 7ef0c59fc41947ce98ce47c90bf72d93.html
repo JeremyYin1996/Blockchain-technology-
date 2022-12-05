@@ -1,0 +1,673 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第五节:BTC-实现</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="7ef0c59f-c419-47ce-98ce-47c90bf72d93" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/webb2.jpg" style="object-position:center 70%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍈</span></div><h1 class="page-title">第五节:BTC-实现</h1></header><div class="page-body"><nav id="27b43eca-92a2-4229-a231-a9afdb9b2f58" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#36f2a22f-1e06-4427-a86c-5896e97c8cd8">5.1 账本</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#5d17e29f-8591-4228-ad4e-070cb970cc42">5.1.1 基于交易(transaction-based ledger)模式</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#6d0a0b82-a6c1-4dd9-9938-9a5a7012d7bf">5.1.2 基于账户(account-based ledger)模式</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#58ebce0c-9f27-4db8-86b5-3e4037c8f08b">5.2 区块链例子</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ee6e0efd-2958-466c-a1d4-6fa76b59c2cd">5.2.1 块头</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#323ad4c7-b116-48c6-8a73-e87f5fca5861">5.2.2 实例</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#a55e5f64-ae38-411a-99f2-d0eb2ec0a2ff">5.3 挖矿概率分析</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ffc779a8-c39a-4df0-8aed-e4d1fb02d198">5.3.1 每次挖矿 Bernoulli trial</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#90b65db3-e594-4fe2-a88c-a5a593e5640c">5.3.2 挖矿过程 Bernoulli process</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#8018036f-515e-4a97-8a0b-5a73c7e93e3e">5.3.3 挖矿安全性</a></div></nav><hr id="40ffca70-850c-4f78-9ac8-6bf103cd890a"/><p id="8d1fbfcb-1397-4c6a-b263-43e3a15e1917" class="">比特币系统的实现</p><h2 id="36f2a22f-1e06-4427-a86c-5896e97c8cd8" class="">5.1 账本</h2><h3 id="5d17e29f-8591-4228-ad4e-070cb970cc42" class="">5.1.1 基于交易(transaction-based ledger)模式</h3><p id="12473f21-67be-4afd-82b1-b7cf7aa375ea" class="">区块链是去中心化的账本，比特币使用的是基于交易的这种账本模式(transaction[交易]-based ledger[账本])。系统当中并不会显示每个账户有多少钱。</p><p id="ae30f7bf-d377-412a-ab8c-ce64edf98c3d" class="">比特币系统的全节点要维护一个叫UTXO(unspent transaction output)(还没有被花出去的交易的输出)的数据结构。区块链上有很多交易，有些交易的输出可能已经被花掉，有些还没有被花掉。所有没有被花掉的输出的集合就叫做UTXO。</p><p id="df69be8b-6101-4fdf-8476-187b3c5b6653" class="">一个交易可能有多个输出。假如A给B5个比特币，B花掉了。A也给了C3个比特币，C没有花掉。这时5个比特币就不算UTXO，而3个比特币算。UTXO集合当中的每个元素要给出产生输出的交易的哈希值，以及它在这个交易里是第几个输出。这两个信息就可以定位到UTXO中的输出。</p><p id="553ccd55-8e4a-4bed-95d8-2d4bb09b2283" class="">要UTXO集合有什么作用?</p><p id="37ccd50b-c7f8-4e7c-92f3-b52d3076807a" class="">为了检测double spending。即检测新发布的交易是否合法。因此全节点要在内存中维护UTXO这样一个数据结构，以便快速检测double spending。</p><p id="065208e9-f892-43aa-bd4b-2e14308b6cc1" class="">每个交易要消耗掉一部分输出，也会产生新的输出。还看上面的例子，B花掉的5个比特币虽然不在UTXO里面，但如果他转账给D，而D没有花掉，那么这5个比特币又要保存在UTXO里面。如果D始终不花，那么这个信息要永久保存在UTXO里面。有可能是不想花，也有可能是把密钥丢了。</p><p id="90b46a91-6b44-41d8-a6a0-e882ccc226fc" class="">每个交易可以有多个输入，也可以有多个输出，所有输入金额之和要等于输出金额之和。即</p><figure id="908b6d83-473b-40ed-b216-202f6b80e366" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>t</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>l</mi><mi>i</mi><mi>n</mi><mi>p</mi><mi>u</mi><mi>t</mi><mi>s</mi><mo>=</mo><mi>t</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>l</mi><mi>o</mi><mi>u</mi><mi>t</mi><mi>p</mi><mi>u</mi><mi>t</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">total inputs=total outputs</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">in</span><span class="mord mathnormal">p</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal">u</span><span class="mord mathnormal">tp</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">s</span></span></span></span></span></div></figure><p id="8bbd9443-68b1-49a4-9df1-260377edf0a4" class="">因此一个交易可能来自多个地址，可能有多个签名。</p><p id="128b865b-2357-46b1-a621-8694032eb0b7" class="">有些交易total inputs略微大于total outputs。</p><p id="8c927df4-1a05-4b39-9e7c-8d8f5da45161" class="">假如输入1比特币，输出0.99比特币，另外0.01比特币作为交易费给获得记账权发布区块的节点。</p><p id="58affa3a-1331-4fb0-81e3-ce75304f688a" class="">区块奖励也不能完全作为挖矿的奖励，发布区块的节点为什么一定要把你的交易打包在区块呢?他们还要验证你的交易的合法性，如果交易较多占用的带宽会比较大，网络传播速度也会更慢。所以只有区块奖励是不够的。</p><p id="7c12833e-a4a4-49c1-9d98-1f8db00ce08a" class="">因此比特币系统设计了第二个激励机制:交易费(transaction fee)。也就是你把我的交易打包在区块里，我给你一些小费。交易费一般很小，也有一些简单的交易没有交易费。</p><p id="546e124f-4220-4e4e-8939-93a93eb2b301" class="">21万个区块大概要挖多长时间呢?大约是4年。比特币系统设计的平均出块时间是10分钟，就是整个系统平均10分钟会产生一个新的区块。</p><h3 id="6d0a0b82-a6c1-4dd9-9938-9a5a7012d7bf" class="">5.1.2 基于账户(account-based ledger)模式</h3><p id="8802fb39-59ee-40de-a583-9086a9e29918" class="">除了比特币这种基于交易的模式，与之对应的还有基于账户的模式(account-based ledger)，比如以太坊系统。在这种模式中，系统是要显示的记录每个账户上有多少币。</p><p id="bb5bc9f1-1749-424a-85c3-e9e5ce287c41" class="">比特币基于交易的模式，隐私保护性较好。缺点是比特币当中的转账交易要说明币的来源，而基于账户的模式就不用。</p><h2 id="58ebce0c-9f27-4db8-86b5-3e4037c8f08b" class="">5.2 区块链例子</h2><figure id="bffa2b32-7d24-4a8e-b26b-8b6c71f6caba" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image1.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image1.png"/></a></figure><p id="7301354e-7a25-4ea0-8ae8-c8d327fa5ba7" class="">一个区块的例子</p><p id="d34ffa35-b3c9-413f-88d4-32127a423f51" class="">左边：</p><table id="99a3ec80-c0bb-4440-a4f1-657199aa7705" class="simple-table"><thead class="simple-table-header"><tr id="cfa24172-f443-48b0-be4f-4cdf56d56cd2"><th id="`HGV" class="simple-table-header-color simple-table-header" style="width:349px"><strong>字段</strong></th><th id="HSRt" class="simple-table-header-color simple-table-header" style="width:349px"><strong>释义</strong></th></tr></thead><tbody><tr id="0501514a-87db-42c4-a222-4fec4e8e4aad"><td id="`HGV" class="" style="width:349px">Number Of Transaction</td><td id="HSRt" class="" style="width:349px">该区块包含了686个交易</td></tr><tr id="5c0dc5b0-f87c-4fbc-a7d8-c7cde0f2569d"><td id="`HGV" class="" style="width:349px">Output Total</td><td id="HSRt" class="" style="width:349px">总输出XXX个比特币</td></tr><tr id="d66366e2-9bd4-4b99-bd07-3b338a120ed6"><td id="`HGV" class="" style="width:349px">Estimated Transaction Volume</td><td id="HSRt" class="" style="width:349px">交易量估算值</td></tr><tr id="3156692f-e751-4553-a63c-8473f66c34fb"><td id="`HGV" class="" style="width:349px">Transaction Fees</td><td id="HSRt" class="" style="width:349px">总交易费(686个交易的交易费之和)</td></tr><tr id="cb62dee8-74f6-4a17-8a29-9f2c8d921fbb"><td id="`HGV" class="" style="width:349px">Height</td><td id="HSRt" class="" style="width:349px">区块的序号</td></tr><tr id="85b288aa-c154-40a7-bd1c-8930d9437c3f"><td id="`HGV" class="" style="width:349px">Timestamp</td><td id="HSRt" class="" style="width:349px">区块的时间戳</td></tr><tr id="f99d4fa9-5481-42a9-b45c-e76a77b3d4b4"><td id="`HGV" class="" style="width:349px">Difficulty</td><td id="HSRt" class="" style="width:349px">挖矿的难度(每隔2016个区块要调整挖矿的难度，保持出块时间在10分钟左右)</td></tr><tr id="bb750cde-8037-49d8-8c41-569ee3ed58c4"><td id="`HGV" class="" style="width:349px">Nonce</td><td id="HSRt" class="" style="width:349px">挖矿时尝试的随机数</td></tr><tr id="9b45a299-ca4d-4845-894f-ecf713d3b1a6"><td id="`HGV" class="" style="width:349px">Block Reward</td><td id="HSRt" class="" style="width:349px">区块奖励(矿工挖矿的主要动力)</td></tr></tbody></table><p id="ba180a92-6044-4961-8591-4761d341695f" class="">
+</p><p id="66b46520-9aa1-4178-8d5c-b33abb842e89" class="">右边：</p><table id="bbde7a5d-dc6f-4ad1-a2dc-1b8d3465004a" class="simple-table"><thead class="simple-table-header"><tr id="1d4891b8-4336-468b-a2bc-4fcc57e5e69d"><th id="`HGV" class="simple-table-header-color simple-table-header" style="width:196px"><strong>字段</strong></th><th id="HSRt" class="simple-table-header-color simple-table-header" style="width:501px"><strong>释义</strong></th></tr></thead><tbody><tr id="80254373-0752-4eb7-a70f-f0e9c00d8eaa"><td id="`HGV" class="" style="width:196px">Hash</td><td id="HSRt" class="" style="width:501px">该区块块头的哈希值</td></tr><tr id="0cba10c5-5993-453b-8995-22f10ebd6283"><td id="`HGV" class="" style="width:196px">Previous Block</td><td id="HSRt" class="" style="width:501px">前一个区块块头的哈希值
+(注意:计算哈希值只算块头)
+两个哈希值的共同点:前面都有一串0。是因为，设置的目标预值，表示成16进制，就是前面一长串的0。所以凡是符合难度要求的区块，块头的哈希值算出来都是要有一长串的0。</td></tr><tr id="1b9df7fc-630d-4840-bab8-ae75dd6a8ba9"><td id="`HGV" class="" style="width:196px">Merkle Root</td><td id="HSRt" class="" style="width:501px">是该区块中包含的那些交易构成的merkle tree的根哈希值</td></tr></tbody></table><h3 id="ee6e0efd-2958-466c-a1d4-6fa76b59c2cd" class="">5.2.1 块头</h3><p id="0d12fe71-9f4f-4c02-9121-11f50cbdfc8d" class="">块头的数据结构</p><figure id="e3553a5f-ecb4-4c2d-87d7-ee26ec05b43f" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image5.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image5.png"/></a></figure><p id="595aba1a-8540-4b86-b103-5804e90b74b7" class="">最后一行:是32位的无符号整数。nonce只有2的32次方个可能的取值。按照比特币现在的挖矿情况来说，很可能把2的32次方个取值都验了一遍也找不到合适的。那怎么办呢?block header 的数据结构里还有哪些域是可以调整的呢?</p><figure id="94c36bb1-d2c6-4898-a36f-e172cf4c1359" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image6.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image6.png"/></a></figure><p id="26a89bc5-0cc1-418a-bfdc-46ae0963e1ac" class="">块头里各个域的描述如上图</p><p id="1d851430-8a69-4b09-9495-4541f1ea26ab" class="">第一行version:比特币协议的版本号(无法更改)</p><p id="31bdb9b9-cd01-49a5-9d4d-99aabae483ce" class="">第二行previous block header hash:前一个区块的块头的哈希值(无法更改)</p><p id="c3b8a499-a9ad-44f9-b36e-6669ec5341b0" class="">第三行merkle root hash:merkle tree的根哈希值(可以更改)</p><p id="0d75327b-2f2b-420f-93ad-1eadd8f9ab3f" class="">第四行time:区块产生的时间(可以调整)比特币系统不要求特别精确的时间，可以在一定范围内调整。</p><p id="34f72f47-1747-41ce-acc0-ab226473361c" class="">第五行nBits:目标预值(编码后的版本)(只能按协议中的要求定期调整)</p><p id="77500709-836e-4884-b914-f3b0c31ddee5" class="">第六行nonce:随机数</p><p id="c739500f-92b5-4e7b-a8cd-a7ae87d11b38" class="">挖矿时只改随机数不够，还可以更改根哈希值。</p><figure id="d43e2e86-1cb3-4a66-9c04-d8432bf8595c" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image7.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image7.png"/></a></figure><p id="72a69885-5a05-421e-bd0a-805f5e3b797f" class="">铸币交易没有输入，它有一个coinbase，可以写入任何的内容。也可以把digital commitment里的commit的哈希值写入里面。也可以把第一节讲到的预测股市的内容写入里面，coinbase的内容是没有人会检查的，甚至可以写你的心情。</p><p id="6c819bd1-2dc2-48fa-822c-71e674d43497" class="">那这个域对我们有什么用呢?</p><figure id="6a9f7a60-8a9e-4e7d-928c-0a1fe70f888d" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image8.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image8.png"/></a></figure><p id="22587a25-b6a9-4d2e-b70f-0c389c233ddb" class="">对应的是最后一个block header里的根哈希值对应的merkle tree，左下角的交易是coinbase，把它的域改了之后，其上的哈希值就发生了变化，然后沿着merkle tree的结构往上传递。最后导致block header里的根哈希值发生变化(merkle root是block header的一部分)。块头里4个字节的nonce不够用，还有其他字节可以用，比如coinbase域的前八个字节当做extra nonce来用，这样子搜索空间就增大到了2的96次方。</p><p id="9fc6353e-4457-4ce7-8bdd-2a304b332f2e" class="">所以真正挖矿的时候只有两层循环，外层循环调整coinbase域的extra nonce。算出block header里的根哈希值之后，内层循环再调整header里的nonce。</p><h3 id="323ad4c7-b116-48c6-8a73-e87f5fca5861" class="">5.2.2 实例</h3><p id="0d5a79b3-3495-4b02-8fd7-63ac8bfe1f19" class="">普通的转账交易的例子</p><figure id="0622d219-ddd8-434b-8620-00700767492f" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image9.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image9.png"/></a></figure><p id="b3d90b7c-bc7f-4860-900c-c517d2218542" class="">该交易有两个输入和两个输出。</p><p id="6bc48027-65cf-4d9c-bcf2-32406a554843" class="">左上角:这里的output其实是输入，指的是之前交易的output。</p><p id="a65d0dec-ef44-4bc2-8e11-418b9582a5aa" class="">右上角:这里的output都是unspent，都没有被花掉，会保存在UTXO里面。</p><p id="5ab19295-e30f-439b-b0f3-1284e08612b0" class="">右边表格第一行:输入的总金额。</p><p id="83fa295f-f920-49dd-bf16-4affaa2a6e3b" class="">依次往下:输出总金额、两者之间的差值。</p><p id="e2ee27c1-df51-4980-a954-d42d11fa0b6b" class="">两表格下面:可以看出输入和输出都是用脚本的形式来指定的。</p><p id="5ebe3ef3-cf13-4db6-8f75-00f65a6c46ca" class="">比特币系统中验证交易的合法性，就是把input scripts和output script配对后执行来完成的。注意:不是把图中的input scripts和output scripts配对，因为这两个脚本是一个交易中的脚本。不是把同一个交易里的输入脚本和输出脚本配对，而是把这里的输入脚本和前面提供币来源的交易的输出脚本配对。如果输入输出脚本拼接在一起，能顺利执行不出现错误，那么该交易就是合法的。</p><h2 id="a55e5f64-ae38-411a-99f2-d0eb2ec0a2ff" class="">5.3 挖矿概率分析</h2><p id="6d144697-447f-46f2-b226-d456742bf588" class="">如图是在求解puzzle的过程。</p><figure id="86827fe5-ea69-4ced-957e-c4bd3b4b3a8f" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image10.png"><img style="width:503px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image10.png"/></a></figure><p id="61735a1c-0b99-4f76-ac87-9e7719b3f369" class="">注意:求哈希时只用到了block header的内容，而交易的具体信息在block header里面是没有的。block header里面只有merkle tree 的根哈希值，这个就已经能保证交易是没有被篡改的。</p><h3 id="ffc779a8-c39a-4df0-8aed-e4d1fb02d198" class="">5.3.1 每次挖矿 Bernoulli trial</h3><p id="2a798010-38f3-4c56-b118-1decdfecc657" class="">挖矿过程每次尝试一个nonce可以看作是一个Bernoulli trial(伯努利实验)。每一个随机的伯努利实验就构成了一个伯努利过程。它的一个性质是:无记忆性。</p><h3 id="90b65db3-e594-4fe2-a88c-a5a593e5640c" class="">5.3.2 挖矿过程 Bernoulli process</h3><p id="972c22f1-d31c-46c5-bfbc-221a4deebb8f" class="">每尝试一个nonce成功的概率是很小的，要进行大量的实验。这时可以用<strong>泊松过程来代替伯努利过程</strong>。我们真正关心的是系统出块时间，<strong>出块时间是服从指数分布</strong>。可以画出一个坐标轴，纵轴表示概率密度，横轴表示出块时间(整个系统的出块时间，并不是每个矿工的出块时间)。具体到每一个矿工，他能挖到下一个区块的时间取决于矿工的算力占系统算力的百分比。</p><p id="512e1aed-b323-43bd-a440-c0d5312b62c4" class="">假如一个人的算力占系统总算力的1%，那么系统出100个区块，就有一个区块是这个人挖的。</p><p id="a1cd62ab-5ebe-44b1-b632-7d96a159d3c1" class=""><strong>指数分布也是无记忆性的</strong>。因为概率分布曲线的特点是:随便从一个地方截断，剩下一部分曲线跟原来是一样的。比如:已经等十分钟了，还没有人找到合法的区块，那么还需要等多久呢?仍然参考概率密度函数分布 ，平均仍然要等十分钟。将来还要挖多长时间，跟过去已经挖了多长时间是没有关系的。这个过程也叫:<strong>progress free（过去的努力无用）</strong>。</p><p id="aa02ec03-57d1-4c95-9d68-1de8ea193a7a" class="">如果没有progress free，会出现什么现象:算力强的矿工会有不成比例的优势。因为算力强的矿工过去做的工作是更多的，过去尝试了那么多不成功的nonce之后，后面nonce成功的概率就会增大。以此<strong>progress free 是挖矿公平性的保证</strong>。</p><p id="be341851-b2d6-4d02-8130-b9c5768bfb95" class="">出块奖励是系统中产生新的比特币的唯一途径。产生的比特币构成的一个几何序列。</p><p id="e66397c6-fdeb-4591-a857-bd918e9a333c" class="">21万*50+21万*25+21万*12.5+......=21万*50*(1+1/2+1/4+......)=2100万（即比特币系统中已经挖出和未挖出的比特币总数便是2100万个）</p><p id="ec9c4456-6daa-4c6f-b2e3-e0b36a8f0638" class="">比特币求解的puzzle，除了比拼算力之外，没有其他实际意义。比特币的稀缺性是人为造成的。</p><p id="1d40f33e-af6a-4176-8b03-b314d2fa5b0b" class="">虽然挖矿求解puzzle本身没有实际意义，但是挖矿的过程对于维护比特币系统的安全性是至关重要的。挖矿提供一种凭借算力投票的有效手段，只要大部分算力是掌握在诚实的节点手里，系统的安全性就能够得到保证。</p><p id="8e43fca0-17c1-4f8d-8f12-803a3c455ce9" class="">虽然挖矿奖励越来越小，难度越来越大，但这几年挖矿的竞争是越来越激烈的，因为比特币的价格是飙升的。最终区块奖励为0了，是不是就没有动力挖矿了呢?不是的，因为还有交易费激励机制。</p><h3 id="8018036f-515e-4a97-8a0b-5a73c7e93e3e" class="">5.3.3 挖矿安全性</h3><p id="df2b7e4d-0ed6-4117-ad57-2b4d7dc807e8" class="">假设大部分算力是掌握在诚实的矿工手里，我们能得到什么样的安全保证?能不能保证写入区块链的交易都是合法的。挖矿给出的只是概率上的保证，只能说有比较大的概率下一个区块是由诚实的矿工发布的，但是不能保证记账权不会落到有恶意的节点手里。</p><p id="297a9d70-f8af-449b-8373-3af5ca58cd04" class="">比如好的矿工占90%的算力，坏的矿工占10%的算力。那么10%的概率下记账权会落在有恶意的矿工手里，这时候会出现什么情况?</p><ul id="6e24fc9f-85bf-4aef-9124-9a33d97fe1f7" class="bulleted-list"><li style="list-style-type:disc"><strong>不可能偷币</strong></li></ul><p id="d550c49e-5ab4-4fc1-9ac2-40da3a538d27" class="">先考虑第一个问题:他能不能偷币?能不能把别人账上的钱转给自己?不能，因为他没有办法伪造别人的签名。</p><p id="efa6a9eb-a75b-40a4-af3f-b262939df1f0" class="">假设M是有恶意的，他想把A账上的钱转走，所以他发布一个A转给M的交易，但这个交易需要有A的签名，M虽然获得记账权，但他不知道A的私钥，所以伪造不了签名。</p><p id="07182b01-e76a-4990-bdc2-4beffa6b7ec0" class="">如果M把交易硬写在区块链上，诚实的节点不会接受这个区块，因为它包含有非法的交易。所以诚实的节点会继续沿前一个区块挖，生成新的区块代替非法的区块，其他诚实的区块会沿着这个合法的区块继续挖。比特币要求是扩展正常合法链，M生成的不是合法区块，所以该区块作废。这对他造成的代价是很大的，因为没有了区块奖励，又没有偷到钱。</p><ul id="8509e6bb-3c86-4d43-b239-bd751e908e80" class="bulleted-list"><li style="list-style-type:disc"><strong>可能双花</strong></li></ul><p id="a0a3a13b-1569-4496-9c0a-dd0b0a7992ed" class="">第二个问题:他能不能把已经花了的币再花一遍(即double spending)?假如他把M→A的交易写在了一个区块里面，现在他获得了记账权，他又发布另一个交易，把这个钱转回给自己，即M→M&#x27;。同样，这很明显是double spending，只要是诚实的节点都不会接受这个区块。</p><p id="91001773-578c-4693-9f7b-18d68867e578" class="">他如果想发布这个区块，只能连在写了M→A交易区块的前一个区块。注意:区块插在哪个位置，在刚挖矿时就是要决定的，因为设置的block header里要填上前一个block header的哈希。所以他想插到那个区块的话，一开始就要认定，而不是等获得记账权以后再认定。</p><p id="71b376dd-d731-4b4f-b9ff-3364fc8506f7" class="">这样生成的两条区块链，都是合法的。参考下图。</p><figure id="74a7b98b-a27d-443d-83b8-75b3e36681e3" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image14.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image14.png"/></a></figure><p id="f16437e1-70ce-4aaf-93ac-0100f96685d7" class="">要看其他节点沿着哪一个链往下扩展，最后一个胜出一个作废。</p><p id="e60c3eea-1048-4696-8f51-7a5530959f8d" class="">这种攻击的目的是什么?如果M→A的交易，产生了某种不可逆的外部效果，然后M→M&#x27;再把M→A的交易回滚了，那么M就可以从中不当获利。</p><p id="d27e64e6-dd21-4c81-b462-e8d2e07a3165" class="">比如:网上购物时，M购买一些商品，然后该网站接受比特币支付，M发起一个交易把账转给网站。网站监听到交易写入了区块链里，以为支付成功了，所以就把商品给了M。M拿到商品之后，又发起一个交易，把支出的钱转给自己，然后把下面的链拓展成最长合法链。这样的结果是:既得到了商品，又收回了花掉的钱，就达到了double spending的目的。</p><p id="3904448a-8440-465e-9fe3-13cb91ed11e3" class="">如何防范这种攻击呢?如果M→A的交易所在的区块不是最后一个区块，那么这种攻击的难度就会大大增加。要是想回滚M→A的交易，还是要插在它之前的一个区块，然后想办法成为最长合法链。这个难度是很大的。因为诚实的节点，不会沿着它生成的区块往下扩展，因为它不是最长合法链。因此防范这种攻击的方法就是多等几个区块，或者叫多等几个确认confirmation。</p><p id="984aba5e-d8e7-4fb5-aa25-520e47477d51" class="">M→A交易刚刚写入区块里时，我们把它叫做one confirmation。这时后面加的区块，依次叫two confirmation、three confirmation...比特币协议当中，缺省(系统默认)的是要等六个confirmation。有了六个confirmation，才认定M→A的交易是不可篡改的。这需要等多长时间呢?平均出块时间是10分钟，因此要等一个小时。</p><p id="5494e06c-5972-4441-9237-f2824d9549b1" class="">区块链是不可篡改的账本，那是不是意味着凡是写入区块链中的内容就永远改不了呢?经上述分析可以看出，这种分析只是一种概率上的保证。刚刚写入区块链的内容，还是比较容易被改动的。经过一段等待时间之后，或者后面几个区块被确认之后，被篡改的概率就大幅度下降(指数级别的下降)。</p><p id="774ed102-5747-4220-9e83-eede35bbf9a8" class="">其实还有一种，叫零确认。</p><figure id="9b628559-9244-4fbb-a88c-d41596f68c76" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image15.png"><img style="width:586px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image15.png"/></a></figure><p id="e72caecf-9bed-4426-935c-6b8a86632285" class="">意思是说，这个转账交易发布出去了，但还没又被写入区块链里。即M→A的交易已经发布，但下面包含M→M&#x27;的区块还没有被挖出来。</p><p id="dc122ce2-2e8b-41d0-8353-b7bd6e3c6a3a" class="">这个概念相当于电商购物的例子中，在支付时你发布一个转账交易，告诉电商自己已经转过钱了。电商运行一个全节点或委托一个全节点监听区块链上的交易，他收到转账交易之后要验证该交易的合法性(有合法的签名，以前没有被花过)，甚至不用等到该交易写入区块链里。这种操作听起来风险很大，交易刚发布出去，都没往区块链里写呢。其实，零确认在实际当中，用的还是比较普遍的。为什么呢?</p><p id="269050e1-1551-4a4b-9633-2bc7e52778ff" class="">这其中有两个原因:</p><p id="e3c3d75e-6763-42a5-b475-d120e987b947" class="">①<strong>比特币协议缺省的设置是节点接收最先听到的那个交易。</strong>所以在零确认的位置，M→A的节点收到后，再发M→M&#x27;的交易，有比较大的概率诚实的节点是不会接受的。</p><p id="032f34fd-6ba8-426d-93d1-057ca989113c" class="">②很多购物网站，从支付成功，到发货，是有一定的时间间隔的，即<strong>有一定的处理时间。</strong></p><p id="9246d5d1-7d7f-462c-94fc-cad28054c28c" class="">回到前面的问题:假设某个有恶意的节点获得记账权，它还能做什么坏事?能不能故意不把某些合法的交易写入区块链里?即发布的区块故意不包含某些交易。这是可以的。</p><p id="2274b39e-1974-4e20-a100-4c22e3e0fda9" class="">比特币协议并没有规定获得记账权的节点一定要把那些交易发布到区块里。但出现这种情况问题也不大，因为这些合法的交易一定会被写入下一个区块里，总有诚实的节点愿意发布这些交易。</p><ul id="beb156dd-c3d6-4ba4-a1c3-7463e8a471d4" class="bulleted-list"><li style="list-style-type:disc"><strong>selfish mining</strong></li></ul><p id="7101d5e7-843a-4e98-b03a-2b40c3783fbf" class="">其实，区块链在正常工作下，也会出现合法的交易没有被包含进去的情况，可能就是这段时间交易的数目太多了。比特币协议中规定，每个区块的大小是有限制的，最多不能超过一兆字节。所以如果交易的数目太多了，那么有些交易可能就只能等到下一个区块再发布。</p><figure id="19daae3e-e37d-4c55-9c8c-d1a5f1a6b2e5" class="image"><a href="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image16.png"><img style="width:608px" src="%E7%AC%AC%E4%BA%94%E8%8A%82%20BTC-%E5%AE%9E%E7%8E%B0%207ef0c59fc41947ce98ce47c90bf72d93/image16.png"/></a></figure><p id="4282180b-8fbf-4f1e-a4c8-a211c577f9ff" class="">会不会出现这种情况?M→M&#x27;的交易所在的区块所在的链条虽然短，但是先偷偷的生成比上面更多的区块，然后等上面的链条公布后再公布，就能够胜过上面的几个区块了?这种方法叫做selfish mining。</p><p id="b76f3802-ed36-429e-90c3-45953a0a54a9" class="">正常情况下挖到一个区块马上就发布，原因是你不发布别人可能就发布了，那样就拿不到区块奖励了。而selfish mining是先藏着不急着发布，这是分叉工具的一种手段。</p><p id="d8725455-06bb-401c-8069-c9e012c699aa" class="">但这样成功的概率并不大，因为有恶意的节点本来算力占比就不高，还要生成更多的区块，就非常困难。</p><p id="cd5a79db-57c4-4545-8ddb-e4954b3a86c3" class="">以上是selfish mining的其中一个目的，它还有另一个目的。假如A挖了两个区块都没有发布，而在B挖到一个区块公布后立马公布，这样B挖的区块就作废了。这样的好处就是<strong>减少竞争</strong>，因为A在挖第二个区块时，别人还在挖第一个区块(前提是A算力足够强)。</p><p id="b53dfee7-bfa4-4767-aa0e-a811ea6e83b3" class="">但这样也有不好的地方，假如A挖出一个区块，A以为他能赶在别人面前再挖一个区块，结果这时有人挖出了第一个区块，那这样的话A就要在别人发布之后立马发布，去争取区块奖励。</p><p id="6d6a5aa3-adb0-4f76-abec-5c3d6a41f3f4" class="">
+</p></div></article></body></html>

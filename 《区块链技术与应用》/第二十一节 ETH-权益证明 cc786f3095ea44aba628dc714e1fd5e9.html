@@ -1,0 +1,671 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第二十一节:ETH-权益证明</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="cc786f30-95ea-44ab-a628-dc714e1fd5e9" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/rijksmuseum_avercamp_1620.jpg" style="object-position:center 60%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍉</span></div><h1 class="page-title">第二十一节:ETH-权益证明</h1></header><div class="page-body"><nav id="474351cf-4dde-4f9e-94d9-dba3a4c20c4f" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#7cd5d81c-a723-4c38-9c7c-783972b2602a">21.1 为什么要转入权益证明</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0c7e2a4f-081a-4924-bc72-024f0cf94782">21.1.1 比特币系统的相关数据</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#049625d0-0976-4d66-9f2d-f28d7f275066">21.1.2 以太坊的统计数据</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#87063cc9-fbea-4bd9-940a-5511d28d8780">21.2 思考</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#48b5401e-cdfc-490e-9de8-9c269e384e84">21.2.1 矿工为什么要挖矿？</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#96c9e43e-e516-4f8e-a1ce-2a4c6e932d27">21.2.2 为什么要给矿工这些收益，这些出块奖励呢？</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#bac619b7-1adb-45e8-a041-71a49b53f67b">21.2.3 矿工具体是怎么挖矿的呢？</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#8e1a3f62-c50a-4ac2-a72d-6f6bd270e5d5">21.2.4 那挖矿的收益是由什么决定的？</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#497b8cb4-c1a3-446e-8754-909f8e516536">21.3 权益证明</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#23dfc567-6b48-44ba-a972-2018a2f1827d">21.3.1 权益证明的特点</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#dc01d680-7fd9-4ec1-b873-bfc5d8c8bf6d">21.3.2 权益证明与工作量证明相比的优点</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f72ea189-6856-4dad-b9ae-fa405cb3a781">21.3.3 权益证明和工作量证明混合模型</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2b69e39e-78d8-4012-968e-b75240caed48">21.3.4 Proof of Stake</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d1d3cfcf-a10b-4c8a-953f-c55242900bff">21.3.5 以太坊中准备采用的权益证明协议</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#7fceb63d-3d87-497a-b18d-8cc8e30f9af6">21.3.6 思考</a></div></nav><hr id="dfb64d12-b626-4d34-b856-89ab484c69ef"/><p id="dcf70a1d-56a2-4735-a2e6-dc310348817d" class="">
+</p><h2 id="7cd5d81c-a723-4c38-9c7c-783972b2602a" class="">21.1 为什么要转入权益证明</h2><h3 id="0c7e2a4f-081a-4924-bc72-024f0cf94782" class="">21.1.1 比特币系统的相关数据</h3><p id="e5d8fabf-8aa8-4bd3-a694-d480e3712e9e" class="">权益证明（Proof of Stake），比特币和以太坊目前都是<strong>基于工作量的证明</strong>，这种共识机制的一大典型缺点就是浪费电。下图显示比特币能耗随时间变化的情况，y轴是TWh（TeraWatt Hours：1012），KWh（Kilowatt hours：103，也就是千瓦时、一度电的意思），从图中可以看出，比特币能耗随时间是不断增长的。</p><figure id="2b115691-70a1-4620-8e42-9be586f19d38" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image12.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image12.png"/></a></figure><p id="11fcbbec-23c2-409f-b23a-71eee3c5128f" class="">具体统计数据如下图所示：</p><figure id="f1277a5e-5af6-4d1a-8e1d-d0352ea912b7" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image13.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image13.png"/></a></figure><h3 id="049625d0-0976-4d66-9f2d-f28d7f275066" class="">21.1.2 以太坊的统计数据</h3><p id="c79ff829-18d4-4c17-a81e-c79d5676886c" class="">以太坊的能耗也是随时间增长的，中间有一些波动如下图所示。</p><figure id="fbed4d33-3e37-4d6e-8a8e-f268030b47a1" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image14.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image14.png"/></a></figure><p id="949d8ca1-83dd-418e-b8cb-5d80b6c0ec77" class="">具体的数据如下图所示 。</p><figure id="f742cca5-c366-4e80-93d1-2c2f14f4740b" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image15.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image15.png"/></a></figure><p id="a247b25e-e5b8-4ad2-b5a3-2e74b50b18b6" class="">从道理上讲，比特币的交易是比较简单的，只有一些单纯的转账交易，以太坊的交易有可能包含对智能合约的调用，但实际上，以太坊的能耗比比特币低了很多。因为比特币出块时间长，比特币平均出块时间是10min，以太坊则是15s，所以以太坊挖矿挖的时间就短，每个交易平均下来的能耗就小，当然以太坊的交易能耗仍然比信用卡公司高很多。</p><p id="007af39c-cf85-4ebd-9993-223d5b0d2fd0" class="">3.比特币和以太坊当成一个国家</p><p id="0fe0bc27-825c-4202-9e30-fc870429b9ef" class="">如果把比特币和以太坊的能耗加在一起当作一个国家来算的话，他在国家中的排行榜入下图所示。</p><figure id="e79833ac-28fa-4074-a211-632eee43d33a" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image16.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image16.png"/></a></figure><h2 id="87063cc9-fbea-4bd9-940a-5511d28d8780" class="">21.2 思考</h2><h3 id="48b5401e-cdfc-490e-9de8-9c269e384e84" class="">21.2.1 矿工为什么要挖矿？</h3><p id="0c3df6c1-80c9-4ea0-902e-dffd5deac290" class="">为了取得出块奖励，为了获得收益。</p><h3 id="96c9e43e-e516-4f8e-a1ce-2a4c6e932d27" class="">21.2.2 为什么要给矿工这些收益，这些出块奖励呢？</h3><p id="4a4e7938-c32c-4d49-a785-b61242c055ec" class="">为了激励矿工参与区块链的维护。</p><h3 id="bac619b7-1adb-45e8-a041-71a49b53f67b" class="">21.2.3 矿工具体是怎么挖矿的呢？</h3><p id="49bcace3-d890-4849-83ae-ef3863d46769" class="">需要找一笔挖矿资金，然后去买挖矿设备，如矿机、GPU等，然后开始挖矿。</p><h3 id="8e1a3f62-c50a-4ac2-a72d-6f6bd270e5d5" class="">21.2.4 那挖矿的收益是由什么决定的？</h3><p id="4b07f6c3-f695-46b5-a867-971404d84757" class="">投入的资金决定的。收益由挖矿多少决定，挖矿多少由算力决定，算力由矿机决定，矿机由投入资金决定。既然最终是拼钱，那直接把钱拿出来比一比不就行了，矿工通过竞争算力来决定挖矿的收益如何分配，能不能改成直接靠比钱的多少来决定收益，都把钱投入区块链开发，按照每个人投入的资金的多少来决定收益的分配，这个就是权益证明的一个基本思想，这种方法也叫做Virtual Mining虚拟挖矿。</p><h2 id="497b8cb4-c1a3-446e-8754-909f8e516536" class="">21.3 权益证明</h2><h3 id="23dfc567-6b48-44ba-a972-2018a2f1827d" class="">21.3.1 权益证明的特点</h3><p id="b11f3bab-da92-466e-8bcf-a3e3dcecda99" class="">采用权益证明的加密货币，一般在正式发行之前，会先预留一部分货币给开发者，也会出售一部分货币，来换取开发这个加密货币所需要的资金，按照<strong>权益证明的共识机制，每个人是按照持有货币的数量来进行投票的。</strong></p><h3 id="dc01d680-7fd9-4ec1-b873-bfc5d8c8bf6d" class="">21.3.2 权益证明与工作量证明相比的优点</h3><p id="4d27d093-8945-40fb-a6f1-36b968063973" class="">（1）省去了挖矿的过程，避免了由此带来的能耗和对环境的影响，减少了温室气体的排放。</p><p id="c57f4739-361b-426c-9bb4-a3b85f81d7ae" class="">（2）发动攻击的资源只能从加密货币系统内部得到。</p><p id="0dd625ae-21f0-4968-908f-d912dc4c8e50" class=""><strong>基于工作量证明的共识系统</strong>从某种意义上来说，<strong>维护区块链安全的资源不是一个闭环</strong>，Block chain is secured by mining，用美元可以购买矿机，然后参与挖矿，资源是可以从<strong>加密货币系统的外面得到的</strong>。虽然近几年加密货币的市值有了很大的增长，但无论怎么说，跟世界经济总量相比，仍微乎其微。所以，如果有某个组织想要发动恶意攻击，只需用足够的资金购买挖矿设备，然后聚集到加密货币总算力一半以上的算力即可。外部的资源都可以转化成挖矿的算力，转换成对这个加密货币攻击的这种能力。<strong>像比特币这样比较主流的加密货币，抗攻击的能力还是相对比较强的，因为系统的总算力还是比较大的，如果是这些刚刚发行的小币种，这种遇到这样的攻击可能就是致命性的。如果这种小币种刚刚发行不久，就遇到这种攻击，那么很可能这个币价就直线下降甚至归零了，对于这个开发者和早期矿工来说，遭受的损失可能是灾难性的。</strong>AltCoin Infanticide，AltCoin：小币种，Infant：婴儿，Infanticide：扼杀在摇篮里。不等这个加密货币长大，就把它先干掉了。</p><p id="e0e7224f-c408-466e-bf66-203bb9442b2e" class=""><strong>权益证明类似于股份制公司按每人占的股份进行投票，权益证明是按照你有多少该币种的币进行投票的</strong>，所以如果有某个人想发动恶意攻击，比如说51%的攻击，首先要获得这个币种发行量一半以上的份额才行，也就是说发动攻击的资源只能从加密货币系统内部得到，这就是为什么说他是一个闭环。买到足够多的币才能发动攻击，而一旦有人大量买入加密货币，会出现价格大涨，有点类似于股份制公司遭受恶意收购，所以说工作量证明的系统维护安全的资源不是一个闭环，权益证明才是一个闭环。</p><h3 id="f72ea189-6856-4dad-b9ae-fa405cb3a781" class="">21.3.3 权益证明和工作量证明混合模型</h3><p id="d5548b18-e2c7-41b7-bfaa-33957c0982c2" class=""><strong>权益证明和工作量证明并不是互斥的。</strong>有的加密货币采用的是一种混合模型，他仍然是要挖矿的，但是挖矿的难度跟你占有的权益，你持有币的数量相关。即持有的币越多，挖矿的难度就越小，根据持有的这个币的权益降低调整你的挖矿难度。当然，这其实也有一定问题，这样的话，系统中持有币数量最多的那个人，每次挖矿都是最容易的。所以，有的加密货币要求你投入的币会被锁定一段时间，不能重复使用，这种情况叫做Proof of Deposit。</p><h3 id="2b69e39e-78d8-4012-968e-b75240caed48" class="">21.3.4 Proof of Stake</h3><p id="0abb3a79-fa2b-492b-8e2d-730ae5b8f11f" class="">如下图3-1所示是我们之前学习过的出现分叉的情况，按照之前的情况是要么按照上方链挖，要么按照下方链挖，一般是会沿着上方链挖，因为它是最长合法链，但是下面那条链也有可能成为最长合法链，但是一般不会两边都挖，因为这样做算力分散了，挖到矿的概率就小了。</p><figure id="122e7adf-2951-47f8-b49a-4fa7114bfe63" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image17.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image17.png"/></a></figure><p id="61c87c9d-91d3-44b9-ab00-5c5460f7f8f9" class="">用权益证明的话，可以两边都下注，如果上面那条链成为最长合法链，下面那条链锁定的那些币是没有影响的。挖下面区块投入的那些币，只记录在下面的分叉上，并不影响你在上面分叉的使用，这种情况叫nothing at stake，这是早期基于权益证明遇到的一个问题。</p><h3 id="d1d3cfcf-a10b-4c8a-953f-c55242900bff" class="">21.3.5 以太坊中准备采用的权益证明协议</h3><p id="40b88474-28b7-427d-a15c-30c18a7fe940" class="">（1）过渡阶段</p><p id="d4a2a5b3-40b0-4831-bdfb-987d6583a24f" class="">以太坊中准备采用的权益证明协议叫做Casper the Friendly Finality Gadget(FFG)，在过渡阶段跟工作量证明混合使用，为工作量证明提供Finality，Finality是一种最终的状态，包含在Finality中的交易不会被取消，单纯基于工作量证明的交易是有可能被回滚的，比特币中规定要等六个确定区块，意思是等了六个确定区块之后，发生回滚的可能性已经非常小了，但是有个某个有恶意的攻击者，从前面开始分叉，只要他算力足够强占到半数以上的算力，那么仍然有可能让这个分叉链变得比原来的链更长，所以单纯基于挖矿的是缺乏这种Finality。</p><p id="e035c706-5573-4dfd-9f75-0f9cace181dc" class="">（2）Casper协议</p><p id="45ed081b-c1a3-4597-8ae6-ab77b837055b" class="">引入了一个概念叫做验证者Validator，要想成为一个Validator必须要投入一定数量的以太币作为保证金，这个保证金会被系统里面锁定住。Validator的职责是要推动系统达成共识，投票决定那条链是最长合法链，投票的权益决定于保证金的数目大小，具体的做法类似于数据库里的Two-phase commit。</p><p id="27f13297-16b6-4547-9118-8ebf968a295c" class="">混用的时候还是有人挖矿的，挖矿每挖出100个区块就作为一个epoch，然后决定能不能成为Finality，要进行一些投票，第一轮投票是Prepare Message，然后第二轮是Commit Message，Casper规定每一轮投票都要得到2/3的验证者才能通过（按照保证金的金额大小来算）。实际系统当中不再区分这两个Message，而且把这个epoch从原来的100个区块减少到50个区块，变成了每50个区块就是一个epoch，每个epoch只用一轮投票的就行了，这一轮投票对于上一个epoch来说是个Commit Message，对于下一个来说是一个Prepare Message，要连续两轮投票，两个epoch都得到2/3以上的多数，才算有效，如下图所示 。</p><figure id="010a2025-4fa7-4f75-b905-1edddb3525fe" class="image"><a href="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image18.png"><img style="width:700px" src="%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E8%8A%82%20ETH-%E6%9D%83%E7%9B%8A%E8%AF%81%E6%98%8E%20cc786f3095ea44aba628dc714e1fd5e9/image18.png"/></a></figure><p id="ec4b2eab-0d02-4f91-901c-fc85f7fe89b9" class="">验证者参与有什么好处呢？</p><p id="50d51eb8-5c9f-42ed-9db7-e04ff4448c1a" class="">如果验证者履行职责的话，可以得到相应的奖励，就像矿工挖矿能得到出块奖励一样，验证者做这个工作也可以得到这个奖励。但如果验证者有不良行为被发现的话，要受到相应的处罚，比如某个验证者行政不作为，该投票的时候不去投票，导致系统迟迟达不成共识，这种情况下要扣掉他的一部分保证金。如果某个验证者乱作为（乱投票），给两个有冲突的分叉都投票，就两边下注，这种情况被发现的话，要没收全部的保证金，没收到保证金会被销毁，相当于减少了系统中以太币的总供应量。每个验证者有一定任期（即使你交了保证金也不是可以永远当验证者），任期满了之后要经过一定时间的等待期，等待期是为了让其他的验证者检举揭发这个验证者有没有什么不良的行为，进行惩处，如果等待期过了，没有什么问题，验证者可以取回当初的保证金并且得到的奖励。</p><h3 id="7fceb63d-3d87-497a-b18d-8cc8e30f9af6" class="">21.3.6 思考</h3><p id="f86ea32a-ef18-4281-bed1-dea3438a262b" class="">（1）Casper 协议可以给挖矿完成一个区块链的某一种状态做一个检查点，做一个check point，那这个check point是不是绝对安全的？通过这个验证者投票达成的Finality有没有可能被推翻？</p><p id="baef1504-173d-486d-91d9-fbad90a9d7f5" class="">包含在Finality里的交易是不会被推翻的，这个是不是绝对的，假设有某个有恶意的组织要发动攻击，如果这个组织仅仅是矿工的话，他是没有办法推翻已经达成的Finality，因为Finality是验证者投票投出来的，单纯是有恶意的矿工，无论他算力有多强，如果没有<strong>验证者作为同伙</strong>是不可能推翻的。</p><p id="46e659cb-8ea7-4dbd-8455-c841d86a60b5" class="">攻击成功的情况：有大量的验证者两边下注。Casper 协议要求每轮投票有2/3的验证者支持才算通过，出现这种情况，至少是1/3的验证者是两边都投票的，一旦发现，1/3的验证者的保证金将会被没收，所以可以看到基于权益证明的共识机制和基于工作量证明的共识机制是很不一样的。</p><p id="57cd7f3a-237d-46b8-90f0-ed91d5ca9340" class="">（2）以太坊是要逐步从工作量证明过渡到权益证明。随着时间的推移，挖矿得到的奖励是越来越少的，权益证明得到的奖励是越来越多的，最后达到完全不用挖矿的境界。<strong>以太坊为什么从一开始就不用权益证明呢？</strong></p><p id="0bf5c75e-2898-4613-b7f0-efb1406260bd" class="">因为权益证明不够成熟，工作量证明比较成熟，经过了时间的检验。比特币和以太坊的挖矿算法都经历了Bug Bounty的检验，没有人发现什么漏洞，很多人认为权益证明是未来的方向，但是目前用的主流的加密货币用的还是工作量证明。有个叫EOS的加密货币，俗称叫柚子，是个曾经有很多人看好的加密货币，用的是权益证明，完全不用挖矿，但是不是用的Casper 协议，用的是DPOS（Delegated Proof of Stake）协议：先用一个投票的方法选出一个超级节点，然后再用这个超级节点产生区块。</p><p id="91d72752-be9a-4f1a-810b-b91bea6d8b70" class="">（3）对于“挖矿消耗大量电能”这个观点有人提出了不同的看法</p><p id="a868ff3a-315e-4aee-921d-a2d1c50ba28b" class="">他们认为其所消耗的电能所占比值并不大，而且其对于环境的影响是有限的。挖矿的一个好处是提供了把电能转化成钱的一种手段。而电能本身难以传输和存储，比特币矿产都是建在电力丰富的地方，所以有人认为挖矿消耗电能并不是坏事，可以有效的化解过剩产能，带动当地经济的发展。提供了将电转向加密货币的思路。</p><p id="bf05345d-a135-4fb5-8dc2-32c5628bcb62" class="">
+</p></div></article></body></html>

@@ -1,0 +1,671 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第九节:BTC-使用的脚本与原理</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="e57961c5-4eb0-4519-856e-3c033e4f786a" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/woodcuts_5.jpg" style="object-position:center 100%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍉</span></div><h1 class="page-title">第九节:BTC-使用的脚本与原理</h1></header><div class="page-body"><nav id="1e25b7a9-01ae-489f-97a0-d0ebed242967" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#548a8716-6798-4e20-9a5a-7f016c401520">9.1 交易实例</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#47e21cc5-d04c-4dc2-8020-647e3f1de9b7">9.1.1 交易的输入</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#fb0eb4a0-3fbb-4c05-9ce2-a5d1685c2826">9.1.2 交易的输出</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#05d63359-3586-4970-becf-2d735a3b67a8">9.2 交易过程</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#c465c989-b7a6-441c-8917-bfc22448373b">9.3 脚本形式</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#3bdff612-0b54-49f6-9ed4-aa377799e6ea">9.3.1 P2PK</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0b62bda8-0975-4c94-aa50-9803eb491ab1">9.3.2 P2PKH</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#1af8f034-3ecf-455c-b805-7a14c74f2845">9.3.3 P2SH</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a1ce66a1-f479-4c71-b3f3-d5f57b8cae3e">9.3.4 Proof of Burn</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#58698455-9869-4461-bcb0-0a886349d5e1">9.4 总结</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#cfdc24cb-7c23-478d-ad43-c4c9bba46c7e">9.4.1 功能有限</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2f11ba27-dadb-4acd-a050-400e36f3c93a">9.4.2 使用简单</a></div></nav><hr id="5c506d9d-9800-4355-bbb1-f6be03ec7e93"/><p id="7a9b3cde-561a-46c8-91c7-237a006c967c" class="">
+</p><h2 id="548a8716-6798-4e20-9a5a-7f016c401520" class="">9.1 交易实例</h2><figure id="1a9ea8f8-50e8-4a38-819b-11c75cc3d6e4" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image17.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image17.png"/></a></figure><p id="16a42800-3a66-474d-8220-89fc3c02ed38" class="">如图是比特币的一个交易实例。该交易有一个输入两个输出。左上角写着output，其实是这个交易的输入。右边两个输出，上面unspent即没有花出，下面spent表示已花出。该交易已经收到了23个确认，所以回滚的可能性很小了。</p><p id="b9ae8645-638b-4cfa-a3c9-8f246d2cec85" class="">下面是这个交易的输入输出脚本，输入脚本包含两个操作，分别把两个很长的数压入栈里。<strong>比特币使用的脚本语言是非常简单的，唯一能访问的内存空间就是一个堆栈。不像通用的编程语言，像C语言C++那样有全局变量、局部变量、动态分配的内存空间，它这里就是一个栈，所以叫做基于栈的语言（stack base laguage）。</strong>这里输出脚本有两行，分别对应上面的两个输出。每个输出有自己单独的一段脚本。</p><figure id="58f0ad37-b38f-44d8-94f0-4e678349f8a4" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image18.png"><img style="width:533px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image18.png"/></a></figure><p id="c88d834b-f389-4d3d-8d3c-2949ed4d8b6f" class="">如图是交易的具体内容。首先看交易的一些宏观信息。</p><p id="e29c8fb8-d8e9-41b8-8474-b915ed2e49b8" class="">第一行txid:transaction ID；</p><p id="a6aa2779-a2e3-4723-a963-3f9cae4b43a3" class="">第二行hash:该交易的哈希值；</p><p id="e9f58c97-81d6-4412-87ec-fbbdbce048ac" class="">第三行version:使用的比特币协议的版本；</p><p id="db32fcb8-341c-4740-b62a-31cb43bf4c06" class="">第四行size:该交易的大小；</p><p id="b6906650-9238-4e0f-9b30-f01416e8a005" class="">第五行locktime:用来设定交易的生效时间。此处的0表示立即生效。绝大多数情况下，locktime都是0。如果是非零值，那么该交易要过一段时间才能生效。比如要等10个区块以后才能被写入区块链里;</p><p id="b9e67566-d8aa-4212-bdf5-29c78037967b" class="">第六行vin:输入；</p><p id="10ef2956-6a94-415e-9414-7a6ab16ddf5f" class="">第七行vout:输出;</p><p id="12b9f255-ba9e-461a-aaf5-4d7bf95eba86" class="">第八行blockhash:这个交易所在区块的哈希值;</p><p id="743bf491-ff20-4ed2-8810-22e8f58d72d5" class="">第九行confirmations:该交易已经有多少个确认信息;</p><p id="5ecb9a1a-4640-463a-b3b3-dfc6ccd69bc5" class="">第十行是交易产生的时间，第十一行是这个区块产生的时间。(time 和block time都是指很早的一个时间到现在过了多少秒)</p><h3 id="47e21cc5-d04c-4dc2-8020-647e3f1de9b7" class="">9.1.1 交易的输入</h3><figure id="51f7f63b-9bb1-439b-b24f-7a6ca688184a" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image19.png"><img style="width:645px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image19.png"/></a></figure><p id="8d06d8ee-7a17-4cdc-8193-81cd2aed465f" class="">如图是交易的输入结构。一个交易可以有多个输入，在这个例子中只有一个输入。每个输入都要说明该输入花的币是来自之前哪个交易的输出，所以前两行给出输出币的来源。</p><p id="f92d7d3e-09c4-420a-bbe5-a25dbed04b81" class="">第一行:之前交易的哈希值。vout表示这个交易里的第几个输出。所以这里表示花的币来自于哈希值为c0cb...c57b的交易中第0个输出。接下来是输入脚本，输入脚本最简单的形式就是给出signification就行了，证明你有权利花这个钱。(后面的PPT中scriptsig就写成input script输入脚本)。如果一个交易有多个输入，每个输入都要说明币的来源，并且要给出签名，也就是说比特币中的一个交易可能需要多个签名。</p><h3 id="fb0eb4a0-3fbb-4c05-9ce2-a5d1685c2826" class="">9.1.2 交易的输出</h3><figure id="a56df461-f5a1-4e73-ae28-1550307810a7" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image20.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image20.png"/></a></figure><p id="937afb33-1957-4747-8978-0c92c0826c26" class="">如图是交易的输出，也是一个数组结构。该例子中有两个输出，value是输出的金额，就是给对方转多少钱，单位是比特币，即0.22684个比特币。还有的单位是satoshi(一聪)，是比特币中最小的单位。1比特币=10的8次方聪。n是序号，表示这是这个交易里的第几个输出。</p><p id="2d4c4a0e-1a53-4d0b-a339-50db4cab7124" class="">scriptPubKey是输出脚本，后面都写成output script。输出脚本最简单的形式就是给出一个pubkey。下面asm是输出脚本的内容，里面包含一系列的操作，在后面会详细解释。require sigs表示这个输出需要多少个签名才能兑现，这两个例子中都是只需要一个签名。type是输出的类型，这两个例子类型都是pubkeyhash，是公钥的哈希。addresses是输出的地址。</p><h2 id="05d63359-3586-4970-becf-2d735a3b67a8" class="">9.2 交易过程</h2><figure id="7fcceeae-5cb6-41bd-9fb8-ea77ed7369c1" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image21.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image21.png"/></a></figure><p id="56eec91e-9a56-4965-b6eb-433ff23e36f8" class="">如图是展示输入和输出脚本是怎样执行的。在区块链第二个区块里有A→B的转账交易，B收到转来的钱后，又隔了两个区块，把币又转给了C。所以B→C交易的txid、vout是指向A→B交易的输出。而要验证交易的合法性，是要把B→C的输入脚本，跟A→B交易的输出脚本拼接在一起执行。</p><figure id="bf14fcc7-20d2-4308-963a-bd1a42930880" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image22.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image22.png"/></a></figure><p id="1e9c8a43-fbdc-4a84-9964-8f7c4af3efdd" class="">如图这里有个交叉，前面交易的输出脚本放在后面，后面交易的输入脚本放在前面。在早期的比特币实践中，这两个脚本是拼接在一起，从头到尾执行一遍。后来出于安全因素的考虑，这两个脚本改为分别执行。首先执行输入脚本，如果没有出错就再执行输出脚本。如果能顺利执行，最后栈顶的结果为非零值，也就是true，那么验证通过，这个交易就是合法的。如果执行过程中出现任何错误，这个交易就是非法的。如果一个交易有多个输入的话，那么每个输入脚本都要和所对应的交易的输出脚本匹配之后来进行验证。全都验证通过了，这个交易才是合法的。</p><h2 id="c465c989-b7a6-441c-8917-bfc22448373b" class="">9.3 脚本形式</h2><h3 id="3bdff612-0b54-49f6-9ed4-aa377799e6ea" class="">9.3.1 P2PK</h3><figure id="235e9df7-5aef-4c1c-9165-2d7d61a4fd73" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image23.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image23.png"/></a></figure><p id="a9f64023-084d-4c2f-a764-213748fc7b23" class="">如图是输入、输出脚本的几种形式。一种最简单的形式就是P2PK(pay to public key)。输出脚本里直接给出收款人的公钥，下面一行CHECKSIG，是检查签名的操作。在输入脚本里，直接给出签名就行了。这个签名是用私钥对输入脚本所在的整个交易的签名。这种形式是最简单的，因为公钥是直接在输出脚本里给出的。</p><figure id="9c83d80f-1848-47dc-9938-20a632b73f20" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image24.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image24.png"/></a></figure><p id="76fb6bd7-9d5f-4602-8dbf-9b84bc12af70" class="">如图是脚本的实际执行情况。这三行是把输入脚本和输出脚本拼接起来之后的结果。第一行来自输入脚本，后两行来自输出脚本。注意，实际代码中出于安全考虑，这两个脚本实际上是分别执行的。第一行:把输入脚本提供的签名压入栈，第二条把输出里提供的公钥压入栈，第三条checksig是把栈顶的这两个元素弹出来。用公钥检查一下这个签名是否正确。如果正确，返回true，说明验证通过。否则，执行出错，这个交易就是非法的。</p><figure id="46fe7bb3-ef8e-4da3-9e0b-238fda08c821" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image25.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image25.png"/></a></figure><p id="3b224f3a-42b7-4ffa-acb3-2bbe1e4ff5c0" class="">如图是P2PK的一个实例。上面交易的输入脚本就是把签名压入栈，下面交易是上面交易输入的币的来源。它的输出有两行，第一行是把公钥压入栈，第二行就是checksig。这是第一种形式。</p><h3 id="0b62bda8-0975-4c94-aa50-9803eb491ab1" class="">9.3.2 P2PKH</h3><figure id="14075321-ef26-4947-9c07-ac4ac4510b54" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image26.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image26.png"/></a></figure><p id="86dba944-2a15-4f4b-8a90-c420a4061ac7" class="">如图是第二种形式P2PKH(pay to public key hash)，跟第一种区别是输出脚本里没有直接给出收款人的公钥，给出的是公钥的哈希。公钥是在输入脚本里给出的。输入脚本既要给出签名，也要给出公钥。输出脚本里还有一些其他操作，DUP、HASH160等等，这些操作都是为了验证签名的正确性。P2PKH是最常用的形式。</p><figure id="542558f9-6c3e-4ff2-8906-df154f6349eb" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image27.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image27.png"/></a></figure><p id="15ea0732-6a5f-4186-82fe-800cb918df97" class="">如图是脚本的执行结果，这个是把上一页的输入脚本和输出脚本拼接之后得到的，前两条语句来自输入脚本，后面的语句来自输出脚本，还是从上往下执行。第一条语句先把签名压入栈，第二条语句把公钥压入栈。第三条语句是把栈顶的元素复制一遍，所以栈顶又多了一个公钥。HASH160是把栈顶元素弹出来，取哈希，然后把得到的哈希值再压入栈。所以栈顶变成了公钥的哈希值。</p><p id="13befe2b-f29a-4407-b8dc-e073b8bff204" class="">第五行是把输出脚本里提供的公钥的哈希值压入栈。这个时候栈顶有两个哈希值，上面的哈希值是输出脚本里面提供的，收款人公钥的哈希，即我发布交易时，转账的钱是转给谁的，在输出脚本里提供一个收款人的公钥的哈希。下面的哈希是指你要花这个钱时在输入脚本里给出的公钥，然后前面的操作HASH160是取哈希后得到的。倒数第二行操作的作用是弹出栈顶的两个元素，比较是否相等，即比较其哈希值是否相等。这样做的目的是防止有人莫名顶替，用自己的公钥冒充收款人的公钥。假设两个哈希是相等的，那么就从栈顶消失了。最后一条作用是用公钥检查弹出栈顶的元素是否正确。假设签名是正确的，整个脚本就顺利运行结束，栈顶留下的是true。如果执行过程任何一个环节发生错误，比如输入里给出的公钥跟输出里给出的哈希值对不上，或者是输入里给出的签名跟给出的公钥对不上，那么这个交易就是非法的。</p><figure id="98d09bb0-585e-43a4-bded-139ed9e950c9" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image28.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image28.png"/></a></figure><p id="75adf344-b6c4-4362-b878-29e6ead287ac" class="">P2PKH是最常用的脚本信息，该实例用的就是这种脚本。输入脚本就是把签名压入栈，把公钥压入栈。下面的输出脚本复制栈顶元素，然后取哈希值，hash160。然后把公钥的哈希压入栈，最后比较栈顶的两个哈希值，检查签名。</p><h3 id="1af8f034-3ecf-455c-b805-7a14c74f2845" class="">9.3.3 P2SH</h3><figure id="06157991-24bf-4f5a-927d-406205270118" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image29.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image29.png"/></a></figure><p id="10a948a2-1aed-4730-bf9f-e5b7b164b36f" class="">最后一种如图，也是最复杂的一种脚本形式，是Pay to Script Hash。这种形式的输出脚本给出的不是收款人的公钥的哈希，而是收款人提供的一个脚本的哈希，这个脚本叫redeemscript，赎回脚本。将来花这个钱时输入脚本里要给出redeemscript(这个赎回脚本的具体内容)，同时还要给出让赎回脚本能够正确运行所需要的签名。</p><figure id="888d84ff-bf6d-45d4-8a58-f795fed62afe" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image30.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image30.png"/></a></figure><p id="ff44b74e-91f9-4657-84eb-3e4f13f525bc" class="">验证时分为两部，第一步验证输入脚本里给出的赎回脚本是不是跟输出脚本里给出的哈希值匹配，如果不匹配说明给出的赎回脚本是不对的，就类似于刚才讲的pay to public key hash里面给出的公钥不对一样。匹配不上说明给出的赎回脚本是不对的，那么验证就失败了。如果输入里给出的赎回脚本是正确的，那么第二步还要把赎回脚本的内容当做操作指令来执行一遍，看看最后能不能顺利执行。如果两步验证都通过了，那么这个交易才是合法的。听上去有点抽象，那么下面看一个具体的例子。</p><figure id="14900114-259a-4c42-9481-2bdc63470d9f" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image31.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image31.png"/></a></figure><p id="c5530be0-cf66-4bbf-855f-31eb842210d1" class="">用pay to script hash实现pay to public key 的功能。这里的输入脚本就是给出签名，再给出序列化的赎回脚本，赎回脚本的内容就是给出公钥，然后用checksig检查签名。下面这个输出脚本是用来验证输入脚本里给出的赎回脚本是否正确。</p><figure id="af0b4819-81f5-480e-a3e0-a8697b1e7981" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image32.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image32.png"/></a></figure><p id="8ae9ff56-373e-46b6-b3a8-76d308314b89" class="">如图看一下pay to script hash的执行过程。开始也是把输入脚本和输出脚本拼接在一起，前两行来自输入脚本，后面三行来自输出脚本。首先把输入脚本的签名压入栈，然后把赎回脚本压入栈，然后是取哈希的操作，得到赎回脚本的哈希。这里RSH是指redeem script hash，赎回脚本的哈希值。接下来还要把输出脚本里给出的哈希值压入栈，这时栈里就有两个哈希值了。最后用equal比较这两个哈希值是否相等，如果不等就失败了。假设相等，那这两个哈希值就从栈顶消失了，到这里第一阶段的验证就算结束了，接下来还要进行第二个阶段的验证。</p><figure id="679d2bb0-bd73-45e2-b92e-399f692cefdb" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image33.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image33.png"/></a></figure><p id="80ccfe6b-46bf-43ea-81cf-6d53dbb02ff0" class="">如图第二个阶段首先要把输入脚本提供的序列化的赎回脚本进行反序列化，这个反序列化的操作在PPT上并没有展现出来，这是每个节点自己要完成的。然后执行赎回脚本，首先把public key压入栈，然后用checksig验证输入脚本里给出的签名的正确性。验证痛过之后，整个pay to script hash才算执行完成。</p><p id="fb9989dc-62ea-44b5-82e2-41f4621f26b8" class="">有人可能会问:干脆用pay to public key就行了，搞这么复杂干嘛?为什么非要把这些功能嵌入到赎回脚本里面?对于这个简单的例子来说确实是复杂了，但pay to script hash它的常见的应用场景是对多重签名的支持。</p><p id="1313ff96-99e3-4551-9f84-da6cd67f8889" class="">比特币系统中一个输出可能要求多个签名才能把钱取出来，比如某个公司的账户，可能要求五个合伙人中任意三个人签名才能把公司账户上的钱取走，这样为私钥的泄露提供了一些安全的保护。</p><p id="39f79415-32b9-4824-8aad-4bff06a9e8de" class="">比如说有某个合伙人私钥泄露出去了，那么问题也不大，因为还需要两个人的签名才能把钱取走。这同时也为私钥的丢失提供了一些冗余，即使有两个人把私钥忘掉了，省下的三个人依然可以把钱取出来，然后转到某一个安全的账户。</p><p id="bcd293d0-7d70-4a9c-b399-59a6b2a38739" class="">以上的功能是通过check multisig来实现的。</p><figure id="0ad6097d-fe4c-470b-9150-9bf6e6745a25" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image34.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image34.png"/></a></figure><p id="53dfae94-ca36-4f8d-bc7f-f2abc4059322" class="">如图，输出脚本里给出N个公钥，同时指定一个预值M。输入脚本只要提供接N个公钥对应的签名中任意M个合法的签名就能通过验证。</p><p id="8274edf8-4596-4d36-9a20-b983f00e64d6" class="">比如刚才举的例子中，N=5，M=3，五个合伙人中任意三个的签名都可以，输入脚本的第一行有一个红色的“×”，这是什么意思呢?</p><p id="77dcdcd1-e2da-4067-be76-f79f0b7d0b3b" class="">比特币中check multisig的实现，有一个bug，执行的时候会从堆栈上多弹出一个元素，这个就是它的代码实现的一个bug。这个bug现在已经没有办法改了，因为这是个去中心化的系统，要想通过软件升级的方法去修复这个bug代价是很大的，要改的话需要硬分叉。所以实际采用的解决方案，是在输入脚本里，往栈上多压进去一个没用的元素，第一行的“×”就是没用的多余的元素。另外需要注意给出的M个签名的相对顺序，要跟它们在N个公钥中的相对顺序是一致的才行。</p><figure id="130aa16f-920a-485f-89b6-fe0cad0c2a68" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image35.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image35.png"/></a></figure><p id="5f5282d8-5577-44cf-9b3a-eb3d32cb6245" class="">如图是check multisig的执行过程。这个例子假设三个签名中给出两个就行。图中可以看到这两个签名给出的相对顺序也是跟它们在公钥中的顺序是一样的。在公钥当中，第一个公钥排在第二个公钥前面。那么给出这两个签名的时候也是第一个签名排在第二个的前面。</p><p id="c0d88893-5da5-42fd-8de1-056bdc65deff" class="">第一行的false就是前面说的多余的元素。首先把多余的元素压入栈里，然后把两个签名依次压入栈，这个时候输入脚本就执行完了。接下来的输出脚本里把M的值，即预值M压入栈。然后把三个公钥压入栈，接着把N的值压入栈，最后执行check multisig，看看堆栈里是不是包含了这三个签名中的两个，如果是那么验证通过。</p><p id="a6196fd8-43ab-4cb2-a831-e700ef7982bf" class="">注意:这个过程中并没有用到pay to script hash。就是用比特币脚本中原生的check multisig来实现的。这么实现有什么问题吗？</p><p id="fd19f4bf-47fe-4762-bd3b-6498ba766c57" class="">早期的多重签名就是这样实现的，在实际的应用当中，有一些不是很方便的地方。</p><p id="7b5044d3-4aa6-4d64-a90b-938af191e57c" class="">比如:网上购物。某个电商用multi签名，要求有五个合伙人中任意三个人的签名才能把钱取出来，要求网上购物的用户在支付的时候生成的转账交易里给出这五个合伙人的公钥，同时要给出N和M值。在这个例子中，N=5，M=3，这些都是用户在网上购物的时候生成转账交易时输出脚本里要给出的信息，给出这五个公钥，给出N和M值。</p><p id="85923809-9f02-40a2-9ad0-69ac0c06bddd" class="">那么用户怎么知道这些信息呢?需要购物网站在网上公布出来，比如网上可以公布我们用了多重签名，我们用的五个签名中要给出三个，这是五个公钥，然后用户生成这个转账交易的时候，就把这些信息填进去。那么不同的电商采用的多重签名的规则是不一样的。有的电商可能是五个签名中要任意三个，有的可能要四个。这就给用户生成转账交易带来了一些不方便的地方，因为这些复杂性都暴露给用户了。</p><p id="c232ab1a-f15c-4e9a-82de-f38e9a23dab5" class="">那么该如何解决?这里就要用到pay to script hash。</p><figure id="776bc71f-4921-404e-9aa4-5eae84f0e084" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image36.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image36.png"/></a></figure><p id="c591c2a7-4257-4931-8c3a-cc3525e34021" class="">如图是用pay to script hash实现的多重签名，它的本质是把复杂度从输出脚本转移到了输入脚本。现在这个输出脚本变得非常简单，只有这三行。原来的复杂度被转移到redeemscript赎回脚本里。输出脚本只要给出这个赎回脚本的哈希值就可以了。赎回脚本里要给出这N个公钥，还有N和M的值，这个赎回脚本是在输入脚本里提供的，也就是说是由收款人提供的。</p><p id="1ada3679-a597-4714-8559-35cb23702733" class="">像前面网上购物的例子，收款人是电商，他只要在网站上公布赎回脚本的哈希值，然后用户生成转账交易的时候把这个哈希值包含在输出脚本里就行了。至于这个电商用什么样的多重签名规则，对用户来说是不可见的，用户没必要知道。从用户的角度来看采用这种支付方式跟采用pay to public key hash没有多大区别，只不过把公钥的哈希值换成了赎回脚本的哈希值。当然，输出脚本的写法上也有一些区别，但不是本质性的。这个输入脚本是电商在花掉这笔输出的时候提供的，其中包含赎回脚本的序列化版本，同时还包含让这个赎回脚本验证通过所需的M个签名。将来如果这个电商改变了所采用的多重签名规则，比如由五个里选三个变成三个里选两个，那么只要改变输入脚本和赎回脚本的内容，然后把新的哈希值公布出去就行了。对用户来说，只不过是付款的时候，要包含的哈希值发生了变化，其他的变化没有必要知道。</p><figure id="ea4a71d7-a052-492f-af94-6c8c10e50d9f" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image37.png"><img style="width:688px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image37.png"/></a></figure><p id="8cff55ff-79ab-42fe-b485-ad319eab6aa6" class="">如图是具体的执行过程。这是把输入脚本和输出脚本拼接在一起后的情况，第一行的FALSE就是为了应付check multisig的bug而准备的一个没用的元素，执行的时候先把它压入栈，然后依次把两个签名压入栈，接下来是序列化的赎回脚本，目前只是把它作为数据压入栈，到这里输入脚本就执行完了。下面是输出脚本，取哈希，然后把输出脚本里提供的哈希值压入栈顶。最后判断两个哈希值是否相等，到这里第一阶段的验证就完成了。</p><figure id="f143ad3a-a7e3-49a2-8914-5112765fe2cc" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image38.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image38.png"/></a></figure><p id="47efa9bb-55a8-4e7a-9ea4-eb4a9716e01b" class="">如图开始第二阶段的验证，把赎回脚本展开后执行。先把M压入栈，然后把三个公钥压入栈，把N压入栈，最后检查多重签名的正确性，三个里面有两个是正确的。第二阶段的验证过程跟前面直接使用check multisig的情况是类似的。</p><figure id="33b9eb8e-77c6-440d-961e-0b151852d718" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image39.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image39.png"/></a></figure><p id="e62d2eab-2e88-4d70-b173-8b2205b7e934" class="">如图是网上使用pay to script hash来做多重签名的一个实例。上面输入脚本的最后一个就是序列化的赎回脚本，反序列化之后得到的就是三个里面取两个的多重签名脚本。下面这个输出脚本的内容，跟前面讲的是一样的。现在的多重签名，一般都是采用这种pay to script hash的形式。</p><h3 id="a1ce66a1-f479-4c71-b3f3-d5f57b8cae3e" class="">9.3.4 Proof of Burn</h3><figure id="5b0cec8b-4070-4d00-a8a1-751e16699960" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image40.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image40.png"/></a></figure><p id="d15de38a-9089-40b7-bf81-a54d01195e27" class="">如图这种脚本格式是比较特殊的，这种格式的输出脚本开头是return的操作，后面可以跟任意的内容。return操作的作用，是无条件的返回错误，所以包含这个操作的脚本永远不可能通过验证，执行到return语句，就会出错，然后执行就终止了，后面跟的内容根本没有机会执行。</p><p id="ee51643c-2b8c-4f69-b198-4c196a5fe681" class="">为什么要设计这样的输出脚本呢？这样的输出岂不是永远花不出去吗？无论输入脚本写的是什么内容，执行到输出的return语句，它就会报错，那么这里的钱永远都花不出去。确实如此，<strong>这个脚本是销毁比特币的一种方法</strong>。</p><p id="14bafe4f-bcca-4386-80be-84166da1a125" class="">为什么要销毁比特币呢？这个一般有两种应用场景:</p><p id="66a80204-d0a9-4425-a0c3-f95b1e073029" class=""><strong>①有些小的币种要求销毁一定数量的比特币才能够得到这个币种</strong>，有时候把这种小币种称为AltCoin(Alternative coin)。除了比特币之外的其他小的加密货币都可以认为是Alternative Coin。比如有的小币种要求销毁一个比特币可以得到1000个小币，也就是说要用上述的方法证明已经付出了一定的代价才能够得到这个小币种。</p><p id="d31d14d5-c99a-440a-8ca5-b9f0f2615a31" class=""><strong>②往区块链里写入一些内容</strong>。区块链是个不可篡改的账本，有人就利用这个特性往里面添加一些需要永久保存的内容，比如第一节课讲的digital commitment。要证明在某个时间，知道某些事情。比如涉及知识产权保护的，把某项知识产权的内容取哈希之后，把哈希值放到return语句的后面，其后面的内容反正是永远不会执行的，往里面写什么都没关系。而且放在这里的是一个哈希值，不会占太大的地方，而且也没有泄露出来你知识产权的具体内容。将来如果出现了纠纷，像知识产权的一些专利诉讼，再把具体的哈希值的输入内容公布出去，证明你在某个时间点已经知道某个知识了。</p><p id="dedc0451-e0b1-4ddb-b114-be2c385bfffc" class="">这个应用场景和coinbase域相似。coinbase transaction里面有个coinbase域，在这个域里写什么内容同样是没人管的，那这里为什么不用coinbase的方法呢？coinbase还不用销毁比特币，就可以直接往里写。</p><p id="bc8cdf8b-eb0a-46c1-8d1e-d6a96992d4a9" class="">coinbase的方法只有获得记账权的那个节点才能用。如果是一个全节点，挖矿挖到了，然后发布一个区块，可以往coinbase transaction 里的coinbase域写入一些内容，这是可以的。</p><p id="34eb88d7-45e8-4321-99fc-98ed0ba7f76c" class="">而我们说的上述方法，是所有节点都可以用的，甚至不一定是个节点，可能就是一个普通的比特币上的一个用户，任何人都可以用这种方法去写入一些内容。发布交易不需要有记账权，发布区块才需要有记账权。任何用户都可以用这种方法销毁很少的比特币，比如0.0000001个比特币，换取往区块链里面写入一些内容的机会。其实有些交易根本没有销毁比特币，只不过支付了交易费。</p><p id="3be4a6d1-06ca-4725-9760-25c03b52b660" class="">下面看两个实例</p><figure id="90e279ee-844d-4ec8-8398-f75065a7d30e" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image41.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image41.png"/></a></figure><p id="b4a228b8-2722-4032-85be-1a2db7d52277" class="">如图是一个coinbase transaction。这个交易有两个输出，第一个输出的脚本是正常的pay to public key hash，输出的金额就是得到的block reward加上transaction fee。第二个输出的金额是0，输出脚本就是刚才提到的格式:开头是return，后面跟了一些乱七八糟的内容，第二个输出的目的就是为了往区块链里写一些东西。</p><figure id="d55205ff-8055-4e4c-8cca-d852d7f120e1" class="image"><a href="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image42.png"><img style="width:700px" src="%E7%AC%AC%E4%B9%9D%E8%8A%82%20BTC-%E4%BD%BF%E7%94%A8%E7%9A%84%E8%84%9A%E6%9C%AC%E4%B8%8E%E5%8E%9F%E7%90%86%20e57961c54eb04519856e3c033e4f786a/image42.png"/></a></figure><p id="09cce4ab-3177-435d-95ba-1ac7e053a26f" class="">如图这是个普通的转账交易，输出脚本也是以return开头的。这个交易的输入是0.05个比特币，输出金额是0，说明输入金额全部用来支付交易费了。这个交易实际上并没有销毁任何比特币，只不过是把输入里的比特币作为交易费转给挖到矿的矿工了。</p><p id="2e49c5d5-479d-4d65-8866-dfb8e8271272" class="">这种形式的脚本的一个好处是:<strong>矿工看到这种脚本的时候知道它里面的输出永远不可能兑现，所以就没必要把它保存在UTXO里面，这样对全节点是比较友好的。</strong>还有一点要说明:这个PPT当中涉及到比特币脚本的操作为了简单起见都没有加上OP前缀。比如CHECKSIG，实际上应该写成OP_CHECKSIG，CHECKMULTISIG、DUP也是如此。</p><h2 id="58698455-9869-4461-bcb0-0a886349d5e1" class="">9.4 总结</h2><h3 id="cfdc24cb-7c23-478d-ad43-c4c9bba46c7e" class="">9.4.1 功能有限</h3><p id="03326b35-7f0d-432b-aa90-824787674b9b" class="">比特币系统中用到的这种脚本语言是非常简单的，甚至连专门的名字都没有，它就叫比特币脚本语言(bitcoin scripting language)。后面可以看到，以太坊当中用的智能合约的语言比这个要复杂的多。比如说比特币的脚本语言不支持循环，所以有很多功能这个语言是实现不了的，这样的设计是有其用意的，不支持循环就不会有死循环，就不用担心停机问题。以太坊当中智能合约的语言表达能力很强，所以就要靠汽油费的机制来防止程序陷入死循环。</p><h3 id="2f11ba27-dadb-4acd-a050-400e36f3c93a" class="">9.4.2 使用简单</h3><p id="49bac746-28f3-49f5-a65c-513fa1107402" class="">另外一方面，这个语言虽然在某些方面功能是很有限的，但是在另外一些方面它的功能却很强大，比如跟密码学相关的功能。如checkmultisig，检查多重签名用一条语句就能够完成，这个比很多通用的编程语言要方便的多。所以比特币的脚本语言虽然看上去很简单，但其实针对比特币的应用场景做了很好的优化。</p><p id="8ddf2f4f-2263-4575-bbf5-c798d62532bc" class="">
+</p></div></article></body></html>

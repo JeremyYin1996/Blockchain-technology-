@@ -1,0 +1,703 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第十九节:ETH-挖矿算法</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="31892714-8566-4adc-a04c-93037b447970" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/webb3.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍉</span></div><h1 class="page-title">第十九节:ETH-挖矿算法</h1></header><div class="page-body"><nav id="3e4bf1ca-84cb-47d9-98e5-d88aae91c167" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#3589ae11-3f5e-482a-954c-3262c56a690c">19.1 工作量证明（POW）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#00667cc5-3146-41c2-8869-e4fdd6c9528b">19.1.1 比特币系统的工作量证明</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#afedf056-14aa-4fc6-8029-83fd28353ec0">19.1.2 比特币系统Mining算法的问题</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#7b219841-715e-401f-ba1a-569c6e0afd53">19.1.3 如何设计出对ASIC芯片不友好的Mining Puzzle</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#6da30771-b0ed-48b8-aaa6-d43aee0ddbcb">19.1.4 LiteCoin</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#1241fa51-eb1c-445b-afb7-8dc197226bc2">19.2 以太坊的工作量证明</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#f63a7fac-5f68-4cb6-867e-4340f78795fc">19.2.1 Memory hard mining puzzle</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#778b879f-9bd3-42f4-b4a8-92297d86b266">19.2.2 基本思想</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#41c7fe74-2bb0-435c-b293-b478bb25822d">19.2.3 ethash算法伪代码</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ab4d94e1-b0fc-46a4-bc66-9e40cca8a274">19.2.4 实际效果</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#11ff84a0-e911-41dc-8924-72be6f5ce168">19.2.5 预挖矿</a></div></nav><hr id="70261cf0-aa4a-456b-9fdc-d1aa8c696cb5"/><p id="bc506814-2fd6-458d-9b9a-2f2b283560f9" class="">
+</p><h2 id="3589ae11-3f5e-482a-954c-3262c56a690c" class="">19.1 工作量证明（POW）</h2><h3 id="00667cc5-3146-41c2-8869-e4fdd6c9528b" class="">19.1.1 比特币系统的工作量证明</h3><p id="b727b27f-9dea-4ea9-b6b9-1c76fc0ec18a" class="">对于基于工作量证明的系统来说，Mining是保障区块链安全的重要手段（Block chain is secured by mining），比特币里面的Mining算法总的来说是比较成功的，经受了时间检验，到目前为止，没有人发现有什么大的漏洞。</p><p id="72192cb1-f258-4711-9d73-7b6ac19ddff2" class="">Bounty（赏金），Bug Bounty：有的公司悬赏来找软件中的漏洞，如果能找到软件中的安全漏洞就可以得到一笔赏金。<strong>比特币的Mining算法是一个天然的Bug Bounty</strong>，如果你能找到里面的漏洞，或者是某一个Mining的捷径就能取得很大的利益。但是到目前为止还没有人发现有什么捷径可走，所以比特币的Mining算法总的来说是比较成功的。</p><h3 id="afedf056-14aa-4fc6-8029-83fd28353ec0" class="">19.1.2 比特币系统Mining算法的问题</h3><p id="f3074031-5509-4bb5-9ff8-2e5c17ac34ab" class="">比特币的Mining算法也有一些值得改进得地方，其中有一个饱受争议得问题就是<strong>Mining设备得专业化</strong>，有普通的计算机挖不倒矿，只能用专门的设备，专用的ASIC芯片来Mining，那么很多人认为这种做法与去中心化的理念是背道而驰的，也跟比特币的设计初衷相违背。中本聪最早的一篇论文，提出One CPU，one vote，理想状况下，应该让普通老百姓也能参与Mining过程，这样也更安全，因为算力分散之后，有恶意的攻击者想要聚集到51%的算力发动攻击，难度就会大得多。所以比特币之后出现的加密货币包括以太坊设计Mining Puzzle的时候，就想要做到ASIC Resistance。</p><h3 id="7b219841-715e-401f-ba1a-569c6e0afd53" class="">19.1.3 如何设计出对ASIC芯片不友好的Mining Puzzle</h3><p id="8b28e9ab-fe15-4299-8bbd-5378c6bf658b" class="">一个常用的做法就是<strong>增加Mining Puzzle对内存访问的需求</strong>（memory hard mining puzzle）。ASIC芯片相对于普通计算机而言，主要优势是算力强，但是在内存访问的性能上没有那么大的优势。同样的价格买一个ASIC矿机和买一个普通的计算机，这个ASIC矿机的计算能力是普通计算机的几千倍，但是内存访问方面的性能差距远没有这么大，所以能设计出一个对内存要求很高的Puzzle，就能起到遏制ASIC芯片的作用。</p><h3 id="6da30771-b0ed-48b8-aaa6-d43aee0ddbcb" class="">19.1.4 LiteCoin</h3><p id="8747a7c7-03db-4c9d-9ef9-d206d6057197" class="">LiteCoin（莱特币），曾经是市值仅次于比特币的第二大加密货币，其Puzzle是基于<strong>Scrypt（一个对内存要求很高的哈希函数</strong>，以前用于计算机安全领域，跟密码相关）。其具体设计思想是，开一个很大的数组，然后按照顺序填充一些伪随机数，比如说有一个种子节点，seed的值通过一些运算，算出一个数来，填在第一个位置，然后后面每个位置都是前一个位置的值取哈希得到的，如图所示。</p><figure id="2afb9489-5f81-4df5-860d-b7185a94f1d5" class="image"><a href="%E7%AC%AC%E5%8D%81%E4%B9%9D%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E7%AE%97%E6%B3%95%203189271485664adca04c93037b447970/image1.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E4%B9%9D%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E7%AE%97%E6%B3%95%203189271485664adca04c93037b447970/image1.png"/></a></figure><p id="42d36c57-aaf0-4b0b-a8bb-0fd91e2a843d" class="">伪随机数是说取哈希值后的值是不知道的，不可能真的用随机数，不然就没法验证。填充完后，里面的数有前后依赖关系，是从第一个数依次算出来的，需要求解这个puzzle的时候，按照伪随机数的顺序从数组当中读取一些数，每次读取的位置跟前一个数相关，如图所示。</p><figure id="4c034a08-e01a-4dc0-861b-4868549e6903" class="image"><a href="%E7%AC%AC%E5%8D%81%E4%B9%9D%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E7%AE%97%E6%B3%95%203189271485664adca04c93037b447970/image2.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E4%B9%9D%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E7%AE%97%E6%B3%95%203189271485664adca04c93037b447970/image2.png"/></a></figure><p id="f3926b33-89cb-44f3-93a1-59b130d23562" class="">（1）LiteCoin的好处</p><p id="255c0cf4-5206-4063-bfaf-8a4708ae2cce" class="">如果这个<strong>数组开的足够大的时候</strong>，Miner就是<strong>Memory Hard</strong>，因为如果不保存数组，那么Mining的计算复杂度会大幅度上升，需要从头计算。所以要想高效地Mining，这个内存区域是需要保存的，有的矿工可能保存一部分内存区的内容，如，只保留数组中奇数位置的元素，这样数组可以少一半，用到偶数位置的数的话，要根据另外一半算一下，计算复杂度会提高一点，但是内存量可以减小一半，叫做time-memory trade off。</p><p id="355694b2-2f6d-44aa-97a1-7c90ea84a5c9" class="">该设计的核心思想是不能像比特币那样主要进行哈希运算，要增加运算过程中对内存访问的需求，设计一个对ASIC芯片不友好的，普通计算机能参与的。设计的任务更像是普通计算机干的事情，而不是像一个Mining专用的ASIC芯片干的事情，普通计算机内存很大，就要利用这个特性，设计puzzle对资源的需求，特别像是普通计算机对资源的配备比例。</p><p id="63e6d5e0-419d-4c59-b67e-bfd6d0196de7" class="">（2）LiteCoin的缺点</p><p id="2de1b584-c25c-44b1-9c17-7d1bd3361385" class="">LiteCoin的优点是对于矿工Mining的时候是memory hard，缺点是对轻节点来说也是memory hard。<strong>设计puzzle的一个原则：difficult to solve,but easy to verify。</strong>这个问题在于验证这个puzzle需要的内存区域跟求解需要的区域几乎是一样，轻节点验证的时候也需要保存数组，否则计算复杂度也会大幅度提高。对于scrypt早期计算机的安全领域，不存在轻节点验证这个问题，但对于区块链来说是不行的。</p><p id="7dda221c-089d-45d0-890f-7f4bc5fa4628" class="">（3）LiteCoin的实践</p><p id="67c12ef4-56de-48ec-b007-1f710e887734" class="">莱特币在真正使用的时候，这个内存区域不敢设置的太大，比如说设一个1G的数组，这对于计算机来说是不大的，但是如果是一个手机上的app，1G的内存可能就太大了。因为这个原因，实际莱特币在使用的时候，这个数组只有128Ks，连1M都不到，就是为了照顾轻节点。</p><p id="c9ae4fee-c390-4f9c-9825-08cb9daad0cb" class="">当初莱特币在发行的时候，目标不仅仅是ASIC resistance，还是GPU resistance，就是Mining最好连GPU都不要用，都用普通的CPU Mining就行了。结果后来就出现GPU Mining的，再后来就出现用ASIC芯片Mining的，实践证明莱特币要求的128k内存不足以对ASIC芯片的生产和设计带来实际上的障碍。从这一点来说，莱特币的设计目标没有达到，但是早期宣传的设计目标对于解决能启动问题是很有帮助的。任何一个加密货币，都存在能启动问题，包括比特币，一开始的时候，没有人知道这个加密货币，发行一个货币，没有人参与，这是一个问题，对于基于工作量证明的加密货币来说，Mining人太少是不安全的，发动恶意攻击难度太低。</p><p id="0c74cf82-e630-4bcb-ba12-54b42e77b308" class="">比特币早期也是不安全的，当时如果想对比特币发动恶意攻击是很容易的。比特币解决能启动的问题是一个循坏迭代的过程，中本聪宣传的多了，对比特币感兴趣的人就多了，参与Mining人就多了，变得更安全，价值也提高了；然后对比特币感兴趣的人就更多了，Mining的人也更多了，然后比特币变得更安全了，价值就更进一步提高了，形成一个良性循坏。</p><p id="0a46c254-673e-431b-8d51-f3f10bb5ec17" class="">莱特币虽然没有达到当初的设计目标，但是他早期的宣传：更民主、让更多人参与的理念对于聚集人气来说是很重要的。所以莱特币一直到现在也是一个比较主流的加密货币，除了这个Mining Puzzle之外，莱特币跟比特币的另一个区别是来特比的出块速度是比特币的4倍，他的出块间隔是2min30s，而不是10min，除此之外，这两种加密货币基本上是一样的。</p><h2 id="1241fa51-eb1c-445b-afb7-8dc197226bc2" class="">19.2 以太坊的工作量证明</h2><h3 id="f63a7fac-5f68-4cb6-867e-4340f78795fc" class="">19.2.1 Memory hard mining puzzle</h3><p id="ff6de984-1819-4cb1-8b42-fbf1e81aae17" class="">以太坊也是用一种Memory hard mining puzzle，但是在设计上，跟莱特币有很大的不同。以太坊用的是两个数据集，一大一小，小的是16M cache，大的数据集是一个1G dataset,DAG，这1G的数据集是从16M的cache生成出来的，设计成一大一小的两个数据集呢，就是为了便于验证。轻节点只要保存16M cache就行了，只有需要挖矿的矿工才需要保存1G的dataset。</p><h3 id="778b879f-9bd3-42f4-b4a8-92297d86b266" class="">19.2.2 基本思想</h3><p id="1aa5db81-31ca-4542-b0b4-f1050d5a3d95" class="">Cache的生成方式跟LiteCoin中数组的生成方式是比较类似的，首先从一个种子节点seed，进行一些运算，算出数组的第一个元素，然后依次取哈希，第一个元素取哈希得到第二个元素，第二个元素取哈希得到第三个元素，依此类推，把这个数组从前往后，填充一些伪随机数得到一个cache。然后生成一个更大的数组DAG，大数组要比小数组大得多，DAG的每个元素都是从cache里按照伪随机数的顺序读取一些元素，方法和刚才讲的莱特币里面求解puzzle的过程类似。第一次读取A位置的元素，读取完之后，对当前的哈希值进行一些更新迭代，算出下一个要读取的位置，比如说B这个位置，然后把B位置的数再进行一些哈希值的更新，算出C这个位置，那么从这个cache里面这么来回读，一共读256次，读256个数，最后算出来一个数放在大的dataset的第一个元素，然后第二个元素也是一样的，dataset的每个元素都是从这个cache里面按照伪随机数的顺序，不断进行迭代更新，最后得到一个值存在里面，然后求解puzzle的时候，用的是大数据集中的数，这个cache是不用的，按照伪随机数的顺序在大的数据集中读取128个数，就是一开始的时候根据区块的块头，包括里面的nonce值算出一个初始的哈希，根据这个哈希，映射到大数据集里面的某个位置，把这个数读取出来，然后进行一些运算，算出下一个要读取的位置，比如说又在大数据集里面的另一个位置，又把这个数读取出来。这里有一个区别：他每次读取的时候除了计算出这个元素的位置之外，还要把相邻元素（该元素的下一个元素）也要读取出来，这个例子当中每次读取的时候是读取两个相邻元素，这样循环64次，每次读两个元素，所以一共是符合难度要求128个数。最后算出一个哈希值来，跟挖矿难度的目标域值比较是不是符合难度要求，如果不是，把Block Header 里面的Nonce替换一下，换另外一个Nonce，因为换了Nonce之后，第一次算的那个哈希值就变了，然后重复这个过程，再去比较。</p><h3 id="41c7fe74-2bb0-435c-b293-b478bb25822d" class="">19.2.3 ethash算法伪代码</h3><p id="5c03e479-6f98-40c5-8f73-a9d9e56bcfe4" class="">（1）生成16M cache。</p><pre id="78788fe2-773c-467d-82a3-3e6c519606e1" class="code"><code>def mkcache(cache_size,seed):
+		o = [hash(seed)]
+		for i in range(1,che_size):
+				o.append(hash(o[-1]))
+		return 0</code></pre><p id="d2077862-4a6d-40d4-9aba-7eded4a037bc" class="">
+</p><p id="8c322eeb-1929-40f4-8f58-e1d04089fa6c" class="">cache中每个元素都是64个字节的哈希值，生成的方法与莱特币类似（第一个元素是Seed的哈希，后面每个元素是前一个的哈希），哈希的内容每隔3万个区块会变化一次，Seed每隔3万个区块会发生变化，然后重新生成cache中的内容，同时cache的容量要增加原始大小的1/128，也就是16M的1/128=128K。</p><p id="712a0afb-3698-4c0c-868c-7e85c30018ca" class="">（2）通过cache来生成dataset中的第i个元素。</p><pre id="50cca105-ea45-411b-bf8d-c39f79d9843b" class="code"><code>def calc_ dataset item(cache,i):
+		cache size = cache.size
+		mix hash(cache[i % cache_size] ^ i)
+		for j in range(256):
+				cache_ index = get_ int_ from_item(mix)
+				mix = make_item(mix,cache[cache_index % cache_size])
+		return hash(mix)</code></pre><p id="f5a395b4-02b2-438c-9739-58e5fc15422e" class="">基本思想是按照伪随机数的顺序读取cache中的256个数，每次读取的位置是由上一个位置的数值经过计算得到的，这里用的两个函数get_int_from_item和make_item，是自己定义的，源代码中是没有的，把源代码中一些相关的内容总结成了这两个函数，可以避免源代码中不是很重要的细节，get_int_from_item函数就是用当前算出来的哈希值求出下一个要读取的位置，然后make_item函数用cache中这个位置的数和当前的哈希值计算出下一个哈希值，这样迭代256轮，最后得到一个64字节的哈希值，作为大数据集中的第 i 个元素。</p><p id="0296cd3a-84c5-447a-b6de-3bb483fe902c" class="">（3）calc_dataset是生成整个1G数据集的过程，就是不断调用前的函数来依次生成大数据集中的每个元素。</p><pre id="f72d3925-66d8-422f-9a0c-8406b87eaab1" class="code"><code>def calc_dataset(full_size, cache);
+return [calc_ dataset_item(cache，i) for i in range(full_size)]</code></pre><p id="85f6ec64-af16-40e4-bfae-885cc35e1042" class="">
+</p><p id="fdce6f8d-d11e-454a-8ae0-1aa19b6fd5ae" class="">（4）矿工用来Mining的函数。</p><pre id="b7178e3c-93b3-46cc-b2f1-14231263f93c" class="code"><code>def hashimoto_full(header,nonce,full_size,dataset):
+		mix = hash(header,nonce)
+		for i in range(64) :
+				dataset_index = get_int_from item(mix) % full_size
+				mix = make_item(mix,dataset[dataset_index])
+				mix = make_item(mix, dataset[dataset_index + 1])
+		return hash(mix)</code></pre><p id="5f14f26c-1717-4cf9-9b4b-b98ab778c118" class="">
+</p><p id="54ebd4d8-914e-42e7-bb8d-a95075ce934c" class="">矿工用来Mining的函数，有四个参数，header是当前要生成的区块的块头，以太坊和比特币一样，Mining只用到块头的信息，这样设计的原因是轻节点只下载块头，就可以验证这个区块是否符合Mining的难度要求，第二个参数nonce就是当前尝试的nonce值，第三个参数full_size是大数据集中元素的个数，元素的个数每3万个区块会增加一次，增加原始大小的1/128也就是1G的1/128=8M，最后参数dataset就是前面生成的大数据集。</p><p id="ece0a553-7b48-454a-a666-58b106fb9826" class="">Mining的过程是这样的，首先根据块头的信息，和当前Nonce算出一个初始哈希值，然后要经过64轮的循环，每一轮循环读取大数据集中两个相邻的数，读取的位置是由当前哈希值计算出来的，然后再根据这个位置上的数值来更新当前的哈希值，这跟前面生成大数据集的方法是类似的，循环64次，最后返回一个哈希值，跟挖矿难度目标域值相比较。</p><p id="86ec83d7-af27-4ff5-888f-2ac385eb8144" class=""><strong>每次读取大数据集中两个相邻位置的哈希值，这两个哈希值其实并没有什么联系</strong>，他们虽然位置相邻，但是生成的过程是独立的，每个都是由前面那个16M的cache中的256个数生成的，而且256个数的位置是按照伪随机数的顺序产生的，这个是构造大数据集的一个特点，每个元素独立生成，这才给轻节点的验证提供了方便，所以每次读取的相邻两个位置的哈希值是没有什么联系的。</p><p id="248fcbd1-8e95-4186-8d5b-5024eabfeb2a" class="">（5）轻节点用来验证的函数。</p><pre id="65d5fba1-1456-4b5e-8508-e0050c7b5341" class="code"><code>def hashimoto light(header,nonce,full_size,cache):
+		mix = hash(header, nonce)
+		for i in range(64):
+				dataset_index = get_int _from item(mix) % full_size
+				mix = make_item(mix,calc_ dataset _item(cache,dataset_index))
+				mix = make_item(mix,calc_dataset_item(cache,dataset_index + 1))
+		return hash(mix)`</code></pre><p id="01737740-4268-40f0-b1bb-447dbf90dfc4" class="">
+</p><p id="e64f14da-2a9b-4f5c-a7d0-fbdcc7a19970" class="">这个函数也是有四个参数，含义跟上面那个矿工用的函数有所不同，轻节点不Mining，当他收到某个矿工发的区块的时候，这里用来验证的函数的第一个参数header是这个区块的块头，第二参数是包含在这个块头里的nonce，是发布这个区块的矿工选好的，轻节点的任务是验证这个nonce是否符合要求，验证用的是16M的cache，也就是最后的参数cache，注意，第三个参数full_size仍然是大数据集的元素个数，跟上面那个Mining的那个full_size含义是一样的，并不是cache中的元素个数，验证的过程也是64轮循环，看上去与Mining的过程类似。</p><p id="5d0a5161-cbce-40f6-9020-b16461ab3c69" class="">特殊地，每次需要从大数据集中读取元素的时候，因为轻节点没有保留大数据集，所以要从cache中重新生成其他地方的代码逻辑是一样的，每次从当前的哈希值算出要读取的元素的位置，这个位置是指在在大数据集中的位置，但是轻节点并没有这个大数据集，所以要从cache中生成大数据集中这个位置的元素，我们前面说过大数据集中每个元素都可以独立生成出来。</p><p id="d96556f2-8177-4c14-9d69-37f764f07308" class="">（6）矿工Mining的主循环</p><pre id="52bd20fa-9915-4f8b-9e65-cb8a42940074" class="code"><code>def mine(full size,dataset,header,target):
+		nonce = random.randint(0,2**64)
+		while hashimoto_full(header,nonce,full_size,dataset) &gt; target:
+				nonce = (nonce + 1) % 2**64
+		return nonce</code></pre><p id="ce250338-b9bd-4a03-97af-b46b4c06046d" class="">
+</p><p id="eaf87ecd-118f-4d55-8461-f6f99a820f0e" class="">这个函数，其实是不断尝试nonce的过程，这里的target就是Mining的难度目标，跟比特币类似，也是可以动态调整的，nonce的可能取值是从0-2的64次方，对每个nonce用前面讲的那个函数算出一个哈希值，看看是不是小于难度目标，如果不行的话，就再试下一个nonce。</p><p id="5142df55-a9b7-4374-a704-35958d04de66" class="">（7）函数汇总</p><figure id="967a8441-5fc3-4994-ad09-c7155abc8a76" class="image"><a href="%E7%AC%AC%E5%8D%81%E4%B9%9D%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E7%AE%97%E6%B3%95%203189271485664adca04c93037b447970/image3.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E4%B9%9D%E8%8A%82%20ETH-%E6%8C%96%E7%9F%BF%E7%AE%97%E6%B3%95%203189271485664adca04c93037b447970/image3.png"/></a></figure><p id="08f9bb91-f65d-447b-b6f6-370108e0197f" class="">同时解释了为什么轻节点可以只保存cache，而矿工要保存整个大数据集。其实轻节点做一次验证的计算量也不算少，同样要经过64轮循环，每次循环用到大数据集中的两个数，所以是128个数，每个数是从cache里的256个数计算得到的，跟比特币相比，以太坊中验证一个nonce的计算量要大很多，但是仍然在可以接受的范围内，相比之下，如果矿工每次都这么折腾的话，代价就太大了，因为要尝试的nonce就太多了。</p><h3 id="ab4d94e1-b0fc-46a4-bc66-9e40cca8a274" class="">19.2.4 实际效果</h3><p id="bfd6268d-7c64-4184-973d-09f8381f70f4" class="">目前为止，以太坊Mining主要还是以GPU为主，用ASIC矿机的很少，所以从这一点来说，他比莱特币来说要成功，起到了ASIC Resistance的作用，这个跟<strong>以太坊的Mining算法需要的大内存</strong>是很有关系的，这个Mining算法就是ethash。矿工Mining需要1G的内存，跟莱特币的128K比差别非常大，即使是16M的cache跟128K比差距也很大。而且这个大小还会定期增长。</p><p id="d2c334a8-1af7-4848-84e2-670d8fc92094" class="">以太坊没有出现ASIC矿机还有另一个原因，<strong>以太坊从很早就计划要从工作量证明转移到权益证明</strong>，即PoW(Proof of Work)→PoS(Proof of Stake)。所谓的权益证明，就是按照所占的权益进行投票来形成共识，权益证明是不Mining，就类似于股份公司按照股票多少来进行投票。这对于ASIC矿机的厂商来说是个威胁，因为ASIC芯片的研发周期是很长的，一款芯片从设计→研发→流片到最后生产出来，研发周期很长，而且研发的成本也很高，将来以太坊转入权益证明之后，投入的研发费用就白费了。其实到目前为止，以太坊是基于工作量证明，以太坊很早就说要转入权益证明，但是转移的时间点一再往后推迟，到现在也没转过来，但是他不停的宣称要这么做，所以要想达到ASIC Resistance一个简单的办法就是不断地吓唬大家：大家注意哦，下面要搞权益证明就不Mining了，所以你就不要设计ASIC矿机了，你设计出来到时候也没用了，因为要设计一年嘛，一年以后，我们就不Mining了。</p><p id="53e06f99-04be-4eeb-91ac-416e1e67f553" class="">从历史看，以太坊成为一个主流的加密货币，其实就是最近两年的事情（2018），以前市值很小的时候，没有人会去设计ASIC芯片，因为划不来啊，无利可图，等到市值上来之后呢，你这么吓唬他几次，就能起到ASIC resistance的作用，这也是另外一方面的原因。</p><h3 id="11ff84a0-e911-41dc-8924-72be6f5ce168" class="">19.2.5 预挖矿</h3><p id="eb470a81-025f-4c3b-bc81-d695bac5e498" class="">以太坊中采用了预Mining（pre-mining），所谓预pre-mining并不是说真的去Mining，而是说，在当初发行货币的时候，预留一部分货币给以太坊的开发者，有点像创业公司会留一部分股票给创始人和早期员工一样，将来这个加密货币成功了的话，这些预留的币就变得是很值钱了。</p><p id="a88de984-7552-4ebb-b36d-9551785bb57c" class="">像以太坊的早期开发者，现在就都很有钱，比北大教授要有钱多了。比特币就没有采用pre-mining的模式，所有的比特币都是挖出来的，只不过早期的Mining的难度低。与pre-mining相关的一个概念叫pre-sale(就是把pre-mining预留的那些币通过出售的方法来换取一些资产用于加密货币的开发工作)，有点类似于众筹，如果你看好这个加密货币的未来，可以在pre-sale的时候买入，将来这个加密货币成功之后呢，同样可以赚很大一笔钱。</p><p id="56533d70-f34e-4fd7-b36f-cab8ca945413" class="">
+</p></div></article></body></html>

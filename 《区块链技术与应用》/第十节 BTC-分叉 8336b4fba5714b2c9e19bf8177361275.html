@@ -1,0 +1,670 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第十节:BTC-分叉</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="8336b4fb-a571-4b2c-9e19-bf8177361275" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/rijksmuseum_jansz_1641.jpg" style="object-position:center 80%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍈</span></div><h1 class="page-title">第十节:BTC-分叉</h1></header><div class="page-body"><nav id="d824340c-4faf-4fc6-9173-c6df0d3ef35c" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#b80bc256-978d-4c5e-b1a6-503e01b1c8c2">10.1 类型</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#59919355-cdef-4cba-907c-abff7bb7c2fc">10.1.1 状态分叉 state fork</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#d904e074-20df-4a76-8dde-9973ee9d15e2">10.1.2 协议分叉 protocol fork</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#30af35e9-00b4-48a5-a9c1-0abf2e39fd14">10.2 硬分叉 hard fork</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#5a3fb68b-e787-4f2b-aac8-ec3b834fe65c">10.2.1 情况</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#9b8e9102-c48e-4075-b0c4-1b0ce9c243d9">10.2.2 案例1-更改 Bitcoin 区块大小限制</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#42272cf3-6ebb-4df1-9eb4-1ac8191eb70e">10.2.3 案例2-ETH与ETC</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#15866ef1-86d5-4993-afd0-584c2c3f993b">10.3 软分叉 soft fork</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#e43bb132-89d4-4432-b7cc-9a3048e7b189">10.3.1 情况</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#502f1e67-be94-42cc-af23-e1277d50067a">10.3.2 案例1-更改 Bitcoin 区块大小限制（假设）</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#26d8c10d-c3ca-4d49-b67b-e7395a987ec5">10.3.2 案例2-给coinbase域添加规定</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0cca0688-0815-4103-8167-2da1dad92d0c">10.3.3 案例3-P2SH</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#2faaa3e7-40b9-4677-9c34-b6d4e675fa54">10.4 总结</a></div></nav><hr id="a247efc8-8478-4290-9880-7c81c10a2f54"/><h2 id="b80bc256-978d-4c5e-b1a6-503e01b1c8c2" class="">10.1 类型</h2><h3 id="59919355-cdef-4cba-907c-abff7bb7c2fc" class="">10.1.1 状态分叉 state fork</h3><p id="7536590f-378d-418a-b563-91a4c3f0ae36" class="">区块链由一条链变为两条链就叫分叉。分叉可能是多种原因造成的，比如挖矿的时候，两个节点差不多同一个时候挖到了矿，就会出现一个临时性的分叉，我们把这个分叉叫做state fork，是由于对比特币区块链当前的状态有意见分歧而导致的分叉。</p><p id="5f11b773-2d64-488c-aaeb-1b71cbe12a02" class="">前面还讲过分叉攻击(forking attack)，它也属于state fork，也是属于对比特币这个区块链当前的状态产生的意见分歧，只不过这个意见分歧是故意造成的，人为造成的，所以我们又叫它deliberate fork。</p><h3 id="d904e074-20df-4a76-8dde-9973ee9d15e2" class="">10.1.2 协议分叉 protocol fork</h3><p id="f9e25b5d-ed3a-4615-8de3-04e49d623b72" class="">除了这种state fork 之外，还有一种产生分叉的情况是，比特币的协议发生了改变，要修改比特币系统需要软件升级。在一个去中心化的系统里，升级软件的时候没有办法保证所有的节点同时都升级软件。</p><p id="216def4f-4b91-4b0c-a052-5b44039a4382" class="">假设大部分节点升级了软件，少数节点因为种种原因可能没有升级，有可能是还没来得及升级，也可能是不同意对这个协议的修改。即假如你想把协议改成某个样子社区中可能是有人不支持的，这个时候也会出现分叉，这种分叉叫protocol fork(协议分叉)。<strong>因为对比特币协议产生了分歧，用不同版本的协议造成的分叉，我们称作protocol fork。</strong></p><p id="7820a2b5-2c18-4f4f-9fb2-001fc637fd6c" class="">根据对协议修改的内容的不同，我们又可以进一步分成<strong>硬分叉</strong>和<strong>软分叉</strong>。</p><h2 id="30af35e9-00b4-48a5-a9c1-0abf2e39fd14" class="">10.2 硬分叉 hard fork</h2><h3 id="5a3fb68b-e787-4f2b-aac8-ec3b834fe65c" class="">10.2.1 情况</h3><p id="5b5951f9-0eaf-49e0-ab8e-678e82aa51f8" class=""><strong>出现硬分叉的情况:</strong>如果对比特币协议增加一些新的特性，扩展一些新的功能，这些时候那些没有升级软件的这些旧的节点，它是不认可这些新特性的，认为这些特性是非法的，这就属于对比特币协议内容产生了意见分歧，所以会导致分叉。</p><p id="4ef87104-3dba-433c-8b4a-7edd03597130" class=""><strong>只要有人不同意就会导致分叉。</strong></p><h3 id="9b8e9102-c48e-4075-b0c4-1b0ce9c243d9" class="">10.2.2 案例1-更改 Bitcoin 区块大小限制</h3><p id="5a42278f-2073-4e1b-a572-bf30115a097b" class="">硬分叉的一个例子就是比特币中的区块大小限制(block size limit)。比特币系统规定每个区块最多是1M字节，有些人认为1M的限制太小了，也增加了交易的延迟。可以计算一下:</p><p id="f9e7e9c7-0480-469f-a09d-2d4ac32b6ffd" class="">1M=1百万bit</p><p id="e7f65eac-bc2a-4238-80b3-db36e67b39cd" class="">一个交易大概认为是250个字节 1百万/250=4000</p><p id="4ea673cc-0645-488a-8eb6-5581b53b7e3f" class="">一个区块大概是4000个交易</p><p id="09ece1f9-b6f6-422b-92c4-1b0993b353bf" class="">平均10分钟出现一个区块 4000/(60×10)=7，即大概每秒钟产生7笔交易即7tx/sec</p><p id="54512fc4-12e2-4e38-8d38-3cff27a40009" class="">这个传输速度是非常低的。</p><p id="8ac1cfaf-2086-4efa-ad7c-848ff6a84d90" class="">有人发布一个软件更新，把block size limit从1M增加到4M。假设大多数节点更新这个软件，把block size limit更新到4M，少数节点没有更新。这里的大多数节点和少数节点不是按照账户数目来算的，而是按照算力，即系统中拥有大多数哈希算力的节点都更新了软件。新节点认为区块大小限制是4M，旧节点认为是1M。</p><figure id="6c6957b5-a45c-4083-97e2-bd5d4491a793" class="image"><a href="%E7%AC%AC%E5%8D%81%E8%8A%82%20BTC-%E5%88%86%E5%8F%89%208336b4fba5714b2c9e19bf8177361275/image1.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E8%8A%82%20BTC-%E5%88%86%E5%8F%89%208336b4fba5714b2c9e19bf8177361275/image1.png"/></a></figure><p id="acc7dd2c-790b-4cdc-bce8-1bfac2a68968" class="">如图这时运行系统，会有什么结果?假如一个新节点挖出一个区块，这个区块比较大，但旧节点不认可，它忽略大区块的存在会继续沿着它的前一个小区块接着挖。而旧节点如果挖出了区块新节点是认可的，因为4M的限制指不能超过4M，比4M小是可以的。</p><p id="88045c7a-e0f4-462e-8d7a-e768666d875d" class="">那为什么会产生分叉呢?大区块挖出之后，因为大多数区块是更新了的，是认可新的大区块的，所以会沿着它继续挖。只有少数旧节点会接着下面链往下挖，这时新节点认为上下两条链都是合法的，但上面那条是最长合法链，所以会沿着上面一条挖。而且算力足够大会使上面那条链越来越长。而旧节点认为上面的链无论多长都是非法的，它们只会沿着下面的链挖。当然上面的链也可能出现小区块，因为新节点也可能挖出大小不到1M的区块，虽然这种是新旧节点都认可的，但这是没有用的，因为这条链上它们认为有非法的区块。所以这种分叉是永久性的，只要旧节点不更新软件，分叉就不会消失，所以才叫它硬分叉。</p><h3 id="42272cf3-6ebb-4df1-9eb4-1ac8191eb70e" class="">10.2.3 案例2-ETH与ETC</h3><p id="f813c9c8-5a61-4645-b454-fafeb611313d" class=""><strong>情况：</strong></p><p id="30ca218f-5723-4eac-86ec-2786cb4b9f49" class="">以太坊硬分叉，分为 ETH 与 ETC 两种合法货币</p><p id="c43208b7-56e6-41d5-b786-e140eb0a2e5a" class=""><strong>问题：</strong></p><p id="fabdc741-4f17-475f-9029-3c8da043c1af" class="">比特币社区当中有些人是比较保守的，提高block size limit有些人就是不同意。而且区块的大小也不是越大越好，比特币底层系统是个P2P overlay network，它的传播主要采用flooding的方式，所以对带宽的消耗是很大的，带宽是瓶颈。</p><p id="8dc9d014-458d-40fb-9019-f68fb11b9e95" class="">那么旧节点挖出的小的区块还有没有出块奖励呢？出现hard fork后出现了两条平行运行的链，平行运行链彼此之间有各自的加密货币。下面链的出块奖励在下面链里是认的。而分叉之前的币按道理应该是上下两条链都认可，所以会拆成两部分。</p><figure id="cb8641f9-d475-440a-ba1f-ef378675f9ac" class="image"><a href="%E7%AC%AC%E5%8D%81%E8%8A%82%20BTC-%E5%88%86%E5%8F%89%208336b4fba5714b2c9e19bf8177361275/image2.png"><img style="width:314px" src="%E7%AC%AC%E5%8D%81%E8%8A%82%20BTC-%E5%88%86%E5%8F%89%208336b4fba5714b2c9e19bf8177361275/image2.png"/></a></figure><p id="e6080344-014e-4061-80e7-2fdc0e924bf7" class="">曾经出现过这样的问题:分叉前有A→B的交易，分叉后在上面链出现了B→C，下面链也出现了B→C，因为账户，私钥都是一样的。<strong>由于公私钥相同，一个链上的交易在另一个链上依然合法，可以被在另一条链上重放。</strong></p><p id="a3bed05b-1b33-46e4-adaf-d923e34f8eda" class="">既然如此，就会有人利用这个特性，想收到上下两条链的转账。但如果没有人转账给他怎么办？</p><p id="6e04e78a-9f5a-404c-b1aa-68b9605a6746" class=""><strong>解决：</strong></p><p id="36a1c695-09e4-45ab-be01-d96ad99a3011" class="">可以这样做:比如说B去购物，花一笔钱，给了C。后来B要退货，要取消这笔交易，C又把钱交给B。然后B又在下面一条链进行回放，就赚了一笔钱。那么在开始B转给C的交易在下面链会不会回放呢？所以这样做也是有风险的。为了解决这个问题，就让这<strong>两条链各带一个chain ID</strong>，所以现在以太坊的分叉已经没有问题了，就是两条独立运行的链了。</p><h2 id="15866ef1-86d5-4993-afd0-584c2c3f993b" class="">10.3 软分叉 soft fork</h2><h3 id="e43bb132-89d4-4432-b7cc-9a3048e7b189" class="">10.3.1 情况</h3><p id="34ab3faa-668f-4530-858d-d2d15b561c59" class=""><strong>软分叉出现的情况：</strong>如果对比特币协议加一些限制，加入限制之后原来合法的交易或区块在新的协议当中有可能变的不是合法了，这就引起软分叉。</p><h3 id="502f1e67-be94-42cc-af23-e1277d50067a" class="">10.3.2 案例1-更改 Bitcoin 区块大小限制（假设）</h3><p id="5a8dbac3-f3e9-476f-91f9-9f0fa558b387" class="">假设有人发布一个软件更新，把这个区块大小变小了。调整区块大小不止是改变一个参数那么简单。一个去中心化的系统，改变一个参数，就可能导致分叉，而且取决于这个参数是怎么改的。有可能是硬分叉，有可能是软分叉。这里把区块大小变小只是为了解释软分叉这个概念，实际中是不会这么做的。</p><p id="7d35404d-f321-4b4e-b679-d2f6f55a6e24" class="">假设新节点把区块大小改为0.5M，旧节点依然以1M为准，这时候会出现什么情况？假如一个区块链开始分叉，新节点挖出小区块，这种区块旧节点也是认的。而旧节点挖出的大区块新节点是不认的。这样下去，旧节点看到上面链更长，而且是合法的之后，就会转去挖上面链。</p><p id="108a5e10-d069-479d-a564-701bea46ed42" class="">所以为什么称这种分叉是软分叉?因为这种分叉是临时性的。所以旧节点如果不更新软件，它们挖的区块可能就白挖了。旧节点转向上面链挖的话，问题可能又会出现:它们可能又挖出了大区块。而新节点不认这个，新节点会继续沿着大区块前面一个小区块挖，如图所示。</p><figure id="9ab640c1-71ba-4a40-a0cd-913b7044bcc6" class="image"><a href="%E7%AC%AC%E5%8D%81%E8%8A%82%20BTC-%E5%88%86%E5%8F%89%208336b4fba5714b2c9e19bf8177361275/image3.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E8%8A%82%20BTC-%E5%88%86%E5%8F%89%208336b4fba5714b2c9e19bf8177361275/image3.png"/></a></figure><h3 id="26d8c10d-c3ca-4d49-b67b-e7395a987ec5" class="">10.3.2 案例2-给coinbase域添加规定</h3><p id="f274263c-b64a-4558-a387-bab98fdc1cf5" class="">实际中可能出现软分叉的情况:给某些目前协议中没有规定的域增加一些新的含义，赋予它们一些新的规则，典型的例子就是coinbase域。前面讲过每一个发布的区块里可以有一个铸币交易(coinbase transaction)，coinbase transaction里有一个域叫coinbase域，这个域用来干什么是没人规定也没人检查的。</p><p id="ea67af78-555a-478d-a89d-1839daa66b0d" class="">前面讲过coinbase域的一个用途:可以把它作为extra nonce。挖矿的时候要不断调整block header里的nonce，但block header里的nonce只有四个字节，最多只有2的32次方个可能性，所以实际中可以把coinbase前八个字节用来做extra nonce。两个合在一起就成了2的96次方，对于目前的挖矿难度，这个域已经是足够了。但coinbase域不止是八个字节，后面还有很多，剩下的字节有人就提议做UTXO集合的根哈希值。</p><p id="a22988d2-8e6a-4290-8d1d-9a7936865d33" class="">目前这个集合只是每个全节点自己在内存中维护的，主要是为了快速查找、判断该交易是不是属于double spending，但这个集合的内容并没有写到区块链里，这跟前面讲到的merkle proof是不太一样的。</p><p id="c0c6333d-45a0-4320-8774-980bbf8128da" class="">merkle proof能证明什么？证明某个交易是不是在给定的区块里。比如一个轻节点，没有维护整个区块的内容，只知道block header。轻节点问一个全节点:该交易是不是在这个区块里?全节点返回一个merkle proof作为证明，轻节点就可以验证是否属实。但如果是另外一种情况，想要证明某个账户上有多少钱，这个目前在比特币系统中是证不出来的。如果是全节点还可以算一下，方法如下:想要知道A账户有多少钱，就看一下A在UTXO里对应的输出总共收到多少个币，就是该账户上有多少钱。</p><p id="4eec5fb1-42a7-4370-bec7-f5ec84d406b3" class="">对于全节点是可以算出来的，但如果是区块链钱包、有的手机上的APP，它不可能在手机上维护一个完整的区块链，它实际上是个轻节点，它想要知道账户的余额需要询问全节点。全节点返回一个结果，怎么知道这个结果是否属实呢？现在是证不出来的。如果你自己不维护一个UTXO集合，就没法用merkle proof证出来。</p><p id="7d868da1-8c9c-4be1-ba47-82d5ac548a77" class="">有人提议把UTXO集合当中的内容也组织成一颗merkle tree，这个merkle tree有一个根哈希值，根哈希值写在coinbase域里面。因为block header没法再改了，改block header动静就太大了，coinbase域正好是没人用的，所以就写入UTXO的根哈希值。coinbase域当中的内容最终往上传递的时候会传递到block header里的根哈希值里。所以改coinbase域的内容，根哈希值会跟着改。因此这个提案就是说把UTXO集合的内容组织成merkle tree，算出一个根哈希值来，写入coinbase域里某个位置。coinbase域的内容本身也会算哈希，算到block header里的根哈希值，这样就可以用merkle proof证出来了。</p><p id="8cc26617-ed3f-4231-9f07-e346e4e2e638" class="">假设有人发布一个软件更新，规定coinbase域要按照这个要求来填写，大多数节点都升级了软件，少数节点没有更新，这属于软分叉，因为新节点发布的区块旧节点认为是合法的，因为旧节点不管新节点写什么内容。但旧节点发布的区块新节点可能是不认的，因为如果coinbase域不按要求写它是不认的，所以属于软分叉。</p><h3 id="0cca0688-0815-4103-8167-2da1dad92d0c" class="">10.3.3 案例3-P2SH</h3><p id="ada050ca-2946-49f4-8c60-b86ce31a582f" class="">比特币历史上比较著名的软分叉的例子是P2SH(pay to script hash)。P2SH这个功能在最初的比特币版本里是没有的，它是后来通过软分叉的功能给加进去的。这是什么意思呢?你支付的时候不是付给一个public key的哈希，而是付给一个赎回脚本的哈希。花钱的时候要把这个交易的输入脚本跟前面币的来源的交易的输出脚本拼接在一起执行。</p><p id="afd1924b-9eb8-433e-a3be-7c9b8edb3c7f" class=""><strong>新节点的两阶段验证</strong></p><p id="96c16d88-2fd8-4cd6-97ad-df5ff46e6757" class="">执行的时候验证分为两步，第一步是要验证输入脚本中给出的redeem script跟前面那个输出脚本给出的script的哈希值是对的上的，证明输入脚本里提供的script是正确的。第二步再执行redeem script，来验证输入脚本里给出的签名是合法的。</p><p id="a28d4b24-510d-47cf-bc8b-a5d0bb908b97" class=""><strong>旧节点只验证第一段</strong></p><p id="574714df-bff0-4a48-8fb7-9575fbfc59ef" class="">对于旧节点来说，它不知道P2SH的特性，只会做第一阶段的验证，即验证redeem script是否正确。新节点才会做第二阶段的验证，所以旧节点认为合法的交易新节点可能认为是非法的(如果第二阶段的验证通不过的话)。而新节点认为合法的交易旧节点肯定认为是合法的，因为旧节点只验证第一阶段。</p><h2 id="2faaa3e7-40b9-4677-9c34-b6d4e675fa54" class="">10.4 总结</h2><p id="aba10dcc-e705-4ed0-8fa3-9254432b8879" class="">soft fork是什么?只要系统中拥有半数以上算力的节点更新了软件，那么系统就不会出现永久性的分叉，只可能有一些临时性的分叉。</p><p id="d123880f-ebb8-43cd-97ea-1ab862f8728d" class="">hard fork特点是什么？必须是所有的节点都要更新软件，系统才不会出现永久性的分叉，如果有小部分节点不愿意更新，那么系统就会分成两条链。</p><p id="3936e0df-153b-4de0-b57c-e69e5d716041" class="">
+</p></div></article></body></html>

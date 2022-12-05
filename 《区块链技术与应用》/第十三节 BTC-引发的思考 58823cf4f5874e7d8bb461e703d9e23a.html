@@ -1,0 +1,670 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第十三节:BTC-引发的思考</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="58823cf4-f587-4e7d-8bb4-61e703d9e23a" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/met_jules_tavernier_1878.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍈</span></div><h1 class="page-title">第十三节:BTC-引发的思考</h1></header><div class="page-body"><nav id="681c0e72-e918-4a47-8207-95ce3cdb3d73" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#f5492307-893d-488b-986c-67b800d33dae">13.1 哈希指针</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#e71ac7fc-2cd0-4d9c-b04a-f5f398790eed">13.2 区块链</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#0eb027b6-d891-4c14-88f1-15873f1f027c">13.4 分布式共识</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#6fec7935-faaf-49ef-b2c6-9a9503b862fb">13.5 比特币的稀缺性</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#32f01ceb-8837-4fb7-a496-3b589920a4fd">13.6 量子计算</a></div></nav><hr id="cdbc27f5-4ce4-495e-bf71-1bdf6d957f58"/><h2 id="f5492307-893d-488b-986c-67b800d33dae" class="">13.1 哈希指针</h2><p id="5dbff80d-7679-493f-b408-b66028769194" class="">指针保存的是本地内存的地址，那么只是在本地这台计算机上才有意义，发送到其他计算机上就没有意义了。那么在发布区块的时候哈希指针是怎么能够通过网络进行传输呢？</p><p id="30785e20-b98f-47d8-aac2-e11db5c22569" class="">所谓的哈希指针只是一种形象的说法，实际系统中用的时候只有哈希，没有指针。回顾一下之前看到的block header的数据结构，如图。</p><figure id="ca398fcf-8e54-4787-af4d-7195647214c5" class="image"><a href="%E7%AC%AC%E5%8D%81%E4%B8%89%E8%8A%82%20BTC-%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83%2058823cf4f5874e7d8bb461e703d9e23a/image14.png"><img style="width:700px" src="%E7%AC%AC%E5%8D%81%E4%B8%89%E8%8A%82%20BTC-%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83%2058823cf4f5874e7d8bb461e703d9e23a/image14.png"/></a></figure><p id="4ece0b44-ed6b-4193-bc2f-da3393190751" class="">第25行就是指向前一个区块的哈希，没有指针。block header里只有哈希值，没有指针。</p><p id="234bff64-945d-4195-babd-13f48b28dfb6" class="">那么怎么才能找到前一个区块的内容呢？全节点一般是把这些区块存储在一个(key，value)数据库里面。key是区块的哈希，value就是区块的内容。一个常用的key value数据库是level DB。所谓的区块链这种链表结构实际上是在level DB里面用哈希值算出来的。只要你掌握了最后一个区块的哈希值，那么你通过level DB的查找，哈希值key对应的value就可以把最后一个区块的内容取出来。然后这个区块块头里面，又有指向前一个区块的哈希值。那么再去查找key和value，可以找到前一个区块的内容，以此类推，一步一步往前找，最终能够把整个区块链都找出来。</p><p id="b69dfc06-e536-4e92-9641-3a0a62352516" class="">所以说在实际系统当中，所谓的哈希指针，只有哈希，没有指针，或者也可以认为哈希值的本身就是指针。</p><p id="a28a2474-4b12-465f-bfda-90a148dea704" class="">有一些节点没有保存完整的区块链的信息，只保存了最近的几千个区块，如果需要用到前面的区块的信息可以问其他的全节点要。哈希指针的性质保证了整个区块链的内容是不可篡改的。</p><h2 id="e71ac7fc-2cd0-4d9c-b04a-f5f398790eed" class="">13.2 区块链</h2><p id="b64f6031-ee38-4f04-9983-6dba9b41d855" class="">就是指，把一个私钥分成几份，有几个人各自保管，只有最终大家都拿出自己的部分私钥，才能合成完整的私钥。</p><p id="04ea851d-9a0d-4cbf-94bd-361edb9c85e2" class="">这样存在的问题是:这些人中任何一个人把私钥丢了钱就取不出来了。还有更大一个问题:这种截断私钥的做法会降低账户的安全性。因为比特币系统中每个账户的安全性跟所用的私钥的长度是相关的。</p><p id="7bb251f2-e94a-47bf-858a-826985e1b461" class="">为什么要用256位的私钥?因为这个长度的私钥用暴力破解的方法是不可行的。就算把全世界的计算机集中起来破解256位的私钥，也是不可能成功的。但是如果从中截断，一对情侣中一个人分手之后想把钱取出来，他已经知道了其中一半的私钥，只要把剩下的128位私钥猜出来就行了。私钥长度减少一半并不意味着难度降低一半，难度由2的256次方降到了2的128次方，前者远远大于后者，破解难度降了很多。如果是四个合伙人的例子，有三个人瞒着另一个人要把钱取出来，那么他们只需要尝试2的64次方就可以了。</p><p id="da392e09-686e-4b69-b9c2-c5909bc967ca" class="">因此对于<strong>多个人的共享账户最好采用多重签名</strong>，不要用截断私钥的方法，多重签名中用到的每一个私钥都是独立产生的。而且多重签名也提供一些别的灵活性，比如可以要求N个人当中任意给出M个签名就可以了。</p><p id="b37b12bf-9468-4c8c-8111-9d448d65f412" class="">在区块链的例子中，如果一对情侣分手了，那么他们的比特币将永久的保存在UTXO里面，这对矿工是不友好的。矿工是不知道这笔钱永远取不出来的，所以矿工要把这笔钱永久的保存在UTXO里面，造成这个集合的膨胀。</p><h2 id="0eb027b6-d891-4c14-88f1-15873f1f027c" class="">13.4 分布式共识</h2><p id="9ea5c80b-ca1d-49b2-9ea8-441fef280ee1" class="">前面已经讲过，从理论上实现分布式系统的共识是不可能的，但实际当中又怎么变的可能了呢?为什么比特币系统能够绕过分布式共识中的那些不可能结论?严格来说，<strong>比特币并没有取得真正意义上的共识</strong>，因为取得的共识随时有可能被推翻，比如出现了分叉攻击。<strong>你以为已经取得了一个共识，分叉攻击后系统会回滚到前一个状态，从理论上说甚至有可能回滚到创世纪块（只要算力强）。</strong></p><p id="c2ba3579-bcd6-48d4-afed-bcd21241590e" class="">按照分布式系统理论的要求，共识一旦达成之后，就不应该再改了，所以从这方面来说比特币并没有绕过分布式系统那些不可能的结论，因为它并没有达到真正意义上的共识。这说明理论和实际往往是有区别的。很多理论上的不可能结论对于实际当中是并不适用的，因为这种不可能结论只是对某种特定的模型下是不可能的，实际当中把模型稍微改一改不可能结论就不成立了。</p><h2 id="6fec7935-faaf-49ef-b2c6-9a9503b862fb" class="">13.5 比特币的稀缺性</h2><p id="a9f2e77f-df1d-4e41-bb64-bf2906198a32" class="">矿工挖矿的原因是为了获得收益，挖矿的收益要大于开销才是有利可图的。要吸引别人来挖矿，要么增加挖矿的收益，要么降低挖矿开销。任何一个新发行的加密货币，都有一个能启动的问题。早期为了吸引矿工来挖矿，可以给矿工更多的收益。</p><p id="a60ee74d-ff2d-44ab-89cd-a0ef98937853" class="">比特币的做法是:①早期难度设置的比较低。②早期的出块奖励比较高。</p><p id="0b12b9a4-992d-41d4-8b32-ef1fa54383f3" class="">实际上，比特币这种总量恒定的性质是不适合用来做货币的。后面讲的以太坊就没有出块奖励定期减半的做法，一些新型的货币甚至要自带通胀的功能，每年要把货币的通行量提高一定的比例。因为稀缺的东西是不适合用来做货币的，通货膨胀会导致钱变得更不值钱了，但<strong>一个好的货币要有通货膨胀的功能</strong>。</p><h2 id="32f01ceb-8837-4fb7-a496-3b589920a4fd" class="">13.6 量子计算</h2><p id="45a501e2-723d-42a8-8445-88c0b3845d2e" class="">随着量子计算的发展，量子计算机计算力变得越来越强大，加密货币会不会变得不安全了?</p><p id="040d7b69-6b0c-48c7-af1a-791c673befbe" class="">这种担心是没必要的:</p><p id="f05bae21-30d6-4a34-bd22-42975f35d304" class="">①量子计算技术离实用还有很长一段距离，在比特币的有生之年不一定能产生实质性的联系。如果量子计算在将来能强大到破坏加密体系的话，首先会冲击的是传统金融业。比如我们在网上进行的很多金融活动:网上银行、网上转账、网上支付，都会变得不安全了。所以与其担心量子计算对比特币的冲击，还不如担心量子计算对传统金融业的冲击，因为大多数的钱还是放在传统金融业里面的，加密货币的市值只占了现代金融体系当中的很小一部分。</p><p id="7d2c97b6-a873-43e6-b616-d31bd3a936b8" class="">②比特币当中没有把账户的公钥直接暴露出来，而是用公钥取哈希之后得到一个地址。比特币当中用的非对称加密体系，从私钥是可以推导出公钥的。所以只要把私钥保管好，公钥其实丢了也没有关系。从公钥显然是不能推出私钥的，否则就麻烦了。</p><p id="52fa52b0-9366-4a05-822f-1e8b8eb4a885" class="">假设将来量子计算技术发达了，能够从公钥中推出私钥，那怎么办呢？比特币在设计的时候又加了一层保护，没有用公钥本身，而是用公钥的哈希。所以<strong>如果有人想偷你账户上的钱的话，首先是要用地址推导出你的公钥，相当于把公钥的哈希值进行逆运算，而这一点即使是用量子计算机也是没有办法完成的。</strong></p><p id="52a876f5-56ce-472a-971b-b2153dbfb814" class="">加密和取哈希是两个不同性质的操作，加密的目的是为了将来能够解密，所以加密算法要保证信息的完整性，加密过程是不能丢失信息的，这样解密的时候才能够还原原来的输入。但是<strong>取哈希的过程一般是会造成信息的损失的</strong>，哈希函数一般都是不可逆的，因为有些信息在取哈希的过程中就已经丢失了。</p><p id="0bb10dde-e409-40fb-9ae6-4c6a4c3f15a8" class="">比特币系统中用的哈希算法是SHA-256，算出的哈希值是256位，无论输入有多大，即使有几个T，算出来的哈希值也是256位。这样的运算过程显然是不可逆的。如果可逆那可就变成了一个超级压缩算法。</p><p id="e2a10d1e-31aa-40b8-9b08-9f5ae0e65f3d" class="">所以在比特币系统中，如果要收款就没必要把公钥暴露出来，只暴露公钥的哈希生成的地址就行了。将来要取钱的时候才需要公钥和私钥产生的签名。假如一个坏人在网上监听到了你取钱的交易，知道了你的公钥，他要偷你的钱，就必须实时的从公钥推导出私钥来，然后要产生一个跟你竞争的交易。你要把钱转你账户，他要把你钱转到他账户，即使这个坏人拥有量子计算机也很难几分钟内把你的私钥破解了，而且他发布的交易要抢在你交易的前面。</p><p id="f135618b-8cc8-4196-b28a-6f88ba633e2f" class="">所以安全起见，<strong>一个地址用过之后就不要再用了，每次取钱最好把钱一次取走</strong>，即使取不完，也最好把钱转给另一个安全的账户。后面会讲到，以太坊中的地址也是从公钥当中推导出来的，但也不是公钥本身，也是公钥取哈希之后进行的转换。</p><p id="44d62066-ca2c-485d-83d3-5960388137f7" class="">
+</p></div></article></body></html>

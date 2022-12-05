@@ -1,0 +1,670 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>第十五节:ETH-账户</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d30b1a18-5499-47f5-b286-ecbf90f74c2d" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/webb4.jpg" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🍈</span></div><h1 class="page-title">第十五节:ETH-账户</h1></header><div class="page-body"><nav id="bd454d3d-4cfa-4e51-b546-c1e621841f6d" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#28ed5cfd-5151-4d0a-ae7e-03a822693f78">15.1 与BTC不同</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#0d7768d1-1555-44c6-9eff-46f679a893ff">15.1.1 BTC 基于 transaction-based ledger</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a0769d03-4bc0-483e-84f4-ba9faa9092b8">15.1.2 ETH 基于 account-based ledger</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#09fb7081-4fa4-46d1-878f-f2a73f97804e">15.2 账户类型</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#c7a428c5-6c1b-4adb-a74c-de2c641e23ff">15.2.1 外部账户 externally owned account</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ecfff2f6-ef65-44e7-b3e8-a2d7f1dcc0aa">15.2.2 合约账户 smart contract account</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#0cbceec3-2229-4020-91d9-e8f3d12debec">15.3 为什么要设计一种新的账户模式</a></div></nav><hr id="1c3b6445-d57a-4721-94f8-8d38f938f8ba"/><h2 id="28ed5cfd-5151-4d0a-ae7e-03a822693f78" class="">15.1 与BTC不同</h2><h3 id="0d7768d1-1555-44c6-9eff-46f679a893ff" class="">15.1.1 BTC 基于 transaction-based ledger</h3><p id="0fa19953-4c5f-45d2-8a3a-5da53f847d91" class="">BTC系统是基于交易的账本，系统中并未显示记录账户有多少钱，只能通过UTXO进行推算。但实际中，使用起来较为别扭。</p><p id="51a656b2-37a9-431d-a947-5fd578cb409c" class="">A转给B钱的时候，需要说明币的来源。实际中只需要存钱说明来源，花钱则不用。此外，账户中的钱在花的时候，必须一次性全部花出去。</p><figure id="08a06eba-2f20-4599-a072-d9f3bd82a3e9" class="image"><a href="%E7%AC%AC%E5%8D%81%E4%BA%94%E8%8A%82%20ETH-%E8%B4%A6%E6%88%B7%20d30b1a18549947f5b286ecbf90f74c2d/image15.png"><img style="width:607px" src="%E7%AC%AC%E5%8D%81%E4%BA%94%E8%8A%82%20ETH-%E8%B4%A6%E6%88%B7%20d30b1a18549947f5b286ecbf90f74c2d/image15.png"/></a></figure><p id="5f29d037-3120-4013-a85a-b32e2dee3640" class="">如图，B收到A的10个BTC，他想要给C3个BTC，如果按照1中方式，其余7个比特币会以交易费的形式给挖出区块的矿工。</p><p id="0cbeb7e3-1117-4e19-a8e1-cb72e48aff1e" class="">因此，为了避免这种情况，便吸引采用2中方式，将3个BTC转给C，将剩余7个BTC转到自己的另一账户D上面。</p><h3 id="a0769d03-4bc0-483e-84f4-ba9faa9092b8" class="">15.1.2 ETH 基于 account-based ledger</h3><p id="5b4e3eec-dd17-4426-a056-ca0a518dddaa" class="">以太坊采用的是基于账户的模型（account-based ledger），这种模型跟银行账户是比较相似的，系统中要显式的记录每个账户上有多少个以太币</p><p id="1bf09245-41e4-4e68-a5c0-3bef0f27ebeb" class="">比如，A要转给B 10个以太币，这个<strong>交易的合法性只要检查一下A账户上有没有足够的钱</strong>就行了。比如A账户上有100个以太币，要转10个给B，这就没问题，不用说明这100个以太币中是具体把哪10个转给了B，不用说明币的来源，是来自之前哪个交易。将来B要转给C 3个以太币也是可以的，不用把剩下的转给他自己，因为有<strong>显式余额</strong>的概念，所以剩下的币就直接放在账户上就行了。用于说明币的来源的哈希指针也不用了。</p><p id="18fa273d-995c-4da2-bbc3-69eed94dd734" class="">比特币中面临的挑战是双花攻击（double spending attack），花钱的人不诚实，以前花过的钱想再花一次</p><p id="730496c3-e23e-4c91-9b0f-eb9b7610748d" class=""><strong>基于账户模式的好处是对double spending attack有天然的防御作用</strong>，因为不用管币的来源，每花掉一次钱，就从你的账户上扣掉，花两次就扣两次。以太坊中面临的挑战是<strong>重放攻击（replay attack），收钱的人不诚实，别人已经给他转过钱了，他想再转一次。</strong></p><p id="21a45d4b-9d8d-4787-9c3c-86007dcabcb4" class="">A把自己转给B 10个以太币的转账交易发布到网络上，过一段时间之后，这个交易被写到区块链里了，A就以为转账交易完成了。假设B是有恶意的，<strong>把这个交易在网上重新广播一遍</strong>，其他节点以为是个新的转账就把A的钱扣了2次</p><p id="e3f37ec9-30c2-4084-95fc-0a7609f6717c" class=""><strong>解决方案：</strong></p><p id="6d2b430b-39fa-4f84-8ddd-5b1411573e60" class="">加一个<strong>计数器（nonce）</strong>，记录一下这个账户有史以来一共发布过多少交易，然后转账的时候，交易次数要成为交易内容的一部分，一起包含进去，都是受到发布交易的签名的保护。</p><figure id="a24fa952-3354-40fa-8262-927243aabc4e" class="image"><a href="%E7%AC%AC%E5%8D%81%E4%BA%94%E8%8A%82%20ETH-%E8%B4%A6%E6%88%B7%20d30b1a18549947f5b286ecbf90f74c2d/Untitled.png"><img style="width:355px" src="%E7%AC%AC%E5%8D%81%E4%BA%94%E8%8A%82%20ETH-%E8%B4%A6%E6%88%B7%20d30b1a18549947f5b286ecbf90f74c2d/Untitled.png"/></a></figure><p id="b4ca05ee-8543-4440-9a19-c00f3f0c095f" class="">如上图，A转给B 10个以太币，A一共发布过20个交易，这是第21个，所以写上nonce=21，然后整个内容写上A的签名。把这个交易发布到网上，<strong>因为有签名的保护，所以nonce的值，别人是改不了的。</strong>系统中的每个节点维护A这个状态，不仅要维护A账户上的钱（balance），还要维护nonce的值，一开始nonce=0，每次收到A发布的一个交易，nonce+1。这个节点一开始A的nonce=20，然后现在发布这个交易，这个节点一看，这个交易是合法的，是可以执行的，同时更新一下nonce=21。以后如果有人重放这个交易，这个节点一看，这个nonce已经是21了，已经被执行过了，就不会再执行一遍了。</p><h2 id="09fb7081-4fa4-46d1-878f-f2a73f97804e" class="">15.2 账户类型</h2><h3 id="c7a428c5-6c1b-4adb-a74c-de2c641e23ff" class="">15.2.1 外部账户 externally owned account</h3><p id="708fbb88-114c-44b1-a9b5-b0e5467fc53e" class="">外部账户是由公私钥控制的，本地产生一个公私钥对，私钥掌握账户的控制权（类似于比特币中的账户），也叫普通账户。</p><p id="69215d49-fe2a-4854-aa61-05da6a3303c8" class="">外部账户的状态：</p><ul id="850eba41-009e-4485-a3f1-1b92f3770ff7" class="bulleted-list"><li style="list-style-type:disc">balance（账户余额）</li></ul><ul id="08cb384e-da75-44f5-9324-90c9df77b153" class="bulleted-list"><li style="list-style-type:disc">nonce（计数器）</li></ul><h3 id="ecfff2f6-ef65-44e7-b3e8-a2d7f1dcc0aa" class="">15.2.2 合约账户 smart contract account</h3><p id="754705ff-d513-4bfb-90b7-d7acd7014cff" class="">合约账户不是通过公私钥对控制的。</p><p id="732e98c1-473f-4be7-83fa-df48070fe0de" class="">合约账户的状态：</p><ul id="3b666fb7-fa37-4c16-aa01-e186e1d5a9cd" class="bulleted-list"><li style="list-style-type:disc">balance（账户余额）</li></ul><ul id="4d3a4bab-cc53-4faf-9562-f43029178a8b" class="bulleted-list"><li style="list-style-type:disc">nonce（计数器）</li></ul><ul id="1c3b2ae4-3d04-44fd-9740-09d3f22bd5eb" class="bulleted-list"><li style="list-style-type:disc">code（代码）</li></ul><ul id="c709a450-eeb6-4df8-99df-e5ca17b0b49b" class="bulleted-list"><li style="list-style-type:disc">storage（相关状态存储，包括每个变量的取值）</li></ul><p id="0daea19b-c90d-4e5f-b82e-9c94f547809f" class="">一个合约可以调用另外一个合约，所以要通过nonce值记录一下调用的次数</p><p id="5d43c7e5-2a6a-4cbf-bb3f-7f4e20f8fb40" class=""><strong>合约账户不能主动发起一个交易，以太坊中规定，所有的交易只能由外部账户发起。</strong>外部账户发起一个交易如果调用了一个合约账户，这个合约账户可以发送一个message调用另外一个合约，但是他不能自己平白的发起一个交易</p><p id="88d1e6d2-4f63-41e2-a328-2c4385c75c3f" class="">创建合约会返回一个地址，<strong>知道这个合约的地址，就可以调用这个合约</strong>，调用的过程当中<strong>状态会发生变化</strong>，代码（code）不会变，<strong>存储（storage）</strong>会变。</p><h2 id="0cbceec3-2229-4020-91d9-e8f3d12debec" class="">15.3 为什么要设计一种新的账户模式</h2><p id="b2c0e1aa-1d56-4b37-a372-a5c9c1a8fb59" class="">以太坊的创始人叫Vitalik，是个19岁的小孩，他当初创建以太坊的时候，比特币已经有比较成熟的代码可以作为参考，为什么不用比特币已有的代码，而要另弄一套？为什么不直接在比特币系统设计上改进，比如改出块时间、mining puzzle，为什么非要改账户体系？</p><p id="65645e2c-d567-4f33-860e-8cf2b1b30d8c" class=""><strong>比特币基于交易模型的一个好处是隐私保护，但是以太坊要支持的是智能合约，对于合约来说，要求参与者有比较稳定的身份</strong></p><p id="dab3e73c-8602-4ee3-bdb8-8aeeaea4bfa3" class="">这跟日常生活当中是比较类似的，比如说，你跟某个人签个合同，如果说你跟他签合同的时候，他是一个身份，签完之后，他身份变了，你找不到了，那这就有问题了，也有可能突然冒出了另外一个人，说他当初就是跟你一块签合同的，只不过换了一个身份，这就给合同的执行带来一些困难。将来出现纠纷的时候，你也是需要知道这个合同当初是跟谁签的</p><p id="1bc09763-de88-4ebe-be3e-839da46f883d" class="">现在有人提出来用智能合约实现一些金融衍生品（financial derivative）</p><p id="52f9e379-b806-4ab5-9ef3-3553cb3ac257" class="">比如期权/期货，往合约里投一笔钱，预测未来的价格走势，如果预测正确，给你一些收益，把钱还给你。但问题是，如果你投钱的这个账户，投完钱就变了，那到时候怎么把钱还给你呢？</p><p id="1512d079-3c67-4dfc-b4ae-2227eb5ce4a8" class="">这个不光是对于外部账户有这个问题。合约账户的问题就更严重了，如果你投钱投到一个合约账户，投完之后合约账户的地址变了，找不到就麻烦了</p><p id="4610d7ac-8865-487e-9417-0880042ad899" class="">所以以太坊创建这个系统的时候，考虑了过去的一些已有的模型的利弊得失，最终没有采用比特币中基于交易的模式，而是采用了基于账户模式</p><p id="22180343-6e32-4436-8412-034b3fe986c1" class="">这个从目前的状况来看，还是比较合适的一个决策，以太坊的账户是希望保持稳定的，无论是个人账户还是合约账户。如果你有隐私保护的需要，同样可以创建很多个账户，根据情况使用不同的账户进行不同的交易。</p><p id="acbf5143-4e07-4b52-bb6c-7fac54fb60ad" class="">
+</p></div></article></body></html>
